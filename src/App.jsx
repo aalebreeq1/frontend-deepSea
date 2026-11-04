@@ -6,9 +6,11 @@ import Homepage from "./pages/Homepage";
 import SignInPage from "./pages/SigninPage";
 import Dashboard from "./pages/Dashboard";
 import { logout } from "./services/authService";
+import TestLocations from "./components/TestLocations"
+
 
 function App() {
-  function  getUserFromToken (){
+  function getUserFromToken() {
     const token = localStorage.getItem("token");
 
     if (!token) return null;
@@ -28,6 +30,7 @@ function App() {
     <div>
       <Navbar user={user} handleLogout={handleLogout} />
       <Routes>
+        <Route path="/test-locations" element={<TestLocations />} />
         <Route path="/" element={<Homepage />} />
         <Route path="/sign-up" element={<SignupPage />} />
         <Route path="/sign-in" element={<SignInPage setUser={setUser} />} />
