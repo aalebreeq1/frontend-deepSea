@@ -12,12 +12,10 @@ export async function createNewLocation(newLocation) {
 
 }
 
-
 export async function getLocationById(locationId){
     const response = await api.get(`/location/${locationId}`)
     return response.data
 }
-
 
 export async function updateLocationById(locationId, updatedLocation){
     const response = await api.put(`/location/${locationId}`, updatedLocation)
