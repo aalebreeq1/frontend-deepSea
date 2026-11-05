@@ -6,9 +6,11 @@ import Homepage from "./pages/Homepage";
 import SignInPage from "./pages/SigninPage";
 import Dashboard from "./pages/Dashboard";
 import { logout } from "./services/authService";
-import TestLocations from "./components/TestLocations"
-// Abdulla pages
+
+// Abdulla's pages
 import AllMission from "./pages/MissionPages/AllMission"
+// Zainab's pages
+import AllEquipment from "./pages/equipmentPages/AllEquipments"
 
 function App() {
   function getUserFromToken() {
@@ -31,7 +33,6 @@ function App() {
     <div>
       <Navbar user={user} handleLogout={handleLogout} />
       <Routes>
-        <Route path="/test-locations" element={<TestLocations />} />
         <Route path="/" element={<Homepage />} />
         <Route path="/sign-up" element={<SignupPage />} />
         <Route path="/sign-in" element={<SignInPage setUser={setUser} />} />
@@ -40,6 +41,8 @@ function App() {
           element={user ? <Dashboard user={user} /> : <Navigate to="/sign-in" />}
         />
         <Route path="/all-missions" element={<AllMission />} />
+                <Route path="/equipments" element={<AllEquipment />} />
+
       </Routes>
     </div>
   );
