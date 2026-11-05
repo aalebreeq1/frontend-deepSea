@@ -10,6 +10,7 @@ import TestLocations from "./components/TestLocations"
 // Abdulla pages
 import AllMission from "./pages/MissionPages/AllMission"
 import MissionDetails from "./pages/MissionPages/MissionDetails"
+import CreateMission from "./pages/MissionPages/CreateMission"
 
 function App() {
   function getUserFromToken() {
@@ -40,8 +41,12 @@ function App() {
           path="/dashboard"
           element={user ? <Dashboard user={user} /> : <Navigate to="/sign-in" />}
         />
+        
         <Route path="/all-missions" element={<AllMission />} />
         <Route path="/mission/:id" element={<MissionDetails />} />
+        <Route path="/create-mission" element={<CreateMission/>} />
+
+
       </Routes>
     </div>
   );
