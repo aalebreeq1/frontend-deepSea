@@ -6,12 +6,14 @@ import Homepage from "./pages/Homepage";
 import SignInPage from "./pages/SigninPage";
 import Dashboard from "./pages/Dashboard";
 import { logout } from "./services/authService";
-import TestLocations from "./components/TestLocations"
-// Abdulla pages
-import AllMission from "./pages/MissionPages/AllMission"
-import MissionDetails from "./pages/MissionPages/MissionDetails"
-import CreateMission from "./pages/MissionPages/CreateMission"
-import UpdateMission from "./pages/MissionPages/updateMission"
+// Abdulla's pages
+import AllMission from "./pages/MissionPages/AllMission";
+import MissionDetails from "./pages/MissionPages/MissionDetails";
+import CreateMission from "./pages/MissionPages/CreateMission";
+import UpdateMission from "./pages/MissionPages/updateMission";
+
+// Zainab's pages
+import AllEquipment from "./pages/equipmentPages/AllEquipments";
 
 function App() {
   function getUserFromToken() {
@@ -20,8 +22,7 @@ function App() {
     if (!token) return null;
 
     return JSON.parse(atob(token.split(".")[1]));
-  };
-
+  }
 
   const [user, setUser] = useState(getUserFromToken());
 
@@ -34,21 +35,22 @@ function App() {
     <div>
       <Navbar user={user} handleLogout={handleLogout} />
       <Routes>
-        <Route path="/test-locations" element={<TestLocations />} />
         <Route path="/" element={<Homepage />} />
         <Route path="/sign-up" element={<SignupPage />} />
         <Route path="/sign-in" element={<SignInPage setUser={setUser} />} />
+
         <Route
           path="/dashboard"
           element={user ? <Dashboard user={user} /> : <Navigate to="/sign-in" />}
         />
-        
+
         <Route path="/all-missions" element={<AllMission />} />
         <Route path="/mission/:id" element={<MissionDetails user={user} />} />
         <Route path="/create-mission" element={<CreateMission user={user} />} />
         <Route path="/update-mission/:id" element={<UpdateMission user={user} />} />
 
-
+        <Route path="/equipment" element={<AllEquipment />} />
+        <Route path="/equipments" element={<AllEquipment />} />
       </Routes>
     </div>
   );

@@ -5,6 +5,7 @@ function Navbar({ user, handleLogout }) {
     <nav>
       <Link to='/'>Homepage</Link>
       <Link to='/all-missions'>All Missions</Link>
+      <Link to='/equipment'>Equipments</Link>
       {user
         ?
         (<>
