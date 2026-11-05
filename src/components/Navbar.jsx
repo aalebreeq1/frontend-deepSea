@@ -10,6 +10,7 @@ function Navbar({ user, handleLogout }) {
         ?
         (<>
           <Link to='/dashboard'>Dashboard</Link>
+          <Link to='/create-mission'>Create Mission</Link>
           <button onClick={handleLogout}>Sign Out</button>
         </>) :
         (<>

@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router";
 import Navbar from "./components/Navbar";
@@ -8,9 +9,12 @@ import Dashboard from "./pages/Dashboard";
 import { logout } from "./services/authService";
 
 // Abdulla's pages
-import AllMission from "./pages/MissionPages/AllMission"
+import AllMission from "./pages/MissionPages/AllMission";
+import MissionDetails from "./pages/MissionPages/MissionDetails";
+import CreateMission from "./pages/MissionPages/CreateMission";
+
 // Zainab's pages
-import AllEquipment from "./pages/equipmentPages/AllEquipments"
+import AllEquipment from "./pages/equipmentPages/AllEquipments";
 
 function App() {
   function getUserFromToken() {
@@ -19,8 +23,7 @@ function App() {
     if (!token) return null;
 
     return JSON.parse(atob(token.split(".")[1]));
-  };
-
+  }
 
   const [user, setUser] = useState(getUserFromToken());
 
@@ -36,13 +39,17 @@ function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/sign-up" element={<SignupPage />} />
         <Route path="/sign-in" element={<SignInPage setUser={setUser} />} />
+
         <Route
           path="/dashboard"
           element={user ? <Dashboard user={user} /> : <Navigate to="/sign-in" />}
         />
-        <Route path="/all-missions" element={<AllMission />} />
-                <Route path="/equipments" element={<AllEquipment />} />
 
+        <Route path="/all-missions" element={<AllMission />} />
+        <Route path="/mission/:id" element={<MissionDetails />} />
+        <Route path="/create-mission" element={<CreateMission />} />
+
+        <Route path="/equipments" element={<AllEquipment />} />
       </Routes>
     </div>
   );
