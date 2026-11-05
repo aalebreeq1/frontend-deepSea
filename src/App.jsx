@@ -7,7 +7,8 @@ import SignInPage from "./pages/SigninPage";
 import Dashboard from "./pages/Dashboard";
 import { logout } from "./services/authService";
 import TestLocations from "./components/TestLocations"
-
+// Abdulla pages
+import AllMission from "./pages/MissionPages/AllMission"
 
 function App() {
   function getUserFromToken() {
@@ -38,6 +39,7 @@ function App() {
           path="/dashboard"
           element={user ? <Dashboard user={user} /> : <Navigate to="/sign-in" />}
         />
+        <Route path="/all-missions" element={<AllMission />} />
       </Routes>
     </div>
   );
