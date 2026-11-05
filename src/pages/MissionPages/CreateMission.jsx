@@ -18,40 +18,21 @@ function CreateMission() {
 
     const [submarines, setSubmarines] = useState([]);
     const [locations, setLocations] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        let active = true;
-
         const fetchOptions = async () => {
             try {
-                const [submarineData, locationData] = await Promise.all([
-                    getAllSubmarines(),
-                    getAllLocations(),
-                ]);
+                const submarineData = await getAllSubmarines();
+                const locationData = await getAllLocations();
 
-                if (active) {
-                    setSubmarines(submarineData.submarines);
-                    setLocations(locationData);
-                }
+                setSubmarines(submarineData.submarines);
+                setLocations(locationData);
             } catch (err) {
                 console.error(err);
-
-                if (active) {
-                    setError('Failed to load submarines and locations.');
-                }
-            } finally {
-                if (active) setLoading(false);
             }
         };
 
         fetchOptions();
-
-        return () => {
-            active = false;
-        };
     }, []);
 
     const handleChange = (e) => {
@@ -66,11 +47,6 @@ function CreateMission() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (isSubmitting) return;
-
-        setError('');
-        setIsSubmitting(true);
-
         try {
             const missionData = { ...formData };
 
@@ -81,35 +57,13 @@ function CreateMission() {
             const mission = await createMission(missionData);
             navigate(`/mission/${mission._id}`);
         } catch (err) {
-            setError(
-                err.response?.data?.error ||
-                err.response?.data?.message ||
-                err.response?.data?.err ||
-                'Failed to create mission.'
-            );
-        } finally {
-            setIsSubmitting(false);
+            console.error(err);
         }
     };
 
     return (
         <div>
             <h1>Create Mission</h1>
-
-            {error && <p role="alert">{error}</p>}
-
-            {loading && <p>Loading submarines and locations...</p>}
-
-            {!loading && !error && (
-                <>
-                    {submarines.length === 0 && (
-                        <p>No submarines available.</p>
-                    )}
-                    {locations.length === 0 && (
-                        <p>No locations available.</p>
-                    )}
-                </>
-            )}
 
             <form onSubmit={handleSubmit}>
                 <label htmlFor="title">Title</label>
@@ -158,7 +112,6 @@ function CreateMission() {
                     name="submarine"
                     value={formData.submarine}
                     onChange={handleChange}
-                    disabled={loading || isSubmitting}
                     required
                 >
                     <option value="">Select a submarine</option>
@@ -175,7 +128,6 @@ function CreateMission() {
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
-                    disabled={loading || isSubmitting}
                     required
                 >
                     <option value="">Select a location</option>
@@ -186,17 +138,7 @@ function CreateMission() {
                     ))}
                 </select>
 
-                <button
-                    type="submit"
-                    disabled={
-                        loading ||
-                        isSubmitting ||
-                        submarines.length === 0 ||
-                        locations.length === 0
-                    }
-                >
-                    {isSubmitting ? 'Creating...' : 'Create Mission'}
-                </button>
+                <button type="submit">Create Mission</button>
             </form>
         </div>
     );

@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react'
 import { getAllEquipments } from "../../services/equipmentServices"
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 
 function AllEquipments() {
     const [equipment, setEquipment] = useState([])
 
-    async function loadEquipment() {
-        const response = await getAllEquipments()
-        setEquipment(response)
-    }
-
     useEffect(() => {
+        async function loadEquipment() {
+            const response = await getAllEquipments()
+            setEquipment(response)
+        }
+
         loadEquipment()
     }, [])
 

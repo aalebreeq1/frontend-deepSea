@@ -25,7 +25,7 @@ export async function deleteMission(id){
     return response.data.mission;
 }
 
-export async function updateMissionState(id, state){
-    const response = await api.patch(`/mission/${id}/state`, { state });
+export async function updateMissionState(id, status) {
+    const response = await api.patch(`/mission/${id}/status`, { status });
     return response.data.mission;
 }

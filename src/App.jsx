@@ -1,5 +1,4 @@
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Navigate, Route, Routes } from "react-router";
 import Navbar from "./components/Navbar";
 import SignupPage from "./pages/SignupPage";
@@ -7,11 +6,11 @@ import Homepage from "./pages/Homepage";
 import SignInPage from "./pages/SigninPage";
 import Dashboard from "./pages/Dashboard";
 import { logout } from "./services/authService";
-
 // Abdulla's pages
 import AllMission from "./pages/MissionPages/AllMission";
 import MissionDetails from "./pages/MissionPages/MissionDetails";
 import CreateMission from "./pages/MissionPages/CreateMission";
+import UpdateMission from "./pages/MissionPages/updateMission";
 
 // Zainab's pages
 import AllEquipment from "./pages/equipmentPages/AllEquipments";
@@ -46,9 +45,11 @@ function App() {
         />
 
         <Route path="/all-missions" element={<AllMission />} />
-        <Route path="/mission/:id" element={<MissionDetails />} />
-        <Route path="/create-mission" element={<CreateMission />} />
+        <Route path="/mission/:id" element={<MissionDetails user={user} />} />
+        <Route path="/create-mission" element={<CreateMission user={user} />} />
+        <Route path="/update-mission/:id" element={<UpdateMission user={user} />} />
 
+        <Route path="/equipment" element={<AllEquipment />} />
         <Route path="/equipments" element={<AllEquipment />} />
       </Routes>
     </div>
