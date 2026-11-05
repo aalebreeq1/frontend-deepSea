@@ -14,6 +14,7 @@ import UpdateMission from "./pages/MissionPages/updateMission";
 
 // Zainab's pages
 import AllEquipment from "./pages/equipmentPages/AllEquipments";
+import CreateEquipment from "./pages/equipmentPages/CreateEquipment";
 
 function App() {
   function getUserFromToken() {
@@ -51,6 +52,7 @@ function App() {
 
         <Route path="/equipment" element={<AllEquipment />} />
         <Route path="/equipments" element={<AllEquipment />} />
+        <Route path="/equipments/new" element={<CreateEquipment />} />
       </Routes>
     </div>
   );
