@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Navigate, Route, Routes } from "react-router";
 import Navbar from "./components/Navbar";
 import SignupPage from "./pages/SignupPage";
@@ -11,6 +11,7 @@ import TestLocations from "./components/TestLocations"
 import AllMission from "./pages/MissionPages/AllMission"
 import MissionDetails from "./pages/MissionPages/MissionDetails"
 import CreateMission from "./pages/MissionPages/CreateMission"
+import UpdateMission from "./pages/MissionPages/updateMission"
 
 function App() {
   function getUserFromToken() {
@@ -44,7 +45,8 @@ function App() {
         
         <Route path="/all-missions" element={<AllMission />} />
         <Route path="/mission/:id" element={<MissionDetails user={user} />} />
-        <Route path="/create-mission" element={<CreateMission/>} />
+        <Route path="/create-mission" element={<CreateMission user={user} />} />
+        <Route path="/update-mission/:id" element={<UpdateMission user={user} />} />
 
 
       </Routes>

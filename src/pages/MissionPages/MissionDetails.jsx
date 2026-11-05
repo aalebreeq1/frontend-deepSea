@@ -1,64 +1,28 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import { getMissionById, deleteMission, updateMissionState } from '../../services/MissionService';
-import { useNavigate } from 'react-router';
 
 
 function MissionDetails({ user }) {
     const isAdmin = user?.role === 'admin';
+    const canEdit = isAdmin || user?.role === 'researcher';
     const navigate = useNavigate();
     const { id } = useParams();
 
-    const [details, setDetails] = useState({
-        id: null,
-        mission: null,
-        error: '',
-    });
+    const [mission, setMission] = useState(null);
 
     useEffect(() => {
-        let active = true;
-
         const fetchMission = async () => {
             try {
                 const data = await getMissionById(id);
-
-                if (active) {
-                    setDetails({ id, mission: data, error: '' });
-                }
+                setMission(data);
             } catch (err) {
-                if (active) {
-                    setDetails({
-                        id,
-                        mission: null,
-                        error:
-                            err.response?.data?.error ||
-                            err.response?.data?.message ||
-                            'Failed to load mission details.',
-                    });
-                }
+                console.error(err);
             }
         };
 
         fetchMission();
-
-        return () => {
-            active = false;
-        };
     }, [id]);
-
-    if (details.id !== id) {
-        return <p>Loading mission details...</p>;
-    }
-
-    if (details.error) {
-        return <p role="alert">{details.error}</p>;
-    }
-
-    const mission = details.mission;
-
-    if (!mission) {
-        return <p>Mission not found.</p>;
-    }
 
     const handleDelete = async () => {
         try {
@@ -71,8 +35,6 @@ function MissionDetails({ user }) {
     const handleUpdateState = async (status) => {
         if (!isAdmin) return;
 
-        setError('');
-
         try {
             const updated = await updateMissionState(id, status);
 
@@ -80,15 +42,21 @@ function MissionDetails({ user }) {
                 ...previous,
                 status: updated.status,
             }));
-        } catch {
-            setError('Failed to update mission status.');
+        } catch (err) {
+            console.error('Failed to update mission status:', err);
         }
     };
+
+    if (!mission || mission._id !== id) return null;
+
     return (
         <div>
             <h1>Mission Details</h1>
             <Link to="/all-missions">Back to missions</Link>
             <div>
+                {canEdit && (
+                    <Link to={`/update-mission/${id}`}>Update Mission</Link>
+                )}
                 {isAdmin && (
                     <>
                         {mission.status === 'planned' && (
@@ -122,11 +90,11 @@ function MissionDetails({ user }) {
 
             <h2>{mission.title}</h2>
             <p>Objective: {mission.objective}</p>
-            <p>Start Date: {mission.startDate}</p>
-            <p>End Date: {mission.endDate}</p>
+            <p>Start Date: {mission.startDate?.split('T')[0]}</p>
+            <p>End Date: {mission.endDate?.split('T')[0] || 'Not set'}</p>
             <p>Status: {mission.status}</p>
-            <p>Submarine: {mission.submarine}</p>
-            <p>Location: {mission.location}</p>
+            <p>Submarine: {mission.submarine?.name || 'Unavailable'}</p>
+            <p>Location: {mission.location?.name || 'Unavailable'}</p>
 
             <h3>Mission Researchers</h3>
             {mission.missionResearchers?.length > 0 ? (
