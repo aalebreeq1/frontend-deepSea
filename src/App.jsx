@@ -43,7 +43,7 @@ function App() {
         />
         
         <Route path="/all-missions" element={<AllMission />} />
-        <Route path="/mission/:id" element={<MissionDetails />} />
+        <Route path="/mission/:id" element={<MissionDetails user={user} />} />
         <Route path="/create-mission" element={<CreateMission/>} />
 
 
