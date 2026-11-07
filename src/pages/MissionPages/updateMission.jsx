@@ -27,10 +27,10 @@ function UpdateMission({ user }) {
                 setFormData({
                     title: mission.title,
                     objective: mission.objective,
-                    startDate: mission.startDate?.split('T')[0] || '',
-                    endDate: mission.endDate?.split('T')[0] || '',
-                    submarine: mission.submarine?._id || '',
-                    location: mission.location?._id || '',
+                    startDate: mission.startDate,
+                    endDate: mission.endDate,
+                    submarine: mission.submarine,
+                    location: mission.location,
                     missionResearchers: mission.missionResearchers.map(
                         (researcher) => researcher._id
                     ),

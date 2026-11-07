@@ -107,11 +107,11 @@ function MissionDetails({ user }) {
 
             <h2>{mission.title}</h2>
             <p>Objective: {mission.objective}</p>
-            <p>Start Date: {mission.startDate?.split('T')[0]}</p>
-            <p>End Date: {mission.endDate?.split('T')[0] || 'Not set'}</p>
+            <p>Start Date: {mission.startDate}</p>
+            <p>End Date: {mission.endDate}</p>
             <p>Status: {mission.status}</p>
-            <p>Submarine: {mission.submarine?.name || 'Unavailable'}</p>
-            <p>Location: {mission.location?.name || 'Unavailable'}</p>
+            <p>Submarine: {mission.submarine}</p>
+            <p>Location: {mission.location}</p>
 
             <h3>Mission Researchers</h3>
             {mission.missionResearchers?.length > 0 ? (

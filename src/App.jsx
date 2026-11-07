@@ -12,6 +12,11 @@ import MissionDetails from "./pages/MissionPages/MissionDetails";
 import CreateMission from "./pages/MissionPages/CreateMission";
 import UpdateMission from "./pages/MissionPages/updateMission";
 
+import AllSubmarines from "./pages/submarines/AllSubmarines"
+import CreateSubmarines from "./pages/submarines/CreateSubmarines"
+import UpdateSubmarines from "./pages/submarines/UpdateSubmarines"
+import SubmarinesDetails from "./pages/submarines/SubmarinesDetails"
+
 // Zainab's pages
 import AllEquipment from "./pages/equipmentPages/AllEquipments";
 import CreateEquipment from "./pages/equipmentPages/CreateEquipment";
@@ -49,6 +54,11 @@ function App() {
         <Route path="/mission/:id" element={<MissionDetails user={user} />} />
         <Route path="/create-mission" element={<CreateMission user={user} />} />
         <Route path="/update-mission/:id" element={<UpdateMission user={user} />} />
+
+        <Route path="/submarines" element={<AllSubmarines />} />
+        <Route path="/create-submarines" element={<CreateSubmarines />} />
+        <Route path="/update-submarines/:id" element={<UpdateSubmarines />} />
+        <Route path="/submarines/:id" element={<SubmarinesDetails />} />
 
         <Route path="/equipment" element={<AllEquipment />} />
         <Route path="/equipments" element={<AllEquipment />} />
