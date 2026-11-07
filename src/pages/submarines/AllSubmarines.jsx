@@ -13,9 +13,6 @@ function AllSubmarines() {
   useEffect(() => {
     fetchSubmarines()
   }, [])
-  useEffect(() => {
-    fetchSubmarines()
-  }, [])
 
   return (
     <div>
