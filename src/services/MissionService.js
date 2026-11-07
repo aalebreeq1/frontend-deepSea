@@ -29,3 +29,7 @@ export async function updateMissionState(id, status) {
     const response = await api.patch(`/mission/${id}/status`, { status });
     return response.data.mission;
 }
+export async function registerMissionReachers(id, missionResearchers) {
+    const response = await api.patch(`/mission/${id}/researchers`, { missionResearchers });
+    return response.data.mission;
+}
