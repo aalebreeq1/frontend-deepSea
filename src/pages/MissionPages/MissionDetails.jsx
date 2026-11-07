@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
-import { getMissionById, deleteMission, updateMissionState } from '../../services/MissionService';
+import { getMissionById, deleteMission, updateMissionState, registerMissionReachers } from '../../services/MissionService';
+
 
 
 function MissionDetails({ user }) {
@@ -46,6 +47,17 @@ function MissionDetails({ user }) {
             console.error('Failed to update mission status:', err);
         }
     };
+    const handleRegisterResearcher = async (missionResearchers) => {
+        try {
+            const updated = await registerMissionReachers(id, missionResearchers);
+            setMission((previous) => ({
+                ...previous,
+                missionResearchers: updated.missionResearchers,
+            }));
+        } catch (err) {
+            console.error('Failed to register mission researchers:', err);
+        }
+    };
 
     if (!mission || mission._id !== id) return null;
 
@@ -54,8 +66,13 @@ function MissionDetails({ user }) {
             <h1>Mission Details</h1>
             <Link to="/all-missions">Back to missions</Link>
             <div>
-                {canEdit && (
+                {canEdit && (<>
                     <Link to={`/update-mission/${id}`}>Update Mission</Link>
+                    <button onClick={() => handleRegisterResearcher([])}>
+                        Register
+                    </button>
+                </>
+                    
                 )}
                 {isAdmin && (
                     <>
