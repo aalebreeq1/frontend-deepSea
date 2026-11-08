@@ -4,11 +4,41 @@ import { ArrowRightUp } from 'reicon-react'
 import {useEffect, useRef} from 'react'
 
 function Homepage() {
-  
+  const journeyRef = useRef(null)
+  const heroRef = useRef(null)
+
+  useInsertionEffect(()=>{
+    const journey = journeyRef.current
+    const hero = heroRef.current
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+
+    let frameId
+
+    function updateZoom(){
+      if(reducedMotion.matches){
+        hero.style.setProperty("--zoom","1")
+        return
+      }
+      const journeyTop = journey.getBoundingClientRect().top
+      const scrollDistance = journey.offsetHeight - hero.offsetHeight
+
+      const progress = 
+        scrollDistance > 0
+        ? Math.min(1, Math.max(0, -journeyTop / scrollDistance))
+        : 0
+      
+      const zoom = 1+ progress *4
+
+      hero.style.setProperty("--zoom", Sting(zoom))
+    }
+
+    
+  })
   return (
     <main className="homepage">
-      <div className="home-journey">
-        <section className="home-hero">
+      <div className="home-journey" ref={journeyRef}>
+        <section className="home-hero" ref={heroRef}>
           <picture className="home-hero-background">
             <source media="(prefers-reduced-motion: reduce)" srcSet="/images/submarine-still.jpg" />
             <img src="/images/submarine-realistic.gif" alt="" fetchPriority="high" />
