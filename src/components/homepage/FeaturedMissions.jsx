@@ -1,8 +1,37 @@
 import { Link } from 'react-router';
 import { ArrowRightUp } from 'reicon-react'
+import { useState, useEffect } from 'react'
+import { getAllMissions } from '../../services/MissionService'
 function FeaturedMissions() {
+    const [missions, setMissions] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState("")
+
+    useEffect(() => {
+        let ignore = false
+        async function loadMissions() {
+            try {
+                const data = await getAllMissions()
+                if (!ignore) {
+                    setMissions(data.slice(0, 3))
+                    setLoading(false)
+                }
+            }
+            catch (e) {
+                const noMissions =
+                    e.response?.status === 404 &&
+                    e.response?.data?.message === "No missions found"
+                if (!ignore) {
+                    setError(noMissions ? "No missions found" : "An error occurred")
+                    setLoading(false)
+                }
+            }
+        }
+        loadMissions()
+        return () => { ignore = true }
+    }, [])
     return (
-        <section className="homw-featured" aria-labelledby="featured-missions-title">
+        <section className="home-featured" aria-labelledby="featured-missions-title">
             <div className="home-featured-heading">
                 <div>
                     <p className="home-eyebrow">
@@ -25,6 +54,42 @@ function FeaturedMissions() {
                 From sunlit reefs to the quiet unknown.
                 Find the expedition that sparks yout curiosity
             </p>
+
+            {loading && (
+                <p role="status">Loading missions...</p>
+            )}
+            {error && (
+                <p role="alert">{error}</p>
+            )}
+            {!loading && !error && missions.length === 0 && (
+                <p>No missions available.</p>
+            )}
+
+            <div className="home-mission-grid">
+                {missions.map((mission) => (
+                    <article className="home-mission-card" key={mission.id}>
+                        <span className="home-mission-status">
+                            {mission.status}
+                        </span>
+                        <h3>{mission.title}</h3>
+                        <p>{mission.objective}</p>
+                        <p className="home-mission-location">
+                            {mission.location?.name || "location pending "}
+                        </p>
+                        <Link
+                            to={`/mission/${mission._id}`}
+                        >
+                            View Mission
+                            <span aria-hidden="true">
+                                <ArrowRightUp size={16} />
+                            </span>
+                        </Link>
+                    </article>
+                ))}
+
+            </div>
+
+
         </section>
     )
 }

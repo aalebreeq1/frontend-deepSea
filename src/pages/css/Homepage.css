@@ -277,3 +277,66 @@
         will-change: auto;
     }
 }
+
+.home-mission-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+}
+
+.home-mission-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+
+    padding: 24px;
+    border: 1px solid #28414f;
+    border-radius: 14px;
+    background: #0c1e2b;
+}
+
+.home-mission-status {
+    align-self: flex-start;
+    padding: 6px 10px;
+    border-radius: 5px;
+
+    background: #173b43;
+    color: #a6e9ec;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+.home-mission-card h3 {
+    margin: 24px 0 12px;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.home-mission-card p {
+    color: #a8bdc9;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.home-mission-card .home-mission-location {
+    color: #a6e9ec;
+    font-size: 14px;
+}
+
+.home-mission-card .home-view-all {
+    align-self: flex-start;
+    margin-top: auto;
+}
+
+@media (max-width: 900px) {
+    .home-mission-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .home-mission-grid {
+        grid-template-columns: 1fr;
+    }
+}
