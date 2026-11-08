@@ -1,13 +1,13 @@
 import { Link } from 'react-router'
 import "./css/Homepage.css"
 import { ArrowRightUp } from 'reicon-react'
-import {useEffect, useRef} from 'react'
+import { useEffect, useRef } from 'react'
 
 function Homepage() {
   const journeyRef = useRef(null)
   const heroRef = useRef(null)
 
-  useInsertionEffect(()=>{
+  useInsertionEffect(() => {
     const journey = journeyRef.current
     const hero = heroRef.current
 
@@ -15,25 +15,44 @@ function Homepage() {
 
     let frameId
 
-    function updateZoom(){
-      if(reducedMotion.matches){
-        hero.style.setProperty("--zoom","1")
+    function updateZoom() {
+      if (reducedMotion.matches) {
+        hero.style.setProperty("--zoom", "1")
         return
       }
       const journeyTop = journey.getBoundingClientRect().top
       const scrollDistance = journey.offsetHeight - hero.offsetHeight
 
-      const progress = 
+      const progress =
         scrollDistance > 0
-        ? Math.min(1, Math.max(0, -journeyTop / scrollDistance))
-        : 0
-      
-      const zoom = 1+ progress *4
+          ? Math.min(1, Math.max(0, -journeyTop / scrollDistance))
+          : 0
 
-      hero.style.setProperty("--zoom", Sting(zoom))
+      const zoom = 1 + progress * 4
+
+      hero.style.setProperty("--zoom", String(zoom))
+    }
+    function requestUpdate() {
+      cancelAnimationFrame(frameId)
+      frameId = requestAnimationFrame(updateZoom)
+    }
+    updateZoom()
+
+    window.addEventListener("scroll", requestUpdate, { passive: true })
+
+    window.addEventListener("resize", requestUpdate)
+    reducedMotion.addEventListener("change", requestUpdate)
+
+    return () => {
+      cancelAnimationFrame(frameId)
+      window.removeEventListener("scroll", requestUpdate)
+      window.removeEventListener("resize", requestUpdate)
+      reducedMotion.removeEventListener("change", requestUpdate)
     }
 
-    
+
+
+
   })
   return (
     <main className="homepage">
