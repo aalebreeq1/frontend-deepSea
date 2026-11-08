@@ -27,8 +27,8 @@ function UpdateMission({ user }) {
                 setFormData({
                     title: mission.title,
                     objective: mission.objective,
-                    startDate: mission.startDate,
-                    endDate: mission.endDate,
+                    startDate: mission.startDate ? new Date(mission.startDate).toISOString().split('T')[0] : '',
+                    endDate: mission.endDate ? new Date(mission.endDate).toISOString().split('T')[0] : '',
                     submarine: mission.submarine,
                     location: mission.location,
                     missionResearchers: mission.missionResearchers.map(

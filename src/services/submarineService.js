@@ -25,7 +25,7 @@ export async function deleteSubmarine(id){
     return response.data;
 }
 
-export async function updateSubmarineState(id, state){
-    const response = await api.patch(`/submarine/${id}/state`, { state });
+export async function updateSubmarineState(id, status){
+    const response = await api.patch(`/submarine/${id}/status`, { status });
     return response.data;
 }

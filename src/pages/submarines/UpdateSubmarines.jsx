@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import {
   updateSubmarine,
   getSubmarineById,
 } from "../../services/submarineService";
 
-function UpdateSubmarines() {
+function UpdateSubmarines({user}) {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     model: "",
@@ -48,6 +49,7 @@ function UpdateSubmarines() {
     await updateSubmarine(id, {
       ...formData,
     });
+    navigate("/all-submarines");
   }
 
   return (
@@ -102,19 +104,6 @@ function UpdateSubmarines() {
             required
           />
         </label>
-
-        <label>
-          Status:
-          <input
-            type="text"
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            placeholder="Status"
-            required
-          />
-        </label>
-
         <label>
           Description:
           <textarea
@@ -136,7 +125,7 @@ function UpdateSubmarines() {
           />
         </label>
 
-        <button type="submit">Update Submarine</button>
+        <button type="submit" onClick={handleSubmit}>Update Submarine</button>
       </form>
     </div>
   );

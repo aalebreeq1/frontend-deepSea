@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { createSubmarine } from "../../services/submarineService";
-function CreateSubmarines() {
+function CreateSubmarines({user}) {
   const [formData, setFormData] = useState({
     name: "",
     model: "",
@@ -15,7 +15,7 @@ function CreateSubmarines() {
   async function handleSubmit(e) {
     e.preventDefault();
     await createSubmarine(formData);
-    navigate("/submarines");
+    navigate("/all-submarines");
   }
   function handleChange(e) {
     setFormData({
