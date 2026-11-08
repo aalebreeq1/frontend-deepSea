@@ -4,13 +4,17 @@ function Navbar({ user, handleLogout }) {
   return (
     <nav>
       <Link to='/'>Homepage</Link>
-      <Link to='/all-missions'>All Missions</Link>
+      <Link to='/all-missions'>Missions</Link>
+      <Link to='/all-submarines'>Submarines</Link>
       <Link to='/equipment'>Equipments</Link>
-      {user
+      {user && user.role !== 'visitor'
         ?
         (<>
-          <Link to='/dashboard'>Dashboard</Link>
+          {user.role === 'admin' && (
+            <Link to='/dashboard'>Dashboard</Link>
+          )}
           <Link to='/create-mission'>Create Mission</Link>
+          <Link to='/create-submarines'>Create Submarine</Link>
           <button onClick={handleLogout}>Sign Out</button>
         </>) :
         (<>
