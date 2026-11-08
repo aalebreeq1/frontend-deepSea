@@ -9,7 +9,8 @@
 }
 
 .home-hero {
-    position: relative;
+    position: sticky;
+    top: 0;
     isolation: isolate;
     min-height: 720px;
     min-height: 100svh;
@@ -140,5 +141,15 @@
     .home-hero-bottom {
         font-size: 8px;
         letter-spacing: 1px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce){
+    .home-journey{
+        height: auto;
+    }
+    .home-hero{
+        position: relative;
+        top:auto;
     }
 }
