@@ -6,7 +6,7 @@ import {
   updateSubmarineState,
 } from "../../services/submarineService";
 import { useEffect, useState } from "react";
-function SubmarinesDetails() {
+function SubmarinesDetails({user}) {
   const navigate = useNavigate();
   const { id } = useParams();
   const [submarine, setSubmarine] = useState(null);
@@ -15,12 +15,12 @@ function SubmarinesDetails() {
 
   async function fetchSubmarine() {
     const data = await getSubmarineById(id);
-    setSubmarine(data);
+    setSubmarine(data.submarine);
   }
   async function handleDelete() {
     await deleteSubmarine(id);
     setSubmarine(null);
-    navigate("/submarines");
+    navigate("/all-submarines");
   }
 
   async function handleUpdateState(newState) {

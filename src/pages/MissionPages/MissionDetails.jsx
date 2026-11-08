@@ -1,12 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
-import { getMissionById, deleteMission, updateMissionState, registerMissionReachers } from '../../services/MissionService';
-
-
+import {
+    getMissionById,
+    deleteMission,
+    updateMissionState,
+    registerMissionReachers,
+} from '../../services/MissionService';
 
 function MissionDetails({ user }) {
     const isAdmin = user?.role === 'admin';
-    const canEdit = isAdmin || user?.role === 'researcher';
+    const isResearcher = user?.role === 'researcher';
+    const canEdit = isAdmin || isResearcher;
+    const canDelete = isAdmin || user?.role === 'visitor';
+
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -26,6 +32,8 @@ function MissionDetails({ user }) {
     }, [id]);
 
     const handleDelete = async () => {
+        if (!canDelete) return;
+
         try {
             await deleteMission(id);
             navigate('/all-missions');
@@ -33,6 +41,7 @@ function MissionDetails({ user }) {
             console.error('Failed to delete mission:', err);
         }
     };
+
     const handleUpdateState = async (status) => {
         if (!isAdmin) return;
 
@@ -47,73 +56,115 @@ function MissionDetails({ user }) {
             console.error('Failed to update mission status:', err);
         }
     };
-    const handleRegisterResearcher = async (missionResearchers) => {
+
+    const handleRegisterResearcher = async () => {
+        if (!isResearcher || !user?._id || !mission) return;
+
+        const researcherIds = (mission.missionResearchers ?? []).map(
+            (researcher) => researcher._id
+        );
+
+        if (researcherIds.includes(user._id)) return;
+
         try {
-            const updated = await registerMissionReachers(id, missionResearchers);
-            setMission((previous) => ({
-                ...previous,
-                missionResearchers: updated.missionResearchers,
-            }));
+            await registerMissionReachers(id, [
+                ...researcherIds,
+                user._id,
+            ]);
+
+            const refreshedMission = await getMissionById(id);
+            setMission(refreshedMission);
         } catch (err) {
-            console.error('Failed to register mission researchers:', err);
+            console.error('Failed to register researcher:', err);
         }
     };
 
     if (!mission || mission._id !== id) return null;
 
+    const isRegistered = mission.missionResearchers?.some(
+        (researcher) => researcher._id === user?._id
+    ) ?? false;
+
     return (
         <div>
             <h1>Mission Details</h1>
+
             <Link to="/all-missions">Back to missions</Link>
+
             <div>
-                {canEdit && (<>
-                    <Link to={`/update-mission/${id}`}>Update Mission</Link>
-                    <button onClick={() => handleRegisterResearcher([])}>
-                        Register
-                    </button>
-                </>
-                    
+                {canEdit && (
+                    <Link to={`/update-mission/${id}`}>
+                        Update Mission
+                    </Link>
                 )}
+
+                {isResearcher && (
+                    <button
+                        onClick={handleRegisterResearcher}
+                        disabled={isRegistered}
+                    >
+                        {isRegistered ? 'Registered' : 'Register'}
+                    </button>
+                )}
+
                 {isAdmin && (
                     <>
                         {mission.status === 'planned' && (
-                            <button onClick={() => handleUpdateState('active')}>
+                            <button
+                                onClick={() => handleUpdateState('active')}
+                            >
                                 Start Mission
                             </button>
                         )}
 
                         {mission.status === 'active' && (
                             <>
-                                <button onClick={() => handleUpdateState('suspended')}>
+                                <button
+                                    onClick={() =>
+                                        handleUpdateState('suspended')
+                                    }
+                                >
                                     Suspend Mission
                                 </button>
 
-                                <button onClick={() => handleUpdateState('completed')}>
+                                <button
+                                    onClick={() =>
+                                        handleUpdateState('completed')
+                                    }
+                                >
                                     Complete Mission
                                 </button>
                             </>
                         )}
 
                         {mission.status === 'suspended' && (
-                            <button onClick={() => handleUpdateState('active')}>
+                            <button
+                                onClick={() => handleUpdateState('active')}
+                            >
                                 Resume Mission
                             </button>
                         )}
                     </>
                 )}
 
-                <button onClick={handleDelete}>Delete Mission</button>
+                {canDelete && (
+                    <button onClick={handleDelete}>
+                        Delete Mission
+                    </button>
+                )}
             </div>
 
             <h2>{mission.title}</h2>
+
             <p>Objective: {mission.objective}</p>
-            <p>Start Date: {mission.startDate}</p>
-            <p>End Date: {mission.endDate}</p>
+            <p>Start Date: {mission.startDate?.split('T')[0]}</p>
+            <p>End Date: {mission.endDate?.split('T')[0]}</p>
             <p>Status: {mission.status}</p>
-            <p>Submarine: {mission.submarine}</p>
-            <p>Location: {mission.location}</p>
+            <p>Submarine: {mission.submarine?.name ?? 'Not assigned'}</p>
+            <p>Location: {mission.location?.name ?? 'Not assigned'}</p>
 
             <h3>Mission Researchers</h3>
+
             {mission.missionResearchers?.length > 0 ? (
                 <ul>
                     {mission.missionResearchers.map((researcher) => (
@@ -127,6 +178,7 @@ function MissionDetails({ user }) {
             )}
 
             <h3>Equipment</h3>
+
             {mission.equipment?.length > 0 ? (
                 <ul>
                     {mission.equipment.map((item) => (
