@@ -72,6 +72,7 @@ function FeaturedMissions() {
                         key={mission._id}
                         mission={mission}
                     />
+                    
                 ))}
             </div>
 
