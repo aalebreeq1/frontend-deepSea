@@ -20,6 +20,9 @@ function Homepage() {
         hero.style.setProperty("--zoom", "1");
         hero.style.setProperty("--intro-opacity", "1");
         hero.style.setProperty("--intro-visibility", "visible");
+        hero.style.setProperty("--submarine-opacity", "1");
+        hero.style.setProperty("--welcome-opacity", "0");
+        hero.style.setProperty("--welcome-visibility", "hidden");
         return;
       }
 
@@ -36,14 +39,28 @@ function Homepage() {
       const zoom = 1 + progress * 4;
 
       const introOpacity = Math.max(0, 1 - progress * 4);
+      const oceanProgress = Math.min(1, Math.max(0, (progress - 0.5) * 2))
+      const submarineOpacity = 1 - oceanProgress
 
-      hero.style.setProperty("--zoom", String(zoom));
-
+      hero.style.setProperty(
+        "--welcome-opacity",
+        String(oceanProgress)
+      )
+      hero.style.setProperty(
+        "--welcome-visibility",
+        oceanProgress === 0 ? "hidden" : "visible"
+      )
+      hero.style.setProperty(
+        "--submarine-opacity",
+        String(submarineOpacity)
+      );
+      hero.style.setProperty("--zoom",
+        String(zoom)
+      );
       hero.style.setProperty(
         "--intro-opacity",
         String(introOpacity)
       );
-
       hero.style.setProperty(
         "--intro-visibility",
         introOpacity === 0 ? "hidden" : "visible"
@@ -66,15 +83,12 @@ function Homepage() {
       window.removeEventListener("resize", requestUpdate)
       reducedMotion.removeEventListener("change", requestUpdate)
     }
-
-
-
-
   }, [])
   return (
     <main className="homepage">
       <div className="home-journey" ref={journeyRef}>
         <section className="home-hero" ref={heroRef}>
+          <img className="home-ocean-background" src='/images/ocean.jpg' alt="" />
           <picture className="home-hero-background">
             <source media="(prefers-reduced-motion: reduce)" srcSet="/images/submarine-still.jpg" />
             <img src="/images/submarine-realistic.gif" alt="" fetchPriority="high" />
@@ -98,6 +112,16 @@ function Homepage() {
               Explore expeditions
               <span aria-hidden="true"><ArrowRightUp size={16} /></span>
             </Link>
+          </div>
+          <div className="home-ocean-content">
+            <p className="home-eyebrow">
+              WELCOME TO THE OTHER SIDE
+            </p>
+            <h2>
+              There is a whole world
+              <br />
+              waiting below
+            </h2>
           </div>
           <div className="home-hero-bottom">
             <span>DEEPSEA EXPLORATION</span>

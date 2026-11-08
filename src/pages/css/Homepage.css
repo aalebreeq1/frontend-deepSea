@@ -28,6 +28,7 @@
     transform: scale(var(--zoom, 1));
     transform-origin: 50% 48%;
     will-change: transform;
+    opacity: var(--submarine-opacity, 1);
 }
 
 .home-hero-background img {
@@ -113,6 +114,33 @@
     outline-offset: 5px;
 }
 
+.home-ocean-content{
+    position: absolute;
+    inset:0;
+
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
+
+    padding:24px;
+    text-align: center;
+
+    opacity: var(--welcome-opacity, 0);
+    visibility: var(--welcome-visibility, hidden);
+
+    pointer-events: none;
+}
+
+.home-ocean-content h2{
+    margin: 0;
+
+    font-size:clamp(32px, 5vw, 64px);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -1.5px;
+}
+
 .home-hero-bottom {
     position: absolute;
     right: 7%;
@@ -154,6 +182,17 @@
 
 .home-hero-content {
   visibility: var(--intro-visibility, visible);
+}
+
+.home-ocean-background{
+    position: absolute;
+    inset:0;
+    z-index: -3;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.65);
 }
 @media (prefers-reduced-motion: reduce){
     .home-journey{
