@@ -55,7 +55,7 @@ function App() {
         <Route path="/create-mission" element={<CreateMission user={user} />} />
         <Route path="/update-mission/:id" element={<UpdateMission user={user} />} />
 
-        <Route path="/submarines" element={<AllSubmarines />} />
+        <Route path="/all-submarines" element={<AllSubmarines />} />
         <Route path="/create-submarines" element={<CreateSubmarines />} />
         <Route path="/update-submarines/:id" element={<UpdateSubmarines />} />
         <Route path="/submarines/:id" element={<SubmarinesDetails />} />
