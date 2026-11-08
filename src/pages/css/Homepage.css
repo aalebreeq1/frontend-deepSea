@@ -147,7 +147,14 @@
         letter-spacing: 1px;
     }
 }
+.home-hero-content,
+.home-hero-overlay {
+  opacity: var(--intro-opacity, 1);
+}
 
+.home-hero-content {
+  visibility: var(--intro-visibility, visible);
+}
 @media (prefers-reduced-motion: reduce){
     .home-journey{
         height: auto;

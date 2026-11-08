@@ -17,20 +17,37 @@ function Homepage() {
 
     function updateZoom() {
       if (reducedMotion.matches) {
-        hero.style.setProperty("--zoom", "1")
-        return
+        hero.style.setProperty("--zoom", "1");
+        hero.style.setProperty("--intro-opacity", "1");
+        hero.style.setProperty("--intro-visibility", "visible");
+        return;
       }
-      const journeyTop = journey.getBoundingClientRect().top
-      const scrollDistance = journey.offsetHeight - hero.offsetHeight
+
+      const journeyTop = journey.getBoundingClientRect().top;
+
+      const scrollDistance =
+        journey.offsetHeight - hero.offsetHeight;
 
       const progress =
         scrollDistance > 0
           ? Math.min(1, Math.max(0, -journeyTop / scrollDistance))
-          : 0
+          : 0;
 
-      const zoom = 1 + progress * 4
+      const zoom = 1 + progress * 4;
 
-      hero.style.setProperty("--zoom", String(zoom))
+      const introOpacity = Math.max(0, 1 - progress * 4);
+
+      hero.style.setProperty("--zoom", String(zoom));
+
+      hero.style.setProperty(
+        "--intro-opacity",
+        String(introOpacity)
+      );
+
+      hero.style.setProperty(
+        "--intro-visibility",
+        introOpacity === 0 ? "hidden" : "visible"
+      );
     }
     function requestUpdate() {
       cancelAnimationFrame(frameId)
@@ -53,7 +70,7 @@ function Homepage() {
 
 
 
-  })
+  }, [])
   return (
     <main className="homepage">
       <div className="home-journey" ref={journeyRef}>
