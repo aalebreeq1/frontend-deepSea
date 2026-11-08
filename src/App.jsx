@@ -60,9 +60,9 @@ function App() {
         <Route path="/update-submarines/:id" element={<UpdateSubmarines />} />
         <Route path="/submarines/:id" element={<SubmarinesDetails />} />
 
-        <Route path="/equipment" element={<AllEquipment />} />
         <Route path="/equipments" element={<AllEquipment />} />
         <Route path="/equipments/new" element={<CreateEquipment />} />
+        <Route path="/equipments/:equipmentId/edit" element={<UpdateEquipment />} />
       </Routes>
     </div>
   );
