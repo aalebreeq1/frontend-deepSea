@@ -3,6 +3,7 @@ import "./css/Homepage.css"
 import { ArrowRightUp } from 'reicon-react'
 import { useEffect, useRef } from 'react'
 import FeaturedMissions from "../components/homepage/FeaturedMissions"
+
 function Homepage() {
   const journeyRef = useRef(null)
   const heroRef = useRef(null)

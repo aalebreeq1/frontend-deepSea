@@ -340,3 +340,27 @@
         grid-template-columns: 1fr;
     }
 }
+
+.home-card-flip {
+  align-self: flex-start;
+  min-height: 44px;
+  margin-top: 20px;
+  padding: 10px 14px;
+
+  border: 1px solid #456675;
+  border-radius: 6px;
+
+  background: transparent;
+  color: #a6e9ec;
+  font: inherit;
+  cursor: pointer;
+}
+
+.home-card-flip:hover {
+  background: #173b43;
+}
+
+.home-card-flip:focus-visible {
+  outline: 2px solid #a6e9ec;
+  outline-offset: 4px;
+}

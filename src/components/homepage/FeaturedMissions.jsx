@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import { ArrowRightUp } from 'reicon-react'
 import { useState, useEffect } from 'react'
 import { getAllMissions } from '../../services/MissionService'
+import MissionCard from "./MissionCard";
 function FeaturedMissions() {
     const [missions, setMissions] = useState([])
     const [loading, setLoading] = useState(true)
@@ -67,28 +68,12 @@ function FeaturedMissions() {
 
             <div className="home-mission-grid">
                 {missions.map((mission) => (
-                    <article className="home-mission-card" key={mission.id}>
-                        <span className="home-mission-status">
-                            {mission.status}
-                        </span>
-                        <h3>{mission.title}</h3>
-                        <p>{mission.objective}</p>
-                        <p className="home-mission-location">
-                            {mission.location?.name || "location pending "}
-                        </p>
-                        <Link
-                            to={`/mission/${mission._id}`}
-                        >
-                            View Mission
-                            <span aria-hidden="true">
-                                <ArrowRightUp size={16} />
-                            </span>
-                        </Link>
-                    </article>
+                    <MissionCard
+                        key={mission._id}
+                        mission={mission}
+                    />
                 ))}
-
             </div>
-
 
         </section>
     )
