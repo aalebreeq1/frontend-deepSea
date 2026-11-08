@@ -6,10 +6,12 @@ import { useEffect, useRef } from 'react'
 function Homepage() {
   const journeyRef = useRef(null)
   const heroRef = useRef(null)
+  const depthRef = useRef(null)
 
   useEffect(() => {
     const journey = journeyRef.current
     const hero = heroRef.current
+    const depthLabel = depthRef.current
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
 
@@ -23,6 +25,7 @@ function Homepage() {
         hero.style.setProperty("--submarine-opacity", "1");
         hero.style.setProperty("--welcome-opacity", "0");
         hero.style.setProperty("--welcome-visibility", "hidden");
+        depthLabel.textContent = "000";
         return;
       }
 
@@ -36,6 +39,8 @@ function Homepage() {
           ? Math.min(1, Math.max(0, -journeyTop / scrollDistance))
           : 0;
 
+      const depth = Math.round(progress * 240)
+      depthLabel.textContent = String(depth).padStart(3, '0');
       const zoom = 1 + progress * 4;
 
       const introOpacity = Math.max(0, 1 - progress * 4);
@@ -125,7 +130,9 @@ function Homepage() {
           </div>
           <div className="home-hero-bottom">
             <span>DEEPSEA EXPLORATION</span>
-            <span>DEPTH / 000m</span>
+            <span>
+              DEPTH / <span ref={depthRef}>000</span>m
+            </span>
           </div>
         </section>
       </div>
