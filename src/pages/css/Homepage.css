@@ -1,0 +1,140 @@
+.homepage {
+    background: #050f19;
+    color: #ecf3f5;
+    font-family: Arial, sans-serif;
+}
+
+.homepage * {
+    box-sizing: border-box;
+}
+
+.home-hero {
+    position: relative;
+    isolation: isolate;
+    min-height: 720px;
+    min-height: 100svh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 100px 7%;
+}
+
+.home-hero-background {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+}
+
+.home-hero-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+
+}
+
+.home-hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg,
+            rgba(3, 16, 24, 0.9),
+            rgba(3, 16, 24, 0.45)45%,
+            rgba(3, 16, 24, 0.08)),
+        linear-gradient(to top,
+            #050f19,
+            transparent 30%);
+}
+
+.home-hero-content {
+    max-width: 650px;
+}
+
+.home-eyebrow {
+    margin: 0 0 24px;
+    color: #b8dfe5;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+.home-hero h1 {
+    margin: 0;
+    font-size: clamp(64px, 8vw, 112px);
+    font-weight: 500;
+    line-height: 1.03;
+    letter-spacing: -4px;
+}
+
+.home-hero h1 span {
+    color: #a6e9ec;
+}
+
+.home-hero-description {
+    margin: 28px 0;
+    color: #c3d1d9;
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.home-primary-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+
+    min-height: 48px;
+    padding: 14px 22px;
+    border-radius: 7px;
+
+    background: #a6e9ec;
+    color: #0a2631;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: background-color 200ms;
+}
+
+.home-primary-link:hover {
+    background: #c7f6f7;
+}
+
+.home-primary-link:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 5px;
+}
+
+.home-hero-bottom {
+    position: absolute;
+    right: 7%;
+    bottom: 32px;
+    left: 7%;
+
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+
+    color: #9fbdce;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+}
+
+@media (max-width: 600px) {
+    .home-hero {
+        padding: 100px 7% 130px;
+    }
+
+    .home-hero h1 {
+        font-size: clamp(56px, 14vw, 80px);
+        letter-spacing: -3px;
+    }
+
+    .home-hero-description {
+        font-size: 14px;
+    }
+
+    .home-hero-bottom {
+        font-size: 8px;
+        letter-spacing: 1px;
+    }
+}

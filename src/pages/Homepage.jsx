@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import "./Homepage.css"
+import "./css/Homepage.css"
 import { ArrowRightUp } from 'reicon-react'
 function Homepage() {
   return (
