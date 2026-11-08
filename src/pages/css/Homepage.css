@@ -33,6 +33,10 @@
 
 }
 
+.home-journey {
+    height: 260svh;
+}
+
 .home-hero-overlay {
     position: absolute;
     inset: 0;
