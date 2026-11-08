@@ -23,7 +23,7 @@ function FeaturedMissions() {
                     e.response?.status === 404 &&
                     e.response?.data?.message === "No missions found"
                 if (!ignore) {
-                    setError(noMissions ? "No missions found" : "An error occurred")
+                    setError(noMissions ? "" : "Unable to load missions.");
                     setLoading(false)
                 }
             }
