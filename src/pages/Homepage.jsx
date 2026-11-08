@@ -7,7 +7,7 @@ function Homepage() {
   const journeyRef = useRef(null)
   const heroRef = useRef(null)
 
-  useInsertionEffect(() => {
+  useEffect(() => {
     const journey = journeyRef.current
     const hero = heroRef.current
 
