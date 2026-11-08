@@ -1,7 +1,10 @@
 import { Link } from 'react-router'
 import "./css/Homepage.css"
 import { ArrowRightUp } from 'reicon-react'
+import {useEffect, useRef} from 'react'
+
 function Homepage() {
+  
   return (
     <main className="homepage">
       <div className="home-journey">
