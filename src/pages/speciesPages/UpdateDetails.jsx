@@ -1,6 +1,6 @@
 import {useEffect ,useState } from 'react';
 import { useNavigate ,useParams} from 'react-router';
-import { getSpeciesById,updateSpecies} from '../../services/speciesServices';
+import { getSpeciesById,updateSpecies} from '../../services/speciesService';
 
 
 function UpdateSpecies() {

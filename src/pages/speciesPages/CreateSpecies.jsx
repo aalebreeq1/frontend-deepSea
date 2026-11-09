@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { createSpecies} from '../../services/speciesServices';
+import { createSpecies} from '../../services/speciesService';
 
 
 function CreateSpecies() {
