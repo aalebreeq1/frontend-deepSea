@@ -6,8 +6,11 @@ import {
     updateMissionState,
     registerMissionReachers,
 } from '../../services/MissionService';
+import { Button } from "@heroui/react";
+import RecordFormModal from "../../components/RecordFormModal";
 
 function MissionDetails({ user }) {
+    const [showEdit, setShowEdit] = useState(false);
     const isAdmin = user?.role === 'admin';
     const isResearcher = user?.role === 'researcher';
     const canEdit = isAdmin || isResearcher;
@@ -17,33 +20,56 @@ function MissionDetails({ user }) {
     const { id } = useParams();
 
     const [mission, setMission] = useState(null);
+    const [loadError, setLoadError] = useState(null);
+    const [error, setError] = useState('');
+    const [pending, setPending] = useState(false);
 
     useEffect(() => {
+        let active = true;
+
         const fetchMission = async () => {
             try {
                 const data = await getMissionById(id);
-                setMission(data);
+                if (active) setMission(data);
             } catch (err) {
-                console.error(err);
+                if (active) {
+                    setLoadError({
+                        id,
+                        message: err.response?.data?.message ||
+                            'Failed to load this mission.',
+                    });
+                }
             }
         };
 
         fetchMission();
+
+        return () => {
+            active = false;
+        };
     }, [id]);
 
     const handleDelete = async () => {
-        if (!canDelete) return;
+        if (!canDelete || pending) return;
+
+        setPending(true);
+        setError('');
 
         try {
             await deleteMission(id);
             navigate('/all-missions');
         } catch (err) {
-            console.error('Failed to delete mission:', err);
+            setError(err.response?.data?.message || 'Failed to delete mission.');
+        } finally {
+            setPending(false);
         }
     };
 
     const handleUpdateState = async (status) => {
-        if (!isAdmin) return;
+        if (!canEdit || pending) return;
+
+        setPending(true);
+        setError('');
 
         try {
             const updated = await updateMissionState(id, status);
@@ -53,18 +79,23 @@ function MissionDetails({ user }) {
                 status: updated.status,
             }));
         } catch (err) {
-            console.error('Failed to update mission status:', err);
+            setError(err.response?.data?.message || 'Failed to update mission status.');
+        } finally {
+            setPending(false);
         }
     };
 
     const handleRegisterResearcher = async () => {
-        if (!isResearcher || !user?._id || !mission) return;
+        if (!isResearcher || !user?._id || !mission || pending) return;
 
         const researcherIds = (mission.missionResearchers ?? []).map(
-            (researcher) => researcher._id
+            (researcher) => researcher._id ?? researcher
         );
 
         if (researcherIds.includes(user._id)) return;
+
+        setPending(true);
+        setError('');
 
         try {
             await registerMissionReachers(id, [
@@ -75,14 +106,27 @@ function MissionDetails({ user }) {
             const refreshedMission = await getMissionById(id);
             setMission(refreshedMission);
         } catch (err) {
-            console.error('Failed to register researcher:', err);
+            setError(err.response?.data?.message || 'Failed to register for this mission.');
+        } finally {
+            setPending(false);
         }
     };
 
-    if (!mission || mission._id !== id) return null;
+    if (!mission || mission._id !== id) {
+        return (
+            <div>
+                <Link to="/all-missions">Back to missions</Link>
+                {loadError?.id === id ? (
+                    <p role="alert" className="text-danger">{loadError.message}</p>
+                ) : (
+                    <p role="status">Loading mission...</p>
+                )}
+            </div>
+        );
+    }
 
     const isRegistered = mission.missionResearchers?.some(
-        (researcher) => researcher._id === user?._id
+        (researcher) => (researcher._id ?? researcher) === user?._id
     ) ?? false;
 
     return (
@@ -91,26 +135,41 @@ function MissionDetails({ user }) {
 
             <Link to="/all-missions">Back to missions</Link>
 
+            {error && <p role="alert" className="text-danger">{error}</p>}
+            {pending && <p role="status">Saving changes...</p>}
+
             <div>
                 {canEdit && (
-                    <Link to={`/update-mission/${id}`}>
-                        Update Mission
-                    </Link>
+                    <Button isDisabled={pending} onPress={() => setShowEdit(true)}>
+                        Edit Mission
+                    </Button>
+                )}
+
+                {canEdit && showEdit && (
+                    <RecordFormModal
+                        key={mission._id}
+                        kind="mission"
+                        user={user}
+                        record={mission}
+                        onClose={() => setShowEdit(false)}
+                        onSaved={setMission}
+                    />
                 )}
 
                 {isResearcher && (
                     <button
                         onClick={handleRegisterResearcher}
-                        disabled={isRegistered}
+                        disabled={isRegistered || pending}
                     >
                         {isRegistered ? 'Registered' : 'Register'}
                     </button>
                 )}
 
-                {isAdmin && (
+                {canEdit && (
                     <>
                         {mission.status === 'planned' && (
                             <button
+                                disabled={pending}
                                 onClick={() => handleUpdateState('active')}
                             >
                                 Start Mission
@@ -120,6 +179,7 @@ function MissionDetails({ user }) {
                         {mission.status === 'active' && (
                             <>
                                 <button
+                                    disabled={pending}
                                     onClick={() =>
                                         handleUpdateState('suspended')
                                     }
@@ -128,6 +188,7 @@ function MissionDetails({ user }) {
                                 </button>
 
                                 <button
+                                    disabled={pending}
                                     onClick={() =>
                                         handleUpdateState('completed')
                                     }
@@ -139,6 +200,7 @@ function MissionDetails({ user }) {
 
                         {mission.status === 'suspended' && (
                             <button
+                                disabled={pending}
                                 onClick={() => handleUpdateState('active')}
                             >
                                 Resume Mission
@@ -148,7 +210,7 @@ function MissionDetails({ user }) {
                 )}
 
                 {canDelete && (
-                    <button onClick={handleDelete}>
+                    <button disabled={pending} onClick={handleDelete}>
                         Delete Mission
                     </button>
                 )}

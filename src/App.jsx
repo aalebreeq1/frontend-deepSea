@@ -5,6 +5,7 @@ import SignupPage from "./pages/SignupPage";
 import Homepage from "./pages/Homepage";
 import SignInPage from "./pages/SigninPage";
 import Dashboard from "./pages/Dashboard";
+import NotFound from "./pages/NotFound";
 import { logout } from "./services/authService";
 // Abdulla's pages
 import AllMission from "./pages/MissionPages/AllMission";
@@ -32,6 +33,19 @@ import AllUsers from "./pages/UserPages/AllUsers";
 import CreateUser from "./pages/UserPages/CreateUser";
 import UpdateUser from "./pages/UserPages/UpdateUser";
 import UserDetails from "./pages/UserPages/UserDetails";
+
+//Nawraa's pages 
+import AllDiscovery from "./pages/discoveryPages/AllDiscovery";
+import CreateDiscovery from "./pages/discoveryPages/createDiscovery";
+import DiscoveryDetails from "./pages/discoveryPages/DiscoveryDeatials";
+import UpdateDiscovery from "./pages/discoveryPages/UpdateDiscovery";
+
+
+import AllSpecies from "./pages/speciesPages/AllSpecies";
+import CreateSpecies from "./pages/speciesPages/CreateSpecies";
+import SpeciesDetails from "./pages/speciesPages/SpeciesDeatails";
+import UpdateSpecies from "./pages/speciesPages/UpdateDetails";
+
 
 function App() {
   function getUserFromToken() {
@@ -62,12 +76,12 @@ function App() {
           element={user ? <Dashboard user={user} /> : <Navigate to="/sign-in" />}
         />
 
-        <Route path="/all-missions" element={<AllMission />} />
+        <Route path="/all-missions" element={<AllMission user={user} />} />
         <Route path="/mission/:id" element={<MissionDetails user={user} />} />
         <Route path="/create-mission" element={<CreateMission user={user} />} />
         <Route path="/update-mission/:id" element={<UpdateMission user={user} />} />
 
-        <Route path="/all-submarines" element={<AllSubmarines />} />
+        <Route path="/all-submarines" element={<AllSubmarines user={user} />} />
         <Route path="/create-submarines" element={<CreateSubmarines user={user} />} />
         <Route path="/update-submarines/:id" element={<UpdateSubmarines user={user} />} />
         <Route path="/submarines/:id" element={<SubmarinesDetails user={user} />} />
@@ -86,6 +100,25 @@ function App() {
         <Route path="/users/new" element={<CreateUser />} />
         <Route path="/users/:userId/edit" element={<UpdateUser />} />
         <Route path="/users/:userId" element={<UserDetails />} />
+
+        <Route path="*" element={<NotFound />} />
+
+
+
+
+
+        //Discovery Routes
+        <Route path="/all-discoveries" element={<AllDiscovery/>}/>
+        <Route path="/create-discovery" element={<CreateDiscovery/>}/>
+        <Route path="/discovery/:id" element={<DiscoveryDetails user={user}/>}/>
+        <Route path="/update-discovery/:id" element={<UpdateDiscovery/>}/>
+        
+        //Species Routes
+        <Route path="/all-species" element={<AllSpecies/>}/>
+        <Route path="/create-species" element={<CreateSpecies/>}/>
+        <Route path="/species/:id" element={<SpeciesDetails user={user}/>}/>
+        <Route path="/update-species/:id" element={<UpdateSpecies/>}/>
+
 
 
       </Routes>
