@@ -66,16 +66,17 @@ function App() {
         <Route path="/create-submarines" element={<CreateSubmarines user={user} />} />
         <Route path="/update-submarines/:id" element={<UpdateSubmarines user={user} />} />
         <Route path="/submarines/:id" element={<SubmarinesDetails user={user} />} />
-
+        // EQUIPMENT Routes
         <Route path="/equipments" element={<AllEquipment />} />
-        <Route path="/equipments/new" element={<CreateEquipment />} />
-        <Route path="/equipments/:equipmentId/edit" element={<UpdateEquipment />} />
+        <Route path="/equipments/new" element={<CreateEquipment user={user}/>} />
+        <Route path="/equipments/:equipmentId/edit" element={<UpdateEquipment user={user}/>} />
         <Route path="/equipments/:equipmentId" element={<EquipmentDetails />} />
-
+        // LOCATION Routes
         <Route path="/locations" element={<AllLocations />} />
-        <Route path="/locations/new" element={<CreateLocation />} />
-        <Route path="/locations/:locationId/edit" element={<UpdateLocation />} />
+        <Route path="/locations/new" element={<CreateLocation user={user}/>} />
+        <Route path="/locations/:locationId/edit" element={<UpdateLocation user={user}/>} />
         <Route path="/locations/:locationId/" element={<LocationDetails />} />
+        //USER Routes
 
 
       </Routes>
