@@ -23,6 +23,7 @@ import CreateEquipment from "./pages/equipmentPages/CreateEquipment";
 import UpdateEquipment from "./pages/equipmentPages/UpdateEquipment";
 import EquipmentDetails from "./pages/equipmentPages/EquipmentDetails"
 
+import AllLocations from "./pages/locationPages/AllLocations"
 import CreateLocation from "./pages/locationPages/CreateLocation"
 
 function App() {
@@ -69,6 +70,7 @@ function App() {
         <Route path="/equipments/:equipmentId/edit" element={<UpdateEquipment />} />
         <Route path="/equipments/:equipmentId" element={<EquipmentDetails />} />
 
+        <Route path="/locations" element={<AllLocations />} />
         <Route path="/locations/new" element={<CreateLocation />} />
 
       </Routes>

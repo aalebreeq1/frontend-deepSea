@@ -7,6 +7,8 @@ function Navbar({ user, handleLogout }) {
       <Link to='/all-missions'>Missions</Link>
       <Link to='/all-submarines'>Submarines</Link>
       <Link to='/equipments'>Equipments</Link>
+      <Link to='/locations'>Locations</Link>
+
       {user && user.role !== 'visitor'
         ?
         (<>
@@ -15,6 +17,7 @@ function Navbar({ user, handleLogout }) {
           )}
           <Link to='/create-mission'>Create Mission</Link>
           <Link to='/create-submarines'>Create Submarine</Link>
+          <Link to='/locations/new'>Create Location</Link>
           <button onClick={handleLogout}>Sign Out</button>
         </>) :
         (<>
