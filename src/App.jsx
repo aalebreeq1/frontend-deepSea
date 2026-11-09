@@ -20,6 +20,8 @@ import SubmarinesDetails from "./pages/submarines/SubmarinesDetails"
 // Zainab's pages
 import AllEquipment from "./pages/equipmentPages/AllEquipments";
 import CreateEquipment from "./pages/equipmentPages/CreateEquipment";
+import UpdateEquipment from "./pages/equipmentPages/UpdateEquipment";
+import EquipmentDetails from "./pages/equipmentPages/EquipmentDetails"
 
 function App() {
   function getUserFromToken() {
@@ -63,6 +65,7 @@ function App() {
         <Route path="/equipments" element={<AllEquipment />} />
         <Route path="/equipments/new" element={<CreateEquipment />} />
         <Route path="/equipments/:equipmentId/edit" element={<UpdateEquipment />} />
+        <Route path="/equipments/:equipmentId" element={<EquipmentDetails />} />
       </Routes>
     </div>
   );

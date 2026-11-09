@@ -6,7 +6,7 @@ function Navbar({ user, handleLogout }) {
       <Link to='/'>Homepage</Link>
       <Link to='/all-missions'>Missions</Link>
       <Link to='/all-submarines'>Submarines</Link>
-      <Link to='/equipment'>Equipments</Link>
+      <Link to='/equipments'>Equipments</Link>
       {user && user.role !== 'visitor'
         ?
         (<>
