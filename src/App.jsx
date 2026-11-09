@@ -97,6 +97,20 @@ function App() {
 
 
 
+        //Discovery Routes
+        <Route path="/all-discoveries" element={<AllDiscovery/>}/>
+        <Route path="/create-discovery" element={<CreateDiscovery/>}/>
+        <Route path="/discovery/:id" element={<DiscoveryDetails user={user}/>}/>
+        <Route path="/update-discovery/:id" element={<UpdateDiscovery/>}/>
+        
+        //Species Routes
+        <Route path="/all-species" element={<AllSpecies/>}/>
+        <Route path="/create-species" element={<CreateSpecies/>}/>
+        <Route path="/species/:id" element={<SpeciesDetails user={user}/>}/>
+        <Route path="/update-species/:id" element={<UpdateSpecies/>}/>
+
+
+
       </Routes>
     </div>
   );
