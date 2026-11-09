@@ -29,7 +29,7 @@ function CreateEquipment() {
   }
   return (
     <div>
-      <h1>Create Equpment</h1>
+      <h1>Create Equipment</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="name">Name: </label>
         <input
