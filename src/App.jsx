@@ -5,6 +5,7 @@ import SignupPage from "./pages/SignupPage";
 import Homepage from "./pages/Homepage";
 import SignInPage from "./pages/SigninPage";
 import Dashboard from "./pages/Dashboard";
+import NotFound from "./pages/NotFound";
 import { logout } from "./services/authService";
 // Abdulla's pages
 import AllMission from "./pages/MissionPages/AllMission";
@@ -71,12 +72,12 @@ function App() {
           element={user ? <Dashboard user={user} /> : <Navigate to="/sign-in" />}
         />
 
-        <Route path="/all-missions" element={<AllMission />} />
+        <Route path="/all-missions" element={<AllMission user={user} />} />
         <Route path="/mission/:id" element={<MissionDetails user={user} />} />
         <Route path="/create-mission" element={<CreateMission user={user} />} />
         <Route path="/update-mission/:id" element={<UpdateMission user={user} />} />
 
-        <Route path="/all-submarines" element={<AllSubmarines />} />
+        <Route path="/all-submarines" element={<AllSubmarines user={user} />} />
         <Route path="/create-submarines" element={<CreateSubmarines user={user} />} />
         <Route path="/update-submarines/:id" element={<UpdateSubmarines user={user} />} />
         <Route path="/submarines/:id" element={<SubmarinesDetails user={user} />} />
@@ -92,6 +93,7 @@ function App() {
         <Route path="/locations/:locationId/" element={<LocationDetails />} />
         //USER Routes
 
+        <Route path="*" element={<NotFound />} />
 
 
 
