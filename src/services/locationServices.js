@@ -12,18 +12,18 @@ export async function createNewLocation(newLocation) {
 
 }
 
-export async function getLocationById(locationId){
+export async function getLocationById(locationId) {
     const response = await api.get(`/location/${locationId}`)
     return response.data
 }
 
-export async function updateLocationById(locationId, updatedLocation){
+export async function updateLocationById(locationId, updatedLocation) {
     const response = await api.put(`/location/${locationId}`, updatedLocation)
-        return response.data
+    return response.data
 
 }
 
-export async function deleteLocationById(locationId){
+export async function deleteLocationById(locationId) {
     const response = await api.delete(`/location/${locationId}`)
     return response.data
 }

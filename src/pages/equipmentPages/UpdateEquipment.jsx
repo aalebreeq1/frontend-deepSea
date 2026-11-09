@@ -32,6 +32,8 @@ function UpdateEquipment() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+        console.log("Update button clicked")
+
 
     await updateEquipment(equipmentId, formData);
 
