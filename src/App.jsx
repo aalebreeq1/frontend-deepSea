@@ -23,6 +23,8 @@ import CreateEquipment from "./pages/equipmentPages/CreateEquipment";
 import UpdateEquipment from "./pages/equipmentPages/UpdateEquipment";
 import EquipmentDetails from "./pages/equipmentPages/EquipmentDetails"
 
+import CreateLocation from "./pages/locationPages/CreateLocation"
+
 function App() {
   function getUserFromToken() {
     const token = localStorage.getItem("token");
@@ -58,14 +60,17 @@ function App() {
         <Route path="/update-mission/:id" element={<UpdateMission user={user} />} />
 
         <Route path="/all-submarines" element={<AllSubmarines />} />
-        <Route path="/create-submarines" element={<CreateSubmarines user={user}/>} />
-        <Route path="/update-submarines/:id" element={<UpdateSubmarines user={user}/>} />
+        <Route path="/create-submarines" element={<CreateSubmarines user={user} />} />
+        <Route path="/update-submarines/:id" element={<UpdateSubmarines user={user} />} />
         <Route path="/submarines/:id" element={<SubmarinesDetails user={user} />} />
 
         <Route path="/equipments" element={<AllEquipment />} />
         <Route path="/equipments/new" element={<CreateEquipment />} />
         <Route path="/equipments/:equipmentId/edit" element={<UpdateEquipment />} />
         <Route path="/equipments/:equipmentId" element={<EquipmentDetails />} />
+
+        <Route path="/locations/new" element={<CreateLocation />} />
+
       </Routes>
     </div>
   );

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { getMissionById, updateMission } from '../../services/MissionService';
 import { getAllSubmarines } from '../../services/submarineService';
-import { getAllLocations } from '../../services/locationService';
+import { getAllLocations } from '../../services/locationServices';
 
 function UpdateMission({ user }) {
     const { id } = useParams();
