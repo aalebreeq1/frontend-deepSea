@@ -28,6 +28,20 @@ import CreateLocation from "./pages/locationPages/CreateLocation"
 import UpdateLocation from "./pages/locationPages/UpdateLocation";
 import LocationDetails from "./pages/locationPages/LocationDetails";
 
+
+//Nawraa's pages 
+import AllDiscovery from "./pages/discoveryPages/AllDiscovery";
+import CreateDiscovery from "./pages/discoveryPages/createDiscovery";
+import DiscoveryDetails from "./pages/discoveryPages/DiscoveryDeatials";
+import UpdateDiscovery from "./pages/discoveryPages/UpdateDiscovery";
+
+
+import AllSpecies from "./pages/speciesPages/AllSpecies";
+import CreateSpecies from "./pages/speciesPages/CreateSpecies";
+import SpeciesDetails from "./pages/speciesPages/SpeciesDeatails";
+import UpdateSpecies from "./pages/speciesPages/UpdateDetails";
+
+
 function App() {
   function getUserFromToken() {
     const token = localStorage.getItem("token");
@@ -77,6 +91,10 @@ function App() {
         <Route path="/locations/:locationId/edit" element={<UpdateLocation user={user}/>} />
         <Route path="/locations/:locationId/" element={<LocationDetails />} />
         //USER Routes
+
+
+
+
 
 
       </Routes>
