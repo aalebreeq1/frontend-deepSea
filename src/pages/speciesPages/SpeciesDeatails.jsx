@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router";
-import {getSpeciesById, deleteSpecies}from '../../services/speciesServices'
+import {getSpeciesById, deleteSpecies}from '../../services/speciesService'
 import {useEffect,useState}from "react"
 
 function SpeciesDetails({user}) {
