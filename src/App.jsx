@@ -29,6 +29,10 @@ import CreateLocation from "./pages/locationPages/CreateLocation"
 import UpdateLocation from "./pages/locationPages/UpdateLocation";
 import LocationDetails from "./pages/locationPages/LocationDetails";
 
+import AllUsers from "./pages/UserPages/AllUsers";
+import CreateUser from "./pages/UserPages/CreateUser";
+import UpdateUser from "./pages/UserPages/UpdateUser";
+import UserDetails from "./pages/UserPages/UserDetails";
 
 //Nawraa's pages 
 import AllDiscovery from "./pages/discoveryPages/AllDiscovery";
@@ -83,15 +87,19 @@ function App() {
         <Route path="/submarines/:id" element={<SubmarinesDetails user={user} />} />
         // EQUIPMENT Routes
         <Route path="/equipments" element={<AllEquipment />} />
-        <Route path="/equipments/new" element={<CreateEquipment user={user}/>} />
-        <Route path="/equipments/:equipmentId/edit" element={<UpdateEquipment user={user}/>} />
+        <Route path="/equipments/new" element={<CreateEquipment user={user} />} />
+        <Route path="/equipments/:equipmentId/edit" element={<UpdateEquipment user={user} />} />
         <Route path="/equipments/:equipmentId" element={<EquipmentDetails />} />
         // LOCATION Routes
         <Route path="/locations" element={<AllLocations />} />
-        <Route path="/locations/new" element={<CreateLocation user={user}/>} />
-        <Route path="/locations/:locationId/edit" element={<UpdateLocation user={user}/>} />
+        <Route path="/locations/new" element={<CreateLocation user={user} />} />
+        <Route path="/locations/:locationId/edit" element={<UpdateLocation user={user} />} />
         <Route path="/locations/:locationId/" element={<LocationDetails />} />
         //USER Routes
+        <Route path="/users" element={<AllUsers />} />
+        <Route path="/users/new" element={<CreateUser />} />
+        <Route path="/users/:userId/edit" element={<UpdateUser />} />
+        <Route path="/users/:userId" element={<UserDetails />} />
 
         <Route path="*" element={<NotFound />} />
 
