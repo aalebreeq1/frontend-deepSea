@@ -30,7 +30,7 @@ function CreateLocation() {
     }
     return (
         <div>
-            <h1>CreateLocation</h1>
+            <h1>Create Location</h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="name">Name: </label>
                 <input

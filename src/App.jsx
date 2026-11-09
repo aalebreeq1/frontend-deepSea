@@ -25,6 +25,8 @@ import EquipmentDetails from "./pages/equipmentPages/EquipmentDetails"
 
 import AllLocations from "./pages/locationPages/AllLocations"
 import CreateLocation from "./pages/locationPages/CreateLocation"
+import UpdateLocation from "./pages/locationPages/UpdateLocation";
+import LocationDetails from "./pages/locationPages/LocationDetails";
 
 function App() {
   function getUserFromToken() {
@@ -72,6 +74,9 @@ function App() {
 
         <Route path="/locations" element={<AllLocations />} />
         <Route path="/locations/new" element={<CreateLocation />} />
+        <Route path="/locations/:locationId/edit" element={<UpdateLocation />} />
+        <Route path="/locations/:locationId/" element={<LocationDetails />} />
+
 
       </Routes>
     </div>
