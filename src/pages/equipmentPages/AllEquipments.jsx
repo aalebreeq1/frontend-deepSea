@@ -9,6 +9,7 @@ function AllEquipments() {
     useEffect(() => {
         async function loadEquipment() {
             const response = await getAllEquipments()
+            console.log(response)
             setEquipment(response)
         }
 
@@ -20,7 +21,7 @@ function AllEquipments() {
             <h1>All Equipments</h1>
             {equipment.map((oneEquipment) => <div key={oneEquipment._id}>
                 <h2>{oneEquipment.name}</h2>
-                <Link to={`/equipment/${oneEquipment._id}`}>Equipment Details</Link>
+                <Link to={`/equipments/${oneEquipment._id}`}>Equipment Details</Link>
 
             </div>)}
         </div>
