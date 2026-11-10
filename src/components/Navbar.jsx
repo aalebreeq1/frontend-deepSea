@@ -15,9 +15,6 @@ function Navbar({ user, handleLogout }) {
           {user.role === 'admin' && (
             <Link to='/dashboard'>Dashboard</Link>
           )}
-          <Link to='/create-mission'>Create Mission</Link>
-          <Link to='/create-submarines'>Create Submarine</Link>
-          <Link to='/locations/new'>Create Location</Link>
           <button onClick={handleLogout}>Sign Out</button>
         </>) :
         (<>
