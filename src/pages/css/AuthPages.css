@@ -69,7 +69,7 @@
 
 .auth-discoveries {
   width: 100%;
-  max-width: 410px;
+  max-width: 620px;
   margin: 40px auto;
 }
 
@@ -102,7 +102,7 @@
 
 .auth-species-swap {
   width: 100%;
-  max-width: 340px;
+  max-width: 620px;
   margin: 0 auto;
 }
 
@@ -112,6 +112,8 @@
 }
 
 .auth-reactbits-swap .auth-species-card {
+  display: grid;
+  grid-template-columns: 300px 1fr;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -126,19 +128,8 @@
 
 .auth-species-photo {
   position: relative;
-  display: grid;
-  place-items: center;
-  height: 155px;
-  padding: 20px;
+  height: 100%;
   background: #173b43;
-  color: #a6e9ec;
-  text-align: center;
-}
-
-.auth-species-photo > span {
-  font-size: 9px;
-  line-height: 1.8;
-  letter-spacing: 2px;
 }
 
 .auth-species-photo img {
@@ -150,7 +141,12 @@
 }
 
 .auth-species-info {
-  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 20px;
+  border-left: 1px solid #28414f;
 }
 
 .auth-species-classification {
@@ -166,23 +162,30 @@
 }
 
 .auth-species-info h3 {
+  display: -webkit-box;
   margin: 9px 0 0;
   overflow: hidden;
   font-size: 21px;
   font-weight: 500;
   line-height: 1.2;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .auth-species-scientific {
+  display: -webkit-box;
   margin: 6px 0 0;
   overflow: hidden;
   color: #a8bdc9;
   font-size: 11px;
   font-style: italic;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .auth-species-description {
@@ -190,10 +193,10 @@
   margin: 10px 0 0;
   overflow: hidden;
   color: #a8bdc9;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 5;
 }
 
 .auth-species-controls {
@@ -489,5 +492,29 @@
 
   .auth-visual-top > span {
     display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .auth-species-swap {
+    max-width: 364px;
+  }
+
+  .auth-species-stack {
+    height: 600px;
+  }
+
+  .auth-reactbits-swap .auth-species-card {
+    grid-template-columns: 1fr;
+    grid-template-rows: 330px 1fr;
+  }
+
+  .auth-species-info {
+    border-top: 1px solid #28414f;
+    border-left: 0;
+  }
+
+  .auth-species-description {
+    -webkit-line-clamp: 3;
   }
 }

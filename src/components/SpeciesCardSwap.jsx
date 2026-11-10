@@ -8,6 +8,9 @@ function SpeciesCardSwap() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [mobile, setMobile] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(max-width: 600px)").matches
+  );
   const [paused, setPaused] = useState(() =>
     typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
   );
@@ -18,7 +21,7 @@ function SpeciesCardSwap() {
     async function loadSpecies() {
       try {
         const data = await getAllSpecies();
-        if (active) setSpecies(data);
+        if (active) setSpecies(data.filter((item) => item.image));
       } catch {
         if (active) setError("Species are unavailable right now. You can still sign in.");
       } finally {
@@ -28,6 +31,17 @@ function SpeciesCardSwap() {
 
     loadSpecies();
     return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    const screen = window.matchMedia("(max-width: 600px)");
+
+    function updateSize(event) {
+      setMobile(event.matches);
+    }
+
+    screen.addEventListener("change", updateSize);
+    return () => screen.removeEventListener("change", updateSize);
   }, []);
 
   function togglePause() {
@@ -50,7 +64,7 @@ function SpeciesCardSwap() {
     return (
       <div className="auth-species-message">
         <strong>Every discovery starts with curiosity.</strong>
-        <p>Species will appear here when they are added to Deepsea.</p>
+        <p>Species photos will appear here when they are added to Deepsea.</p>
       </div>
     );
   }
@@ -61,8 +75,8 @@ function SpeciesCardSwap() {
         <CardSwap
           ref={swap}
           className="auth-reactbits-swap"
-          width={300}
-          height={330}
+          width={mobile ? 300 : 540}
+          height={mobile ? 520 : 330}
           cardDistance={24}
           verticalDistance={18}
           visibleCards={Math.min(species.length, 3)}
@@ -78,7 +92,6 @@ function SpeciesCardSwap() {
           {species.map((item, index) => (
             <Card key={item._id} className="auth-species-card" aria-hidden={index !== currentIndex}>
               <div className="auth-species-photo">
-                <span>THE WORLD BENEATH THE WAVES</span>
                 {item.image && (
                   <img
                     src={item.image}
@@ -90,7 +103,9 @@ function SpeciesCardSwap() {
               <div className="auth-species-info">
                 <span className="auth-species-classification">{item.classification}</span>
                 <h3>{item.commonName || item.scientificName}</h3>
-                {item.commonName && <p className="auth-species-scientific">{item.scientificName}</p>}
+                {item.commonName && (
+                  <p className="auth-species-scientific">{item.scientificName}</p>
+                )}
                 <p className="auth-species-description">{item.description}</p>
               </div>
             </Card>
