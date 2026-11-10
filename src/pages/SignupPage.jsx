@@ -1,86 +1,165 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useRef, useState } from "react";
+import { Link, useNavigate } from "react-router";
 import { signUp } from "../services/authService";
+import AuthLayout from "../components/AuthLayout";
 
-function Signup() {
+function SignupPage() {
   const navigate = useNavigate();
+  const confirmInput = useRef(null);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
+    email: "",
     password: "",
     passwordConf: "",
   });
-  const [ submitting, setSubmitting ] = useState(false)
+  const { username, email, password, passwordConf } = formData;
 
-  const { username, password, passwordConf } = formData;
-
-  function handleChange(event){
+  function handleChange(event) {
+    const { name, value } = event.target;
     setError("");
-    setFormData({ ...formData, [event.target.name]: event.target.value });
-
+    setFormData({ ...formData, [name]: value });
   }
 
+  function togglePassword() {
+    setShowPassword(!showPassword);
+  }
 
-  async function handleSubmit(event){
+  async function handleSubmit(event) {
     event.preventDefault();
+    if (submitting) return;
+
+    if (password !== passwordConf) {
+      setError("Your passwords do not match. Please check your confirmation.");
+      confirmInput.current?.focus();
+      return;
+    }
+
+    setError("");
+    setSubmitting(true);
+
     try {
-      setSubmitting(true)
-      await signUp(formData);
-      navigate('/sign-in')
+      await signUp({
+        username: username.trim(),
+        email: email.trim(),
+        password,
+      });
+      navigate("/sign-in", { state: { accountCreated: true } });
     } catch (err) {
-      setError(err.response.data.message);
-      setSubmitting(false)
+      setError(err.response?.data?.message || "Unable to create your account. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   }
 
-  function isFormInvalid(){
-    return !(username && password && password === passwordConf);
-  };
-
   return (
-    <main>
-      <h1>Sign Up</h1>
-      <p className="error">{error}</p>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
+    <AuthLayout signup>
+      <Link to="/" className="auth-back-link">Back to the ocean</Link>
+      <p className="auth-eyebrow">A SHARED CURIOSITY STARTS HERE</p>
+      <h1>Join the crew.</h1>
+      <p className="auth-intro">
+        Create your account. There is a whole world waiting below.
+      </p>
+
+      <form className="auth-form" onSubmit={handleSubmit} aria-label="Create an account">
+        <div className="auth-field">
+          <label htmlFor="signup-username">Username</label>
           <input
-            type="text"
-            id="username"
-            value={username}
+            id="signup-username"
             name="username"
+            type="text"
+            autoComplete="username"
+            placeholder="Choose a username"
+            value={username}
             onChange={handleChange}
+            disabled={submitting}
             required
           />
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
+
+        <div className="auth-field">
+          <label htmlFor="signup-email">Email address</label>
           <input
-            type="password"
-            id="password"
-            value={password}
-            name="password"
+            id="signup-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            value={email}
             onChange={handleChange}
+            disabled={submitting}
             required
           />
         </div>
-        <div>
-          <label htmlFor="confirm">Confirm Password:</label>
+
+        <div className="auth-field">
+          <label htmlFor="signup-password">Password</label>
+          <div className="auth-password">
+            <input
+              id="signup-password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="new-password"
+              placeholder="Create a password"
+              aria-describedby="signup-password-hint"
+              value={password}
+              onChange={handleChange}
+              disabled={submitting}
+              minLength={6}
+              required
+            />
+            <button
+              type="button"
+              className="auth-password-toggle"
+              aria-label={showPassword ? "Hide passwords" : "Show passwords"}
+              aria-pressed={showPassword}
+              onClick={togglePassword}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
+          <p id="signup-password-hint" className="auth-field-hint">
+            Use at least 6 characters.
+          </p>
+        </div>
+
+        <div className="auth-field">
+          <label htmlFor="signup-confirm">Confirm password</label>
           <input
-            type="password"
-            id="confirm"
-            value={passwordConf}
+            ref={confirmInput}
+            id="signup-confirm"
             name="passwordConf"
+            type={showPassword ? "text" : "password"}
+            autoComplete="new-password"
+            placeholder="Repeat your password"
+            value={passwordConf}
             onChange={handleChange}
+            disabled={submitting}
+            minLength={6}
             required
           />
         </div>
-        <div>
-          <button disabled={isFormInvalid() || submitting}>{submitting ? 'Signing up...' : 'Sign Up'}</button>
-          <button onClick={() => navigate("/")}>Cancel</button>
-        </div>
+
+        {error && <p className="auth-error" role="alert">{error}</p>}
+
+        <button
+          className="auth-submit"
+          type="submit"
+          disabled={submitting}
+          aria-busy={submitting}
+        >
+          {submitting ? "Creating your account..." : "Create account"}
+        </button>
       </form>
-    </main>
+
+      <p className="auth-switch">
+        Already part of the crew? <Link to="/sign-in">Sign in</Link>
+      </p>
+      <p className="auth-footer">DEEPSEA / BEYOND THE SURFACE</p>
+    </AuthLayout>
   );
 }
-export default Signup;
+
+export default SignupPage;

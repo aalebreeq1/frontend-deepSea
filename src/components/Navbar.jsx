@@ -55,7 +55,7 @@ function Navbar({ user, handleLogout }) {
             className={pathname.includes("mission") ? "active" : ""}
             onClick={closeMenu}
           >
-            Expeditions
+            Missions
           </NavLink>
           <NavLink
             to="/all-submarines"

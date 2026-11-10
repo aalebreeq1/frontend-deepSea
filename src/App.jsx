@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate, Route, Routes } from "react-router";
+import { Navigate, Route, Routes, useLocation } from "react-router";
 import Navbar from "./components/Navbar";
 import SignupPage from "./pages/SignupPage";
 import Homepage from "./pages/Homepage";
@@ -48,6 +48,9 @@ import UpdateSpecies from "./pages/speciesPages/UpdateDetails";
 
 
 function App() {
+  const { pathname } = useLocation();
+  const isAuthPage = ["/sign-in", "/sign-up", "/sign-in/", "/sign-up/"].includes(pathname);
+
   function getUserFromToken() {
     const token = localStorage.getItem("token");
 
@@ -65,7 +68,7 @@ function App() {
 
   return (
     <div>
-      <Navbar user={user} handleLogout={handleLogout} />
+      {!isAuthPage && <Navbar user={user} handleLogout={handleLogout} />}
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/sign-up" element={<SignupPage />} />
