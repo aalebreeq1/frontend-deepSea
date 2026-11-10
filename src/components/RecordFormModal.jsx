@@ -1,470 +1,458 @@
-import { useEffect, useId, useState } from "react";
-import { uploadImage } from "../services/uploadService";
-import {
-    Button,
-    FieldError,
-    Form,
-    Input,
-    Label,
-    ListBox,
-    Modal,
-    Select,
-    TextArea,
-    TextField,
-} from "@heroui/react";
-
-import {
-    createMission,
-    updateMission,
-} from "../services/MissionService";
-
-import {
-    createSubmarine,
-    getAllSubmarines,
-    updateSubmarine,
-} from "../services/submarineService";
-
+import { useEffect, useId, useRef, useState } from "react";
+import { Form, Modal } from "@heroui/react";
+import { createMission, updateMission } from "../services/MissionService";
+import { createSubmarine, getAllSubmarines, updateSubmarine } from "../services/submarineService";
 import { getAllLocations } from "../services/locationServices";
+import { uploadImage } from "../services/uploadService";
+import "./RecordFormModal.css";
 
-const missionFields = [
-    { name: "title", label: "Title", type: "text" },
-    { name: "objective", label: "Objective", type: "textarea" },
-    { name: "startDate", label: "Start date", type: "date" },
-    {
-        name: "endDate",
-        label: "End date",
-        type: "date",
-        optional: true,
-    },
-];
+function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
+  const formId = useId();
+  const imageInput = useRef(null);
+  const isMission = kind === "mission";
+  const isEditing = Boolean(record?._id);
+  const title = isMission ? "Mission" : "Submarine";
+  const isAdmin = user?.role === "admin";
+  const canSubmit = isEditing
+    ? isAdmin || user?.role === "researcher"
+    : isAdmin || user?.role === "visitor";
 
-const submarineFields = [
-    { name: "name", label: "Name", type: "text" },
-    { name: "model", label: "Model", type: "text" },
-    {
-        name: "maxDepth",
-        label: "Maximum depth (meters)",
-        type: "number",
-        min: 0.01,
-        step: "any",
-    },
-    {
-        name: "capacity",
-        label: "Capacity",
-        type: "number",
-        min: 1,
-        step: 1,
-    },
-    {
-        name: "description",
-        label: "Description",
-        type: "textarea",
-        optional: true,
-    },
-];
+  const [formData, setFormData] = useState({
+    title: record?.title || "",
+    objective: record?.objective || "",
+    startDate: record?.startDate?.slice(0, 10) || "",
+    endDate: record?.endDate?.slice(0, 10) || "",
+    submarine: record?.submarine?._id || record?.submarine || "",
+    location: record?.location?._id || record?.location || "",
+    name: record?.name || "",
+    model: record?.model || "",
+    maxDepth: record?.maxDepth ?? "",
+    capacity: record?.capacity ?? "",
+    description: record?.description || "",
+    image: record?.image || "",
+  });
+  const [submarines, setSubmarines] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [loading, setLoading] = useState(isMission);
+  const [optionsError, setOptionsError] = useState("");
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [preview, setPreview] = useState(record?.image || "");
+  const [imageError, setImageError] = useState("");
 
-function getId(value) {
-    return value?._id ?? value ?? "";
-}
+  useEffect(() => {
+    if (!isMission || !canSubmit) return;
+    let active = true;
 
-function getErrorMessage(error) {
-    return (
-        error.response?.data?.message ||
-        error.response?.data?.error ||
-        "Something went wrong. Please try again."
-    );
-}
-
-export default function RecordFormModal({
-    kind,
-    user,
-    record = null,
-    onClose,
-    onSaved,
-}) {
-    const formId = useId();
-    const isMission = kind === "mission";
-    const isEditing = Boolean(record?._id);
-    const resourceName = isMission ? "Mission" : "Submarine";
-    const fields = isMission ? missionFields : submarineFields;
-
-    const canSubmit = isEditing
-        ? ["admin", "researcher"].includes(user?.role)
-        : ["admin", "visitor"].includes(user?.role);
-
-    const [values, setValues] = useState(() => {
-        const initialValues = {};
-
-        for (const field of fields) {
-            const value = record?.[field.name];
-
-            initialValues[field.name] =
-                field.type === "date"
-                    ? value?.slice(0, 10) ?? ""
-                    : String(value ?? "");
+    async function loadOptions() {
+      try {
+        const [submarineData, locationData] = await Promise.all([
+          getAllSubmarines(),
+          getAllLocations(),
+        ]);
+        if (active) {
+          setSubmarines(submarineData.submarines);
+          setLocations(locationData);
         }
-
-        if (isMission) {
-            initialValues.submarine = getId(record?.submarine);
-            initialValues.location = getId(record?.location);
-        } else {
-            initialValues.image = record?.image ?? "";
+      } catch (err) {
+        if (active) {
+          setOptionsError(err.response?.data?.message || "Unable to load submarines and locations.");
         }
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
 
-        return initialValues;
-    });
+    loadOptions();
+    return () => { active = false; };
+  }, [isMission, canSubmit]);
 
-    const [options, setOptions] = useState({
-        submarine: [],
-        location: [],
-    });
+  useEffect(() => {
+    return () => {
+      if (preview.startsWith("blob:")) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
 
-    const [loading, setLoading] = useState(isMission);
-    const [optionsError, setOptionsError] = useState("");
-    const [error, setError] = useState("");
-    const [saving, setSaving] = useState(false);
-    const [imageFile, setImageFile] = useState(null);
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+    setError("");
+  }
 
-    useEffect(() => {
-        if (!isMission || !canSubmit) return;
+  function handleImageChange(event) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-        let active = true;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setImageError("Choose a JPEG, PNG, or WebP image.");
+      event.target.value = "";
+      return;
+    }
 
-        async function loadOptions() {
-            try {
-                const [submarineData, locations] = await Promise.all([
-                    getAllSubmarines(),
-                    getAllLocations(),
-                ]);
+    if (file.size > 5 * 1024 * 1024) {
+      setImageError("Your image must be 5 MB or smaller.");
+      event.target.value = "";
+      return;
+    }
 
-                if (active) {
-                    setOptions({
-                        submarine: submarineData.submarines,
-                        location: locations,
-                    });
-                }
-            } catch (err) {
-                if (active) setOptionsError(getErrorMessage(err));
-            } finally {
-                if (active) setLoading(false);
-            }
-        }
+    setImageFile(file);
+    setPreview(URL.createObjectURL(file));
+    setImageError("");
+    setError("");
+  }
 
-        loadOptions();
+  function cancelImageSelection() {
+    setImageFile(null);
+    setPreview(formData.image);
+    setImageError("");
+    if (imageInput.current) imageInput.current.value = "";
+  }
 
-        return () => {
-            active = false;
+  function hideBrokenImage(event) {
+    event.currentTarget.style.display = "none";
+  }
+
+  function handleOpenChange(open) {
+    if (!open && !saving) onClose();
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    if (!canSubmit || saving || loading || optionsError || imageError) return;
+
+    setSaving(true);
+    setError("");
+
+    try {
+      let saved;
+
+      if (isMission) {
+        const missionData = {
+          title: formData.title.trim(),
+          objective: formData.objective.trim(),
+          startDate: formData.startDate,
+          endDate: formData.endDate || null,
+          submarine: formData.submarine,
+          location: formData.location,
         };
-    }, [isMission, canSubmit]);
 
-    function changeValue(name, value) {
-        setValues((previous) => ({
-            ...previous,
-            [name]: value,
-        }));
-    }
-
-    async function handleSubmit(event) {
-        event.preventDefault();
-
-        if (!canSubmit || saving || loading || optionsError) return;
-
-        setSaving(true);
-        setError("");
-
-        try {
-            let saved;
-
-            if (isMission) {
-                const payload = {
-                    ...values,
-                    title: values.title.trim(),
-                    objective: values.objective.trim(),
-                    endDate: values.endDate || null,
-                };
-
-                // Preserve existing researchers and equipment when editing.
-                if (isEditing) {
-                    payload.missionResearchers = (
-                        record.missionResearchers ?? []
-                    ).map(getId);
-
-                    payload.equipment = (record.equipment ?? []).map(getId);
-                }
-
-                saved = isEditing
-                    ? await updateMission(record._id, payload)
-                    : await createMission(payload);
-
-                // PUT returns IDs; keep the detail page's display objects.
-                saved = {
-                    ...saved,
-                    submarine:
-                        options.submarine.find(
-                            (item) => item._id === values.submarine
-                        ) ?? saved.submarine,
-                    location:
-                        options.location.find(
-                            (item) => item._id === values.location
-                        ) ?? saved.location,
-                    missionResearchers: isEditing
-                        ? record.missionResearchers
-                        : saved.missionResearchers,
-                    equipment: isEditing
-                        ? record.equipment
-                        : saved.equipment,
-                };
-            } else {
-                const payload = {
-                    ...values,
-                    name: values.name.trim(),
-                    model: values.model.trim(),
-                    maxDepth: Number(values.maxDepth),
-                    capacity: Number(values.capacity),
-                    image: values.image,
-                };
-
-                if (imageFile) {
-                    const uploaded = await uploadImage(imageFile);
-
-                    payload.image = uploaded.image;
-
-                    // Reuse the uploaded image if saving the record needs a retry.
-                    changeValue("image", uploaded.image);
-                    setImageFile(null);
-                }
-
-                const result = isEditing
-                    ? await updateSubmarine(record._id, payload)
-                    : await createSubmarine(payload);
-
-                saved = result.submarine;
-            }
-
-            onSaved(saved);
-            onClose();
-        } catch (err) {
-            setError(getErrorMessage(err));
-        } finally {
-            setSaving(false);
+        if (!missionData.title || !missionData.objective) {
+          setError("Enter a title and objective for your mission.");
+          return;
         }
+
+        if (isEditing) {
+          missionData.missionResearchers = (record.missionResearchers || []).map(
+            (researcher) => researcher._id || researcher
+          );
+          missionData.equipment = (record.equipment || []).map(
+            (item) => item._id || item
+          );
+          saved = await updateMission(record._id, missionData);
+        } else {
+          saved = await createMission(missionData);
+        }
+
+        saved.submarine = submarines.find((item) => item._id === formData.submarine) || saved.submarine;
+        saved.location = locations.find((item) => item._id === formData.location) || saved.location;
+
+        if (isEditing) {
+          saved.missionResearchers = record.missionResearchers;
+          saved.equipment = record.equipment;
+        }
+      } else {
+        const submarineData = {
+          name: formData.name.trim(),
+          model: formData.model.trim(),
+          maxDepth: Number(formData.maxDepth),
+          capacity: Number(formData.capacity),
+          description: formData.description.trim(),
+          image: formData.image,
+        };
+
+        if (!submarineData.name || !submarineData.model) {
+          setError("Enter a name and model for your submarine.");
+          return;
+        }
+
+        if (imageFile) {
+          setUploading(true);
+          const uploaded = await uploadImage(imageFile);
+          submarineData.image = uploaded.image;
+          setFormData({ ...formData, image: uploaded.image });
+          setPreview(uploaded.image);
+          setImageFile(null);
+          if (imageInput.current) imageInput.current.value = "";
+          setUploading(false);
+        }
+
+        let result;
+        if (isEditing) {
+          result = await updateSubmarine(record._id, submarineData);
+        } else {
+          result = await createSubmarine(submarineData);
+        }
+        saved = result.submarine;
+      }
+
+      onSaved(saved);
+      onClose();
+    } catch (err) {
+      if (err.response?.status === 401) {
+        setError("Please sign in again before saving.");
+      } else {
+        setError(err.response?.data?.message || err.response?.data?.error || err.response?.data?.err || "Unable to save. Please try again.");
+      }
+    } finally {
+      setSaving(false);
+      setUploading(false);
     }
+  }
 
-    if (!canSubmit) return null;
+  if (!canSubmit) return null;
+  const disabled = saving || loading || Boolean(optionsError);
 
-    const disabled = saving || loading || Boolean(optionsError);
-    return (
-        <Modal.Backdrop
-            isOpen
-            isDismissable={!saving}
-            isKeyboardDismissDisabled={saving}
-            onOpenChange={(open) => {
-                if (!open && !saving) onClose();
-            }}
-        >
-            <Modal.Container size="lg" scroll="inside">
-                <Modal.Dialog>
-                    <Modal.CloseTrigger isDisabled={saving} />
+  return (
+    <Modal.Backdrop
+      isOpen
+      className="record-backdrop"
+      isDismissable={!saving}
+      isKeyboardDismissDisabled={saving}
+      onOpenChange={handleOpenChange}
+    >
+      <Modal.Container size="lg" scroll="inside">
+        <Modal.Dialog className="record-modal">
+          <Modal.CloseTrigger className="record-close" isDisabled={saving}>
+            Close
+          </Modal.CloseTrigger>
 
-                    <Modal.Header>
-                        <Modal.Heading>
-                            {isEditing ? "Edit" : "Create"} {resourceName}
-                        </Modal.Heading>
-                    </Modal.Header>
+          <Modal.Header className="record-header">
+            <p className="record-eyebrow">{isMission ? "EXPEDITION PLANNING" : "THE DEEPSEA FLEET"}</p>
+            <Modal.Heading className="record-heading">
+              {isEditing ? "Edit " : "Create "}{title.toLowerCase()}.
+            </Modal.Heading>
+            <p className="record-intro">
+              {isMission
+                ? "Give your next expedition a purpose, a place, and a plan."
+                : "Prepare your vessel for its next journey below the surface."}
+            </p>
+          </Modal.Header>
 
-                    <Modal.Body>
-                        {loading && <p role="status">Loading form options...</p>}
+          <Modal.Body className="record-body">
+            {loading && <p className="record-notice" role="status">Loading submarines and locations...</p>}
+            {optionsError && <p className="record-error" role="alert">{optionsError}</p>}
 
-                        {optionsError && (
-                            <p role="alert" className="text-danger">
-                                {optionsError}
-                            </p>
-                        )}
+            <Form id={formId} onSubmit={handleSubmit} className="record-form" validationBehavior="native">
+              {isMission ? (
+                <>
+                  <div className="record-field record-wide">
+                    <label htmlFor={formId + "-title"}>Mission title</label>
+                    <input
+                      id={formId + "-title"}
+                      name="title"
+                      placeholder="Name your expedition"
+                      value={formData.title}
+                      onChange={handleChange}
+                      disabled={disabled}
+                      required
+                    />
+                  </div>
 
-                        <Form
-                            id={formId}
-                            onSubmit={handleSubmit}
-                            className="flex flex-col gap-4"
-                        >
-                            {fields.map((field) => {
-                                const required = !field.optional;
-                                const id = `${formId}-${field.name}`;
+                  <div className="record-field record-wide">
+                    <label htmlFor={formId + "-objective"}>Objective</label>
+                    <textarea
+                      id={formId + "-objective"}
+                      name="objective"
+                      rows={3}
+                      placeholder="What do you hope to discover?"
+                      value={formData.objective}
+                      onChange={handleChange}
+                      disabled={disabled}
+                      required
+                    />
+                  </div>
 
-                                // Native date/number validation with HeroUI inputs.
-                                if (
-                                    field.type === "date" ||
-                                    field.type === "number"
-                                ) {
-                                    return (
-                                        <div
-                                            key={field.name}
-                                            className="flex flex-col gap-1"
-                                        >
-                                            <label htmlFor={id}>
-                                                {field.label}
-                                                {required ? " *" : ""}
-                                            </label>
+                  <div className="record-field">
+                    <label htmlFor={formId + "-start"}>Start date</label>
+                    <input
+                      id={formId + "-start"}
+                      name="startDate"
+                      type="date"
+                      value={formData.startDate}
+                      onChange={handleChange}
+                      disabled={disabled}
+                      required
+                    />
+                  </div>
 
-                                            <Input
-                                                id={id}
-                                                name={field.name}
-                                                type={field.type}
-                                                value={values[field.name]}
-                                                required={required}
-                                                disabled={disabled}
-                                                min={
-                                                    field.name === "endDate"
-                                                        ? values.startDate || undefined
-                                                        : field.min
-                                                }
-                                                step={field.step}
-                                                onChange={(event) =>
-                                                    changeValue(
-                                                        field.name,
-                                                        event.target.value
-                                                    )
-                                                }
-                                            />
-                                        </div>
-                                    );
-                                }
+                  <div className="record-field">
+                    <label htmlFor={formId + "-end"}>End date <span>(optional)</span></label>
+                    <input
+                      id={formId + "-end"}
+                      name="endDate"
+                      type="date"
+                      min={formData.startDate || undefined}
+                      value={formData.endDate}
+                      onChange={handleChange}
+                      disabled={disabled}
+                    />
+                  </div>
 
-                                return (
-                                    <TextField
-                                        key={field.name}
-                                        name={field.name}
-                                        value={values[field.name]}
-                                        onChange={(value) =>
-                                            changeValue(field.name, value)
-                                        }
-                                        isRequired={required}
-                                        isDisabled={disabled}
-                                        validate={(value) =>
-                                            required && !value.trim()
-                                                ? `${field.label} is required.`
-                                                : null
-                                        }
-                                    >
-                                        <Label>{field.label}</Label>
+                  <div className="record-field">
+                    <label htmlFor={formId + "-submarine"}>Submarine</label>
+                    <select
+                      id={formId + "-submarine"}
+                      name="submarine"
+                      value={formData.submarine}
+                      onChange={handleChange}
+                      disabled={disabled}
+                      required
+                    >
+                      <option value="">Choose a submarine</option>
+                      {submarines.map((item) => <option key={item._id} value={item._id}>{item.name}</option>)}
+                    </select>
+                    {!loading && !optionsError && submarines.length === 0 && <p className="record-help">Add a submarine before creating a mission.</p>}
+                  </div>
 
-                                        {field.type === "textarea" ? (
-                                            <TextArea rows={3} />
-                                        ) : (
-                                            <Input type={field.type} />
-                                        )}
+                  <div className="record-field">
+                    <label htmlFor={formId + "-location"}>Location</label>
+                    <select
+                      id={formId + "-location"}
+                      name="location"
+                      value={formData.location}
+                      onChange={handleChange}
+                      disabled={disabled}
+                      required
+                    >
+                      <option value="">Choose a location</option>
+                      {locations.map((item) => <option key={item._id} value={item._id}>{item.name}</option>)}
+                    </select>
+                    {!loading && !optionsError && locations.length === 0 && <p className="record-help">Add a location before creating a mission.</p>}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="record-field">
+                    <label htmlFor={formId + "-name"}>Submarine name</label>
+                    <input
+                      id={formId + "-name"}
+                      name="name"
+                      placeholder="Name your vessel"
+                      value={formData.name}
+                      onChange={handleChange}
+                      disabled={disabled}
+                      required
+                    />
+                  </div>
 
-                                        <FieldError />
-                                    </TextField>
-                                );
-                            })}
+                  <div className="record-field">
+                    <label htmlFor={formId + "-model"}>Model</label>
+                    <input
+                      id={formId + "-model"}
+                      name="model"
+                      placeholder="Enter the model"
+                      value={formData.model}
+                      onChange={handleChange}
+                      disabled={disabled}
+                      required
+                    />
+                  </div>
 
-                            {!isMission && (
-                                <div className="flex flex-col gap-2">
-                                    <label htmlFor={`${formId}-image`}>
-                                        Submarine image
-                                    </label>
+                  <div className="record-field">
+                    <label htmlFor={formId + "-depth"}>Maximum depth <span>(meters)</span></label>
+                    <input
+                      id={formId + "-depth"}
+                      name="maxDepth"
+                      type="number"
+                      min="0.01"
+                      step="any"
+                      placeholder="300"
+                      value={formData.maxDepth}
+                      onChange={handleChange}
+                      disabled={disabled}
+                      required
+                    />
+                  </div>
 
-                                    <input
-                                        id={`${formId}-image`}
-                                        type="file"
-                                        accept="image/jpeg,image/png,image/webp"
-                                        aria-describedby={`${formId}-image-help`}
-                                        disabled={disabled}
-                                        onChange={(event) =>
-                                            setImageFile(event.target.files?.[0] ?? null)
-                                        }
-                                    />
+                  <div className="record-field">
+                    <label htmlFor={formId + "-capacity"}>Crew capacity</label>
+                    <input
+                      id={formId + "-capacity"}
+                      name="capacity"
+                      type="number"
+                      min="1"
+                      step="1"
+                      placeholder="6"
+                      value={formData.capacity}
+                      onChange={handleChange}
+                      disabled={disabled}
+                      required
+                    />
+                  </div>
 
-                                    <p id={`${formId}-image-help`} className="text-sm text-muted">
-                                        JPEG, PNG, or WebP. Maximum size: 5 MB.
-                                    </p>
+                  <div className="record-field record-wide">
+                    <label htmlFor={formId + "-description"}>Description <span>(optional)</span></label>
+                    <textarea
+                      id={formId + "-description"}
+                      name="description"
+                      rows={3}
+                      placeholder="Tell us about this submarine and its capabilities."
+                      value={formData.description}
+                      onChange={handleChange}
+                      disabled={disabled}
+                    />
+                  </div>
 
-                                    {values.image && (
-                                        <img
-                                            src={values.image}
-                                            alt="Current submarine"
-                                            className="h-32 w-48 rounded-lg object-cover"
-                                        />
-                                    )}
-                                </div>
-                            )}
+                  <div className="record-field record-wide">
+                    <p className="record-upload-label">Vessel image <span>(optional)</span></p>
+                    <div className="record-upload">
+                      <div className="record-image-preview">
+                        <span>{preview ? "Image preview unavailable" : "Your vessel, in focus."}</span>
+                        {preview && <img key={preview} src={preview} alt="Submarine preview" onError={hideBrokenImage} />}
+                      </div>
+                      <div className="record-upload-copy">
+                        <strong>{imageFile ? imageFile.name : formData.image ? "Current vessel image" : "Add a photo of your vessel"}</strong>
+                        <p id={formId + "-image-help"}>JPEG, PNG, or WebP. Up to 5 MB.</p>
+                        <label className="record-file-button">
+                          <input
+                            ref={imageInput}
+                            type="file"
+                            aria-label="Choose a submarine image"
+                            aria-describedby={formId + "-image-help"}
+                            accept="image/jpeg,image/png,image/webp"
+                            onChange={handleImageChange}
+                            disabled={disabled}
+                          />
+                          {preview ? "Change image" : "Choose image"}
+                        </label>
+                        {(imageFile || imageError) && <button className="record-image-cancel" type="button" onClick={cancelImageSelection} disabled={disabled}>Cancel selection</button>}
+                      </div>
+                    </div>
+                    {imageError && <p className="record-error" role="alert">{imageError}</p>}
+                  </div>
+                </>
+              )}
 
-                            {isMission &&
-                                ["submarine", "location"].map((name) => (
-                                    <Select
-                                        key={name}
-                                        name={name}
-                                        isRequired
-                                        isDisabled={disabled}
-                                        placeholder={`Select a ${name}`}
-                                        value={values[name] || null}
-                                        onChange={(value) =>
-                                            changeValue(name, value ?? "")
-                                        }
-                                    >
-                                        <Label>
-                                            {name === "submarine"
-                                                ? "Submarine"
-                                                : "Location"}
-                                        </Label>
+              {error && <p className="record-error record-wide" role="alert">{error}</p>}
+              {uploading && <p className="record-notice record-wide" role="status">Uploading your image...</p>}
+            </Form>
+          </Modal.Body>
 
-                                        <Select.Trigger>
-                                            <Select.Value />
-                                            <Select.Indicator />
-                                        </Select.Trigger>
-
-                                        <Select.Popover>
-                                            <ListBox>
-                                                {options[name].map((item) => (
-                                                    <ListBox.Item
-                                                        key={item._id}
-                                                        id={item._id}
-                                                        textValue={item.name}
-                                                    >
-                                                        {item.name}
-                                                        <ListBox.ItemIndicator />
-                                                    </ListBox.Item>
-                                                ))}
-                                            </ListBox>
-                                        </Select.Popover>
-
-                                        <FieldError />
-                                    </Select>
-                                ))}
-
-                            {error && (
-                                <p role="alert" className="text-danger">
-                                    {error}
-                                </p>
-                            )}
-                        </Form>
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            isDisabled={saving}
-                            onPress={onClose}
-                        >
-                            Cancel
-                        </Button>
-
-                        <Button
-                            type="submit"
-                            form={formId}
-                            isDisabled={disabled}
-                            isPending={saving}
-                        >
-                            {saving
-                                ? "Saving..."
-                                : isEditing
-                                    ? "Save Changes"
-                                    : `Create ${resourceName}`}
-                        </Button>
-                    </Modal.Footer>
-                </Modal.Dialog>
-            </Modal.Container>
-        </Modal.Backdrop>
-    );
+          <Modal.Footer className="record-footer">
+            <span className="record-footer-note">DEEPSEA / BEYOND THE SURFACE</span>
+            <div className="record-footer-buttons">
+              <button type="button" className="record-button record-button-cancel" onClick={onClose} disabled={saving}>Cancel</button>
+              <button type="submit" form={formId} className="record-button record-button-save" disabled={disabled || Boolean(imageError)} aria-busy={saving}>
+                {uploading ? "Uploading image..." : saving ? "Saving..." : isEditing ? "Save changes" : "Create " + title.toLowerCase()}
+              </button>
+            </div>
+          </Modal.Footer>
+        </Modal.Dialog>
+      </Modal.Container>
+    </Modal.Backdrop>
+  );
 }
+
+export default RecordFormModal;

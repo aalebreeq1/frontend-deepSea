@@ -15,17 +15,23 @@ function SignupPage() {
     password: "",
     passwordConf: "",
   });
+  const { username, email, password, passwordConf } = formData;
 
   function handleChange(event) {
+    const { name, value } = event.target;
     setError("");
-    setFormData({ ...formData, [event.target.name]: event.target.value });
+    setFormData({ ...formData, [name]: value });
+  }
+
+  function togglePassword() {
+    setShowPassword(!showPassword);
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
     if (submitting) return;
 
-    if (formData.password !== formData.passwordConf) {
+    if (password !== passwordConf) {
       setError("Your passwords do not match. Please check your confirmation.");
       confirmInput.current?.focus();
       return;
@@ -36,9 +42,9 @@ function SignupPage() {
 
     try {
       await signUp({
-        username: formData.username.trim(),
-        email: formData.email.trim(),
-        password: formData.password,
+        username: username.trim(),
+        email: email.trim(),
+        password,
       });
       navigate("/sign-in", { state: { accountCreated: true } });
     } catch (err) {
@@ -66,7 +72,7 @@ function SignupPage() {
             type="text"
             autoComplete="username"
             placeholder="Choose a username"
-            value={formData.username}
+            value={username}
             onChange={handleChange}
             disabled={submitting}
             required
@@ -81,7 +87,7 @@ function SignupPage() {
             type="email"
             autoComplete="email"
             placeholder="you@example.com"
-            value={formData.email}
+            value={email}
             onChange={handleChange}
             disabled={submitting}
             required
@@ -98,7 +104,7 @@ function SignupPage() {
               autoComplete="new-password"
               placeholder="Create a password"
               aria-describedby="signup-password-hint"
-              value={formData.password}
+              value={password}
               onChange={handleChange}
               disabled={submitting}
               minLength={6}
@@ -109,7 +115,7 @@ function SignupPage() {
               className="auth-password-toggle"
               aria-label={showPassword ? "Hide passwords" : "Show passwords"}
               aria-pressed={showPassword}
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={togglePassword}
             >
               {showPassword ? "Hide" : "Show"}
             </button>
@@ -128,7 +134,7 @@ function SignupPage() {
             type={showPassword ? "text" : "password"}
             autoComplete="new-password"
             placeholder="Repeat your password"
-            value={formData.passwordConf}
+            value={passwordConf}
             onChange={handleChange}
             disabled={submitting}
             minLength={6}

@@ -13,10 +13,16 @@ function SignInPage({ setUser }) {
     username: "",
     password: "",
   });
+  const { username, password } = formData;
 
   function handleChange(event) {
+    const { name, value } = event.target;
     setError("");
-    setFormData({ ...formData, [event.target.name]: event.target.value });
+    setFormData({ ...formData, [name]: value });
+  }
+
+  function togglePassword() {
+    setShowPassword(!showPassword);
   }
 
   async function handleSubmit(event) {
@@ -61,7 +67,7 @@ function SignInPage({ setUser }) {
             type="text"
             autoComplete="username"
             placeholder="Enter your username"
-            value={formData.username}
+            value={username}
             onChange={handleChange}
             disabled={submitting}
             required
@@ -77,7 +83,7 @@ function SignInPage({ setUser }) {
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               placeholder="Enter your password"
-              value={formData.password}
+              value={password}
               onChange={handleChange}
               disabled={submitting}
               required
@@ -87,7 +93,7 @@ function SignInPage({ setUser }) {
               className="auth-password-toggle"
               aria-label={showPassword ? "Hide password" : "Show password"}
               aria-pressed={showPassword}
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={togglePassword}
             >
               {showPassword ? "Hide" : "Show"}
             </button>
