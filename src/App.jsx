@@ -40,7 +40,6 @@ import CreateDiscovery from "./pages/discoveryPages/createDiscovery";
 import DiscoveryDetails from "./pages/discoveryPages/DiscoveryDeatials";
 import UpdateDiscovery from "./pages/discoveryPages/UpdateDiscovery";
 
-
 import AllSpecies from "./pages/speciesPages/AllSpecies";
 import CreateSpecies from "./pages/speciesPages/CreateSpecies";
 import SpeciesDetails from "./pages/speciesPages/SpeciesDeatails";
@@ -102,9 +101,6 @@ function App() {
         <Route path="/users/:userId" element={<UserDetails />} />
 
         <Route path="*" element={<NotFound />} />
-
-
-
 
 
         //Discovery Routes
