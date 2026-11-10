@@ -1,11 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getAllSpecies } from "../services/speciesService";
+import CardSwap, { Card } from "./reactbits/CardSwap";
 
 function SpeciesCardSwap() {
+  const swap = useRef(null);
   const [species, setSpecies] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [paused, setPaused] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 
   useEffect(() => {
     let active = true;
@@ -25,12 +30,8 @@ function SpeciesCardSwap() {
     return () => { active = false; };
   }, []);
 
-  function nextSpecies() {
-    setCurrentIndex((currentIndex + 1) % species.length);
-  }
-
-  function previousSpecies() {
-    setCurrentIndex((currentIndex - 1 + species.length) % species.length);
+  function togglePause() {
+    setPaused(!paused);
   }
 
   function hideBrokenImage(event) {
@@ -54,54 +55,53 @@ function SpeciesCardSwap() {
     );
   }
 
-  const cards = [];
-  for (let position = 0; position < Math.min(species.length, 3); position++) {
-    cards.push(species[(currentIndex + position) % species.length]);
-  }
-
-  const currentSpecies = species[currentIndex];
-
   return (
     <section className="auth-species-swap" aria-label="Species discoveries">
       <div className="auth-species-stack">
-        {cards.map((item, position) => (
-          <article
-            key={item._id}
-            className={"auth-species-card auth-species-position-" + position}
-            aria-hidden={position !== 0}
-          >
-            <div className="auth-species-photo">
-              <span>THE WORLD BENEATH THE WAVES</span>
-              {item.image && (
-                <img
-                  src={item.image}
-                  alt={item.commonName || item.scientificName}
-                  onError={hideBrokenImage}
-                />
-              )}
-            </div>
-            <div className="auth-species-info">
-              <span className="auth-species-classification">{item.classification}</span>
-              <h3>{item.commonName || item.scientificName}</h3>
-              {item.commonName && <p className="auth-species-scientific">{item.scientificName}</p>}
-              <p className="auth-species-description">{item.description}</p>
-            </div>
-          </article>
-        ))}
+        <CardSwap
+          ref={swap}
+          className="auth-reactbits-swap"
+          width={300}
+          height={330}
+          cardDistance={24}
+          verticalDistance={18}
+          visibleCards={Math.min(species.length, 3)}
+          skewAmount={3}
+          delay={4500}
+          autoplay={!paused && species.length > 1}
+          pauseOnHover
+          draggable={species.length > 1}
+          parallax={0}
+          hoverSpread={0}
+          onChange={setCurrentIndex}
+        >
+          {species.map((item, index) => (
+            <Card key={item._id} className="auth-species-card" aria-hidden={index !== currentIndex}>
+              <div className="auth-species-photo">
+                <span>THE WORLD BENEATH THE WAVES</span>
+                {item.image && (
+                  <img
+                    src={item.image}
+                    alt={item.commonName || item.scientificName}
+                    onError={hideBrokenImage}
+                  />
+                )}
+              </div>
+              <div className="auth-species-info">
+                <span className="auth-species-classification">{item.classification}</span>
+                <h3>{item.commonName || item.scientificName}</h3>
+                {item.commonName && <p className="auth-species-scientific">{item.scientificName}</p>}
+                <p className="auth-species-description">{item.description}</p>
+              </div>
+            </Card>
+          ))}
+        </CardSwap>
       </div>
-
-      <div className="auth-species-controls">
-        <button type="button" aria-label="Previous species" onClick={previousSpecies} disabled={species.length === 1}>
-          Previous
+      {species.length > 1 && (
+        <button type="button" className="auth-species-pause" onClick={togglePause} aria-pressed={paused}>
+          {paused ? "Play card swap" : "Pause card swap"}
         </button>
-        <span className="auth-species-count" aria-live="polite" aria-atomic="true">
-          <span className="auth-screen-reader">{currentSpecies.commonName || currentSpecies.scientificName}, </span>
-          {currentIndex + 1} / {species.length}
-        </span>
-        <button type="button" aria-label="Next species" onClick={nextSpecies} disabled={species.length === 1}>
-          Next
-        </button>
-      </div>
+      )}
     </section>
   );
 }
