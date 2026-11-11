@@ -1,0 +1,152 @@
+.create-discovery-page{
+    min-height: 100vh;
+    padding: 5rem 1.5rem;
+    background: linear-gradient(
+        rgba(2,6,12,0.65),
+        rgba(2,6,12,0.85)
+    ),
+    url('/images/discovery/discovery-background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    color: #e6f4f7;
+    font-family: system-ui, -apple-system,'Segoe UI', Roboto, sans-serif;
+
+}
+
+
+.create-discovery-container{
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 2.5rem;
+    border: 1px solid rgba(154,168,181,0.18);
+    border-radius: 18px;
+    background: rgba(10, 25, 35, 0.48);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+}
+
+.create-discovery-title{
+    margin: 0 0 0.8rem;
+    color:#ece8e1;
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-align: center;
+}
+
+
+.create-discovery-subtitle{
+    margin: 0 0 2.5rem;
+    color: #9aa8b5;
+    font-size: 0.9rem;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+
+.create-discovery-form{
+    display: flex;
+    flex-direction: column;
+    gap:1.3rem
+}
+
+.discovery-form-group{
+    display: flex;
+    flex-direction: column;
+    gap:0.6rem
+}
+
+.discovery-form-group label{
+    color: #b8c2cc;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+
+
+.discovery-form-group input,
+.discovery-form-group textarea,
+.discovery-form-group select{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgba(154,168,181,0.3);
+    border-radius:8px;
+    background: #091923;
+    color: #e6f4f7;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline:none;
+    transition: border-color 0.25s,box-shadow 0.25s;
+}
+
+
+.discovery-form-group input::placeholder,
+.discovery-form-group textarea::placeholder{
+    color: #657887;
+}
+
+
+.discovery-form-group input:focus,
+.discovery-form-group textarea:focus,
+.discovery-form-group select:focus{
+    border-color:#8ddce2;
+    box-shadow: 0 0 0 3px rgba(141,220,226,0.1)
+}
+
+.discovery-form-group textarea{
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+
+.create-discovery-btn{
+    margin-top: 1rem;
+    padding: 1rem;
+    border:1px solid #a5e7eb;
+    border-radius: 8px;
+    background: #a5e7eb;
+    color: #02060c;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.create-discovery-btn:hover{
+    background: transparent;
+    color: #a5e7eb;
+    box-shadow: 0 0 22px rgba(141, 220, 226 ,0.2);
+}
+.create-discovery-btn:focus-visible{
+    outline: 2px solid #a5e7eb;
+    outline-offset: 4px;
+}
+
+
+
+@media(max-width:600px){
+    .create-discovery-page{
+        padding: 2rem 1rem;
+        background-attachment: scroll;
+    }
+
+    .create-discovery-container{
+        padding: 1.5rem;
+    }
+
+    .create-discovery-title{
+        font-size: 1.9rem;
+    }
+}

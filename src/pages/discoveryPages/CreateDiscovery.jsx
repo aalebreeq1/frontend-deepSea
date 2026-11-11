@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { createDiscovery} from '../../services/discoveryService';
 import { getAllMissions } from '../../services/MissionService';
 import { getAllSpecies } from '../../services/speciesService';
+import './CreateDiscovery.css';
 
 function CreateDiscovery() {
     const navigate = useNavigate();
@@ -63,10 +64,13 @@ function CreateDiscovery() {
     };
 
     return (
-        <div>
-            <h1>Create Discovery</h1>
+        <div className='create-discovery-page'>
+            <div className='create-discovery-container'>
+            <h1 className='create-discovery-title'>Create Discovery</h1>
+            <p className='create-discovery-subtitle'>Explore the Unknown</p>
 
-            <form onSubmit={handleSubmit}>
+            <form className='create-discovery-form' onSubmit={handleSubmit}>
+                <div className='discovery-form-group'>
                 <label htmlFor="title">Title</label>
                 <input
                     id="title"
@@ -76,22 +80,25 @@ function CreateDiscovery() {
                     onChange={handleChange}
                     required
                 />
+                </div>
+                <div className='discovery-form-group'>
 
                 <label htmlFor="description">Description</label>
-                <input
+                <textarea
                     id="description"
                     name="description"
-                    type="text"
                     value={formData.description}
                     onChange={handleChange}
+                    rows={4}
                     required
                 />
+                </div>
+                <div className='discovery-form-group'>
 
                 <label htmlFor="discoveryType">Discovery Type</label>
                 <select
                     id="discoveryType"
                     name="discoveryType"
-                    type="text"
                     value={formData.discoveryType}
                     onChange={handleChange}
                     required
@@ -102,11 +109,10 @@ function CreateDiscovery() {
     <option value="Shipwreck">Shipwreck</option>
     <option value="Ecosystem">Ecosystem</option>
 
-
-
 </select>
+</div>
                
-
+<div className='discovery-form-group'>
                 <label htmlFor="discoveryDate">Discovery Date</label>
                 <input
                     id="discoveryDate"
@@ -116,6 +122,8 @@ function CreateDiscovery() {
                     onChange={handleChange}
                     required
                 />
+                </div>
+                <div className='discovery-form-group'>
 
                 <label htmlFor="mission">Mission</label>
                 <select
@@ -132,6 +140,9 @@ function CreateDiscovery() {
                         </option>
                     ))}
                 </select>
+                </div>
+
+                <div className='discovery-form-group'>
 
                 <label htmlFor="species">Species</label>
                 <select
@@ -148,8 +159,10 @@ function CreateDiscovery() {
                         </option>
                     ))}
                 </select>
+                </div>
 
 
+             <div className='discovery-form-group'>
                 <label htmlFor="image">Image URL</label>
                 <input
                     id="image"
@@ -159,11 +172,13 @@ function CreateDiscovery() {
                     onChange={handleChange}
                     
                 />
+                </div>
 
 
 
-                <button type="submit">Create Discovery</button>
+                <button className='create-discovery-btn' type="submit">Create Discovery</button>
             </form>
+        </div>
         </div>
     );
 }
