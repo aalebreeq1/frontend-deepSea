@@ -11,6 +11,7 @@ function AllSpecies() {
         const fetchSpecies = async () => {
             try {
                 const data = await getAllSpecies();
+                console.log(data)
                 setSpecies(data);
             } catch (err) {
                 console.error(err);
