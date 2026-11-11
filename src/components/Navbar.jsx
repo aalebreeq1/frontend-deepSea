@@ -67,17 +67,17 @@ function Navbar({ user, handleLogout }) {
           <NavLink to="/equipments" onClick={closeMenu}>Equipment</NavLink>
           <NavLink to="/locations" onClick={closeMenu}>Locations</NavLink>
 
-          Discoveries
+         
           <NavLink
            to="all-discoveries" className={pathname.includes("discover")? "active":""}
            onClick={closeMenu}
-           >
+           >Discoveries
            </NavLink> 
-           Species
+           
            <NavLink to="all-species" className={pathname.includes("species")? "active":""}
            onClick={closeMenu}
            >
-           
+           Species
            </NavLink>
 
 
