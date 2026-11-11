@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { createSpecies} from '../../services/speciesService';
-
+import './CreateSpecies.css'
 
 function CreateSpecies() {
     const navigate = useNavigate();
@@ -47,10 +47,13 @@ function CreateSpecies() {
     };
 
     return (
-        <div>
-            <h1>Create Species</h1>
+        <div className='create-species-page'>
+            <div className='create-species-container'>
+            <h1 className='create-species-title'>Create Species</h1>
+            <p className='create-species-subtitle'>Discover the Unknown</p>
 
-            <form onSubmit={handleSubmit}>
+            <form  className='create-species-form'onSubmit={handleSubmit}>
+                <div className='species-form-group'>
                 <label htmlFor="scientificName">Scientific Name</label>
                 <input
                     id="scientificName"
@@ -60,6 +63,8 @@ function CreateSpecies() {
                     onChange={handleChange}
                     required
                 />
+                </div>
+                <div className='species-form-group'>
 
                 <label htmlFor="commonName">Common Name</label>
                 <input
@@ -70,7 +75,9 @@ function CreateSpecies() {
                     onChange={handleChange}
                     
                 />
+                </div>
 
+                <div className='species-form-group'>
                 <label htmlFor="classification">Classification</label>
                 <input
                     id="classification"
@@ -80,17 +87,24 @@ function CreateSpecies() {
                     onChange={handleChange}
                     required
                 />
+                </div>
 
+                <div className='species-form-group'>
 
                 <label htmlFor="description">Description</label>
-                <input
+                <textarea
                     id="description"
                     name="description"
                     type="text"
                     value={formData.description}
                     onChange={handleChange}
+                    placeholder='Describe this species . . .'
+                    rows={4}
                     required
                 />
+                </div>
+
+                <div className='species-form-group'>
 
                 <label htmlFor="image">Image URL</label>
                 <input
@@ -101,11 +115,14 @@ function CreateSpecies() {
                     onChange={handleChange}
                     
                 />
+                </div>
 
 
-                <button type="submit">Create Species</button>
+                <button className='create-species-btn' type="submit">Create Species</button>
             </form>
         </div>
+        </div>
+       
     );
 }
 
