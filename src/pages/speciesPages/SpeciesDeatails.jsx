@@ -2,6 +2,8 @@ import React from "react";
 import { useParams, useNavigate } from "react-router";
 import {getSpeciesById, deleteSpecies}from '../../services/speciesService'
 import {useEffect,useState}from "react"
+import './SpeciesDetails.css'
+
 
 function SpeciesDetails({user}) {
   const navigate = useNavigate();
@@ -28,28 +30,24 @@ function SpeciesDetails({user}) {
     fetchSpecies();
   }, [id]);
   return (
-    <div>
-      SpeciesDetails
-      {isAdmin &&(
-         <button onClick={handleDelete}>Delete Species</button>
-
-      )}
-      {canEdit && (
-        <>
-          <button onClick={() => navigate(`/update-species/${id}`)}>
-            Edit species
-          </button>
-        </>
-      )}
+    <div className="species-details-page">
+      { !species ?(
+      <p className="species-loading">Loading species . . .</p>
+      ):(
+        <div className="species-details-wrapper">
       
-        {species ?(
+        <button className="back-species-btn"
+        onClick={()=> navigate('/all-species')}
+        >Back to species</button>
         
-            <div>
-            <h2>{species.scientificName}</h2>
-            <p>CommonName:{species.commonName}</p>
-            <p>Classification:{species.classification}</p>
-            <p>Description:{species.description}</p>
+        
+            <div className="species-details-heading">
+            <h1>Species Details</h1>
+            <p>Explore Marine Life</p>
+            </div>
             
+            <div className="species-details-content">
+              <div className="species-image-card">
 
             {species.image && (
                 <img
@@ -59,12 +57,47 @@ function SpeciesDetails({user}) {
 
         )}
         </div>
-        ):(
-            <p>Loading . . .</p>
-        )}
+
+        <div className="species-info-card">
+          <div className="species-name">
+            <h2>{species.scientificName}</h2>
+            <p>{species.commonName}</p>
+          </div>
+
+          <div className="species-info-item">
+            <span>CLASSIFICATION</span>
+            <h3>{species.classification}</h3>
+          </div>
+
+
+          <div className="species-description">
+            <h3>DESCRIPTION</h3>
+            <p>{species.description}</p>
+          </div>
+
+          <div className="species-actions">
+          {canEdit &&(
+            <button className="edit-species-btn"
+            onClick={() => navigate(`/update-species/${id}`)}
+            >Edit Species</button>
+          )}
+
+          {isAdmin &&(
+            <button className="delete-species-btn"
+            onClick={handleDelete}>
+              Delete Species
+            </button>
+
+          )}
+        </div>
+        </div>
+        </div>
         </div>
 
-    );
+)}
+</div>
+
+  );
 }
 
 export default SpeciesDetails;
