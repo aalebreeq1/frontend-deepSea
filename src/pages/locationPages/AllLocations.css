@@ -1,0 +1,119 @@
+/* AllLocations.css */
+
+.locations-page {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding: 5rem 1.5rem 4rem;
+    background: #02060c;
+    color: #e6f4f7;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ---------- Title ---------- */
+
+.loc-hero-title {
+    grid-column: 1 / -1;
+    margin: 0 0 2rem;
+    text-align: center;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: #ece8e1;
+    text-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- Card ---------- */
+
+.loc-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(154, 168, 181, 0.18);
+    border-radius: 16px;
+    background: transparent;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.loc-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(154, 168, 181, 0.4);
+}
+
+.loc-name {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #ece8e1;
+}
+
+/* ---------- Details button ---------- */
+
+.loc-btn {
+    position: relative;
+    overflow: hidden;
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding: 0.7rem 1.4rem;
+    border: none;
+    border-bottom: 2px solid #6b7c8c;
+    background: transparent;
+    color: #b8c2cc;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s;
+    z-index: 0;
+}
+
+.loc-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #5a6b7b, #3f4d5a);
+    transform: translateX(-101%);
+    transition: transform 0.35s ease;
+    z-index: -1;
+}
+
+.loc-btn:hover::before {
+    transform: translateX(0);
+}
+
+.loc-btn:hover {
+    color: #ece8e1;
+}
+
+.loc-btn::after {
+    content: '→';
+    transition: transform 0.3s;
+}
+
+.loc-btn:hover::after {
+    transform: translateX(4px);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+    .locations-page {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .locations-page {
+        grid-template-columns: 1fr;
+    }
+}
