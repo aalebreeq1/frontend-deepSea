@@ -4,28 +4,29 @@ import Navbar from "./components/Navbar";
 import SignupPage from "./pages/SignupPage";
 import Homepage from "./pages/Homepage";
 import SignInPage from "./pages/SigninPage";
-// import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import { logout } from "./services/authService";
+
 // Abdulla's pages
 import AllMission from "./pages/MissionPages/AllMission";
 import MissionDetails from "./pages/MissionPages/MissionDetails";
 import CreateMission from "./pages/MissionPages/CreateMission";
 import UpdateMission from "./pages/MissionPages/updateMission";
 
-import AllSubmarines from "./pages/submarines/AllSubmarines"
-import CreateSubmarines from "./pages/submarines/CreateSubmarines"
-import UpdateSubmarines from "./pages/submarines/UpdateSubmarines"
-import SubmarinesDetails from "./pages/submarines/SubmarinesDetails"
+import AllSubmarines from "./pages/submarines/AllSubmarines";
+import CreateSubmarines from "./pages/submarines/CreateSubmarines";
+import UpdateSubmarines from "./pages/submarines/UpdateSubmarines";
+import SubmarinesDetails from "./pages/submarines/SubmarinesDetails";
 
 // Zainab's pages
 import AllEquipment from "./pages/equipmentPages/AllEquipments";
 import CreateEquipment from "./pages/equipmentPages/CreateEquipment";
 import UpdateEquipment from "./pages/equipmentPages/UpdateEquipment";
-import EquipmentDetails from "./pages/equipmentPages/EquipmentDetails"
+import EquipmentDetails from "./pages/equipmentPages/EquipmentDetails";
 
-import AllLocations from "./pages/locationPages/AllLocations"
-import CreateLocation from "./pages/locationPages/CreateLocation"
+import AllLocations from "./pages/locationPages/AllLocations";
+import CreateLocation from "./pages/locationPages/CreateLocation";
 import UpdateLocation from "./pages/locationPages/UpdateLocation";
 import LocationDetails from "./pages/locationPages/LocationDetails";
 
@@ -73,10 +74,10 @@ function App() {
         <Route path="/sign-up" element={<SignupPage />} />
         <Route path="/sign-in" element={<SignInPage setUser={setUser} />} />
 
-        {/* <Route
+        <Route
           path="/dashboard"
           element={user ? <Dashboard user={user} /> : <Navigate to="/sign-in" />}
-        /> */}
+        />
 
         <Route path="/all-missions" element={<AllMission user={user} />} />
         <Route path="/mission/:id" element={<MissionDetails user={user} />} />
