@@ -5,7 +5,8 @@ import {
   getSubmarineById,
 } from "../../services/submarineService";
 
-function UpdateSubmarines({user}) {
+function UpdateSubmarines({ user }) {
+  const canEdit = user?.role === "admin" || user?.role === "researcher";
   const { id } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -18,22 +19,33 @@ function UpdateSubmarines({user}) {
     image: "",
   });
 
-  async function fetchSubmarine() {
-    const data = await getSubmarineById(id);
-    setFormData({
-      name: data.name,
-      model: data.model,
-      maxDepth: data.maxDepth,
-      capacity: data.capacity,
-      status: data.status,
-      description: data.description,
-      image: data.image,
-    });
-  }
-
   useEffect(() => {
+    if (!canEdit) return;
+    let active = true;
+
+    async function fetchSubmarine() {
+      try {
+        const data = await getSubmarineById(id);
+        const submarine = data.submarine;
+        if (active) {
+          setFormData({
+            name: submarine.name,
+            model: submarine.model,
+            maxDepth: submarine.maxDepth,
+            capacity: submarine.capacity,
+            status: submarine.status,
+            description: submarine.description || "",
+            image: submarine.image || "",
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
     fetchSubmarine();
-  }, [id]);
+    return () => { active = false; };
+  }, [id, canEdit]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -46,10 +58,15 @@ function UpdateSubmarines({user}) {
 
   async function handleSubmit(event) {
     event.preventDefault();
+    if (!canEdit) return;
     await updateSubmarine(id, {
       ...formData,
     });
     navigate("/all-submarines");
+  }
+
+  if (!canEdit) {
+    return <p>Only admins and researchers can update submarines.</p>;
   }
 
   return (
