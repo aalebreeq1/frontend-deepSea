@@ -1,215 +1,374 @@
-// import { useState, useEffect } from 'react';
-// import { getDashboard } from '../services/dashboardService';
-// import { Link } from 'react-router';
-// import './Dashboard.css';
 
-// function label(value = '') {
-//     return value.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase());
-// }
+import React, { useState, useEffect } from 'react';
+import './Dashboard.css';
 
-// function toArray(obj = {}) {
-//     return Object.entries(obj)
-//         .map(([name, count]) => ({ name, count }))
-//         .sort((a, b) => b.count - a.count);
-// }
+import { getAllUsers } from '../services/userServices';
+import { getAllEquipments } from '../services/equipmentServices';
+import { getAllLocations } from '../services/locationServices';
+import { getAllSubmarines } from '../services/submarineService';
+import { getAllMissions } from '../services/MissionService';
+import DashboardOverview from '../components/DashboardOverview'
 
-// function formatDate(value) {
-//     return value ? new Date(value).toLocaleDateString() : '';
-// }
+const MODELS = [
+    { id: 'overview', label: 'Dashboard Overview', icon: '🌊' },
+    { id: 'expeditions', label: 'Expeditions', icon: '🧭' },
+    { id: 'discoveries', label: 'Discoveries', icon: '💎' },
+    { id: 'species', label: 'Species', icon: '🪼' },
+    { id: 'submarines', label: 'Submarines', icon: '🛥️' },
+    { id: 'equipment', label: 'Equipment', icon: '🔦' },
+    { id: 'locations', label: 'Locations', icon: '📍' },
+    { id: 'users', label: 'Users & Access', icon: '👥' },
+];
 
-// function Tile({ label: text, value, icon, tone }) {
-//     return (
-//         <div className="db-card db-stat">
-//             <div className={`db-stat-icon ${tone}`}>{icon}</div>
-//             <div>
-//                 <p className="db-muted">{text}</p>
-//                 <h3>{value}</h3>
-//             </div>
-//         </div>
-//     );
-// }
+export default function Dashboard() {
+    const [activeTab, setActiveTab] = useState('overview');
+    const [searchTerm, setSearchTerm] = useState('');
 
-// function Panel({ title, subtitle, children, wide = false }) {
-//     return (
-//         <div className={`db-card ${wide ? 'db-card-wide' : ''}`}>
-//             <h3>{title}</h3>
-//             {subtitle && <p className="db-muted">{subtitle}</p>}
-//             {children}
-//         </div>
-//     );
-// }
+    const [users, setUsers] = useState([]);
+    const [equipment, setEquipment] = useState([]);
+    const [locations, setLocations] = useState([]);
+    const [submarines, setSubmarines] = useState([]);
+    const [missions, setMissions] = useState([]);
 
-// function BarList({ items }) {
-//     const max = Math.max(1, ...items.map((i) => i.count));
-//     return (
-//         <div className="db-bars">
-//             {items.map((item) => (
-//                 <div className="db-bar-row" key={item.name}>
-//                     <span>{label(item.name)}</span>
-//                     <div className="db-bar-track">
-//                         <div className="db-bar-fill" style={{ width: `${(item.count / max) * 100}%` }} />
-//                     </div>
-//                     <span className="db-muted">{item.count}</span>
-//                 </div>
-//             ))}
-//         </div>
-//     );
-// }
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-// function Dashboard() {
-//     const [data, setData] = useState(null);
-//     const [error, setError] = useState(null);
+    useEffect(() => {
+        async function loadDashboardData() {
+            const results = await Promise.allSettled([
+                getAllUsers(),
+                getAllEquipments(),
+                getAllLocations(),
+                getAllSubmarines(),
+                getAllMissions()
+            ]);
 
-//     useEffect(() => {
-//         let active = true;
+            if (results[0].status === 'fulfilled') {
+                setUsers(results[0].value);
+            } else {
+                console.error('Users error:', results[0].reason);
+            }
 
-//         getDashboard()
-//             .then((res) => { if (active) setData(res); })
-//             .catch(() => { if (active) setError('Failed to load dashboard data.'); });
+            if (results[1].status === 'fulfilled') {
+                setEquipment(results[1].value);
+            } else {
+                console.error('Equipment error:', results[1].reason);
+            }
 
-//         return () => {
-//             active = false;
-//         };
-//     }, []);
+            if (results[2].status === 'fulfilled') {
+                setLocations(results[2].value);
+            } else {
+                console.error('Locations error:', results[2].reason);
+            }
 
-//     const totals = data?.totals || {};
-//     const condition = data?.equipment?.condition || {};
-//     const pctOp = totals.equipment ? (condition.operational / totals.equipment) * 100 : 0;
-//     const pctMaint = totals.equipment ? (condition.needs_maintenance / totals.equipment) * 100 : 0;
-//     const donutStyle = {
-//         background: `conic-gradient(
-//             #4ade80 0% ${pctOp}%,
-//             #fbbf24 ${pctOp}% ${pctOp + pctMaint}%,
-//             #f87171 ${pctOp + pctMaint}% 100%
-//         )`
-//     };
+            if (results[3].status === 'fulfilled') {
+                console.log('Submarine API data:', results[3].value);
+                setSubmarines(results[3].value.submarines);
+            } else {
+                console.error('Submarines error:', results[3].reason);
+            }
 
-//     return (
-//         <div className="db">
+            if (results[4].status === 'fulfilled') {
+                setMissions(results[4].value);
+            } else {
+                console.error('Missions error:', results[4].reason);
+            }
+        }
 
-//             <aside className="db-sidebar">
-//                 <div className="db-logo">DeepSea</div>
-//                 <nav className="db-nav">
-//                     <Link className="db-nav-item active" to="/dashboard">Dashboard</Link>
-//                     <Link className="db-nav-item" to="/equipments">Equipment</Link>
-//                     <Link className="db-nav-item" to="/submarines">Submarines</Link>
-//                 </nav>
-//             </aside>
+        loadDashboardData();
+    }, []);
 
-//             <main className="db-main">
-//                 <header className="db-header">
-//                     <p className="db-breadcrumb">Pages / Dashboard</p>
-//                     <h1>Dashboard</h1>
-//                 </header>
+    // Search users
+    const filteredUsers = users.filter(user =>
+        user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.role?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
-//                 {error && <p className="db-muted">{error}</p>}
-//                 {!data && !error && <p className="db-muted">Loading dashboard...</p>}
+    // Search missions
+    const filteredMissions = missions.filter(mission =>
+        mission.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        mission._id?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
-//                 {data && (
-//                     <>
-//                         <section className="db-stats">
-//                             <Tile label="Equipment" value={totals.equipment} icon="◎" tone="blue" />
-//                             <Tile label="Submarines" value={totals.submarines} icon="▲" tone="cyan" />
-//                             <Tile label="Missions" value={totals.missions} icon="⚑" tone="violet" />
-//                             <Tile label="Discoveries" value={totals.discoveries} icon="✦" tone="green" />
-//                             <Tile label="Locations" value={totals.locations} icon="⌖" tone="amber" />
-//                             <Tile label="Species" value={totals.species} icon="❋" tone="rose" />
-//                             <Tile label="Users" value={totals.users} icon="◐" tone="cyan" />
-//                         </section>
+    return (
+        <div className="ds-layout">
 
-//                         <section className="db-grid">
-//                             <Panel title="Equipment health" subtitle="Share of equipment by condition">
-//                                 <div className="db-donut-wrap">
-//                                     <div className="db-donut" style={donutStyle}>
-//                                         <div className="db-donut-center">
-//                                             <strong>{Math.round(pctOp)}%</strong>
-//                                             <span className="db-muted">Operational</span>
-//                                         </div>
-//                                     </div>
-//                                     <div className="db-legend">
-//                                         <span style={{ '--dot': '#4ade80' }}>Operational: {condition.operational || 0}</span>
-//                                         <span style={{ '--dot': '#fbbf24' }}>Needs maintenance: {condition.needs_maintenance || 0}</span>
-//                                         <span style={{ '--dot': '#f87171' }}>Out of service: {condition.out_of_service || 0}</span>
-//                                     </div>
-//                                 </div>
-//                             </Panel>
+            {/* Sidebar */}
+            <aside className="ds-sidebar">
 
-//                             <Panel title="Submarine status" subtitle="Fleet breakdown">
-//                                 <BarList items={toArray(data.submarines.status)} />
-//                             </Panel>
-//                         </section>
+                <div className="ds-brand">
+                    <span className="ds-logo-icon">🤿</span>
 
-//                         <section className="db-grid-bottom">
-//                             <Panel title="Missions by status" subtitle="Planned, active, completed, and suspended">
-//                                 <BarList items={toArray(data.missions.status)} />
-//                             </Panel>
+                    <div>
+                        <h2>DEEP SEA</h2>
+                        <span className="ds-badge">Admin Console</span>
+                    </div>
+                </div>
 
-//                             <Panel title="Discoveries by type" subtitle="What was found on expeditions">
-//                                 <BarList items={toArray(data.discoveries.type)} />
-//                             </Panel>
-//                         </section>
+                <nav className="ds-nav">
 
-//                         <section className="db-grid-bottom">
-//                             <Panel title="Equipment by category" subtitle="Items in each category">
-//                                 <BarList items={toArray(data.equipment.category)} />
-//                             </Panel>
+                    {MODELS.map((item) => {
 
-//                             <Panel title="Species by classification" subtitle="Recorded species">
-//                                 <BarList items={toArray(data.species.classification)} />
-//                             </Panel>
-//                         </section>
+                        const counts = {
+                            expeditions: missions.length,
+                            submarines: submarines.length,
+                            equipment: equipment.length,
+                            locations: locations.length,
+                            users: users.length
+                        };
 
-//                         <section className="db-grid-bottom">
-//                             <Panel title="Locations by ocean" subtitle="Where missions are based">
-//                                 <BarList items={toArray(data.locations.ocean)} />
-//                             </Panel>
+                        return (
+                            <button
+                                key={item.id}
+                                className={`ds-nav-item ${activeTab === item.id ? 'active' : ''}`}
+                                onClick={() => setActiveTab(item.id)}
+                            >
+                                <span className="ds-nav-icon">{item.icon}</span>
+                                <span className="ds-nav-text">{item.label}</span>
 
-//                             <Panel title="Users by role" subtitle="Accounts on the platform">
-//                                 <BarList items={toArray(data.users.role)} />
-//                             </Panel>
-//                         </section>
+                                {counts[item.id] !== undefined && (
+                                    <span className="ds-nav-count">
+                                        {counts[item.id]}
+                                    </span>
+                                )}
+                            </button>
+                        );
+                    })}
+                </nav>
 
-//                         <section className="db-grid-bottom">
-//                             <Panel title="Recent discoveries" subtitle="Latest five">
-//                                 <div className="db-list">
-//                                     {data.recentDiscoveries.length === 0 && (
-//                                         <p className="db-muted">No discoveries yet.</p>
-//                                     )}
-//                                     {data.recentDiscoveries.map((d) => (
-//                                         <div className="db-row db-row-3" key={d._id}>
-//                                             <div>
-//                                                 <span className="db-row-name">{d.title}</span>
-//                                                 <p className="db-muted">{d.mission?.title} · {formatDate(d.discoveryDate)}</p>
-//                                             </div>
-//                                             <span className="db-badge neutral">{d.discoveryType}</span>
-//                                         </div>
-//                                     ))}
-//                                 </div>
-//                             </Panel>
+                <div className="ds-sidebar-footer">
+                    <div className="ds-live-indicator">
+                        <span className="pulse-dot"></span>
+                        <span>DeepSea Admin</span>
+                    </div>
+                </div>
 
-//                             <Panel title="Recent missions" subtitle="Latest five">
-//                                 <div className="db-list">
-//                                     {data.recentMissions.length === 0 && (
-//                                         <p className="db-muted">No missions yet.</p>
-//                                     )}
-//                                     {data.recentMissions.map((m) => (
-//                                         <div className="db-row db-row-3" key={m._id}>
-//                                             <div>
-//                                                 <span className="db-row-name">{m.title}</span>
-//                                                 <p className="db-muted">{m.submarine?.name}</p>
-//                                             </div>
-//                                             <span className={`db-badge ${m.status}`}>{label(m.status)}</span>
-//                                         </div>
-//                                     ))}
-//                                 </div>
-//                             </Panel>
-//                         </section>
-//                     </>
-//                 )}
-//             </main>
+            </aside>
 
-//         </div>
-//     );
-// }
+            {/* Main Content */}
+            <main className="ds-main">
 
-// export default Dashboard;
+                {/* Header */}
+                <header className="ds-header">
+
+                    <div>
+                        <h1>
+                            {MODELS.find(m => m.id === activeTab)?.label}
+                        </h1>
+
+                        <p className="ds-subtitle">
+                            Manage deep-sea telemetry, public records, and platform permissions.
+                        </p>
+                    </div>
+
+                    <div className="ds-header-actions">
+
+                        <input
+                            type="text"
+                            placeholder="Search records..."
+                            className="ds-search"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+
+                    </div>
+
+                </header>
+
+
+                {loading ? (
+                    <p>Loading dashboard data...</p>
+                ) : error ? (
+                    <p>{error}</p>
+                ) : (
+                    <>
+                        {/* DASHBOARD OVERVIEW */}
+                        {activeTab === 'overview' && (
+                            <DashboardOverview
+                                users={users}
+                                missions={missions}
+                                submarines={submarines}
+                                equipment={equipment}
+                                locations={locations}
+                            />
+                        )}
+                        {/* USERS */}
+                        {activeTab === 'users' && (
+                            <section className="ds-card ds-section">
+                                <h2>Users & Access</h2>
+
+                                <table className="ds-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Specialization</th>
+                                            <th>Institution</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {filteredUsers.map(user => (
+                                            <tr key={user._id}>
+                                                <td>{user.username}</td>
+                                                <td>{user.email}</td>
+                                                <td>{user.role}</td>
+                                                <td>{user.specialization || 'N/A'}</td>
+                                                <td>{user.institution || 'N/A'}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+
+                                {filteredUsers.length === 0 && <p>No users found.</p>}
+                            </section>
+                        )}
+
+                        {/* EXPEDITIONS */}
+                        {activeTab === 'expeditions' && (
+                            <section className="ds-card ds-section">
+                                <h2>Expeditions</h2>
+
+                                <table className="ds-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mission</th>
+                                            <th>Objective</th>
+                                            <th>Location</th>
+                                            <th>Submarine</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {filteredMissions.map(mission => (
+                                            <tr key={mission._id}>
+                                                <td>{mission.title}</td>
+                                                <td>{mission.objective}</td>
+                                                <td>{mission.location?.name || 'N/A'}</td>
+                                                <td>{mission.submarine?.name || 'N/A'}</td>
+                                                <td>{mission.status}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+
+                                {filteredMissions.length === 0 && <p>No expeditions found.</p>}
+                            </section>
+                        )}
+
+                        {/* SUBMARINES */}
+                        {activeTab === 'submarines' && (
+                            <section className="ds-card ds-section">
+                                <h2>Submarines</h2>
+
+                                <table className="ds-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Model</th>
+                                            <th>Maximum Depth</th>
+                                            <th>Capacity</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {submarines.map(submarine => (
+                                            <tr key={submarine._id}>
+                                                <td>{submarine.name}</td>
+                                                <td>{submarine.model}</td>
+                                                <td>{submarine.maxDepth}</td>
+                                                <td>{submarine.capacity}</td>
+                                                <td>{submarine.status}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+
+                                {submarines.length === 0 && <p>No submarines found.</p>}
+                            </section>
+                        )}
+
+                        {/* EQUIPMENT */}
+                        {activeTab === 'equipment' && (
+                            <section className="ds-card ds-section">
+                                <h2>Equipment</h2>
+
+                                <table className="ds-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Category</th>
+                                            <th>Condition</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {equipment.map(item => (
+                                            <tr key={item._id}>
+                                                <td>{item.name}</td>
+                                                <td>{item.category}</td>
+                                                <td>{item.condition}</td>
+                                                <td>{item.description || 'N/A'}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+
+                                {equipment.length === 0 && <p>No equipment found.</p>}
+                            </section>
+                        )}
+
+                        {/* LOCATIONS */}
+                        {activeTab === 'locations' && (
+                            <section className="ds-card ds-section">
+                                <h2>Research Locations</h2>
+
+                                <table className="ds-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Ocean</th>
+                                            <th>Latitude</th>
+                                            <th>Longitude</th>
+                                            <th>Depth</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {locations.map(location => (
+                                            <tr key={location._id}>
+                                                <td>{location.name}</td>
+                                                <td>{location.ocean}</td>
+                                                <td>{location.latitude}</td>
+                                                <td>{location.longitude}</td>
+                                                <td>{location.depth ?? 'N/A'}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+
+                                {locations.length === 0 && <p>No locations found.</p>}
+                            </section>
+                        )}
+
+                        {/* DISCOVERIES AND SPECIES */}
+                        {(activeTab === 'discoveries' || activeTab === 'species') && (
+                            <section className="ds-card ds-section">
+                                <h2>{MODELS.find(item => item.id === activeTab)?.label}</h2>
+                                <p>We will connect this section to its API next.</p>
+                            </section>
+                        )}
+                    </>
+                )}
+
+
+            </main>
+
+        </div>
+    );
+}

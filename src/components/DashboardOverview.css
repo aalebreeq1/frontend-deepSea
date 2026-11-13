@@ -1,0 +1,119 @@
+.analytics-dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    padding: 16px;
+    color: #e6f4f7;
+}
+
+.analytics-card {
+    min-width: 0;
+    min-height: 0;
+    padding: 14px;
+background: rgba(9, 20, 29, 0.45);
+backdrop-filter: blur(8px);
+-webkit-backdrop-filter: blur(8px);    border: 1px solid #1d303b;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.analytics-card-heading {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 12px;
+}
+
+.analytics-card-heading h3 {
+    margin: 0;
+    color: #e6f4f7;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.analytics-number {
+    color: #D69A50;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.overview-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    margin-bottom: 10px;
+}
+
+.overview-stats div,
+.database-summary div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+background: rgba(16, 31, 42, 0.45);
+backdrop-filter: blur(5px);
+-webkit-backdrop-filter: blur(5px);    border-radius: 7px;
+}
+
+.overview-stats span,
+.database-summary span {
+    color: #8da2ad;
+    font-size: 10px;
+}
+
+.overview-stats strong,
+.database-summary strong {
+    color: #e6f4f7;
+    font-size: 18px;
+}
+
+.chart-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 125px;
+    margin: 0;
+    color: #718792;
+    font-size: 12px;
+}
+
+.chart-note {
+    margin: 8px 0;
+    color: #8da2ad;
+    font-size: 11px;
+}
+
+.classification-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.classification-list span {
+    padding: 5px 8px;
+    color: #a9c2cb;
+background: rgba(20, 39, 51, 0.5);    border-radius: 20px;
+    font-size: 10px;
+}
+
+.database-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+}
+
+@media (max-width: 1099px) {
+    .analytics-dashboard {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .analytics-dashboard {
+        grid-template-columns: 1fr;
+        padding: 10px;
+    }
+}
