@@ -1,0 +1,407 @@
+.db {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+    background: radial-gradient(ellipse at top right, #13305f 0%, #0a1430 40%, #050a18 100%);
+    color: #e6edf7;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ---------- Sidebar ---------- */
+
+.db-sidebar {
+    padding: 2rem 1.25rem;
+    background: rgba(8, 14, 32, 0.7);
+    border-right: 1px solid rgba(120, 160, 255, 0.08);
+    backdrop-filter: blur(12px);
+}
+
+.db-logo {
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 2.5rem;
+    padding-left: 0.5rem;
+}
+
+.db-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.db-nav-item {
+    padding: 0.7rem 0.9rem;
+    border-radius: 12px;
+    color: #9fb0cf;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.db-nav-item:hover {
+    background: rgba(120, 160, 255, 0.08);
+    color: #e6edf7;
+}
+
+.db-nav-item.active {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
+}
+
+/* ---------- Main area ---------- */
+
+.db-main {
+    padding: 2rem 2.5rem;
+}
+
+.db-header h1 {
+    margin: 0.2rem 0 1.5rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.db-breadcrumb,
+.db-muted {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #7c8ba8;
+}
+
+/* ---------- Cards ---------- */
+
+.db-card {
+    background: rgba(15, 24, 48, 0.75);
+    border: 1px solid rgba(120, 160, 255, 0.12);
+    border-radius: 20px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(10px);
+}
+
+.db-card h3 {
+    margin: 0.2rem 0 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* ---------- Stat tiles ---------- */
+
+.db-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.db-stat {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.db-stat h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.db-stat-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 1.2rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.db-stat-icon.blue  { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.db-stat-icon.green { background: linear-gradient(135deg, #22c55e, #15803d); }
+.db-stat-icon.amber { background: linear-gradient(135deg, #f59e0b, #b45309); }
+.db-stat-icon.cyan  { background: linear-gradient(135deg, #22d3ee, #0e7490); }
+
+/* ---------- Layout grids ---------- */
+
+.db-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.db-grid-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.db-card-wide {
+    grid-column: 1 / -1;
+}
+
+/* ---------- Welcome card ---------- */
+
+.db-welcome {
+    position: relative;
+    min-height: 220px;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+}
+
+.db-welcome-shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(5, 10, 24, 0.9), rgba(5, 10, 24, 0.2));
+}
+
+.db-welcome-text {
+    position: relative;
+}
+
+.db-welcome-text p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #9fb0cf;
+}
+
+.db-welcome-text h2 {
+    margin: 0.25rem 0 0.5rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.db-welcome-text span {
+    font-size: 0.85rem;
+    color: #9fb0cf;
+}
+
+/* ---------- Donut ---------- */
+
+.db-donut-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.db-donut {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    position: relative;
+}
+
+.db-donut::after {
+    content: '';
+    position: absolute;
+    inset: 22px;
+    border-radius: 50%;
+    background: #0f1830;
+}
+
+.db-donut-center {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.db-donut-center strong {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.db-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+}
+
+.db-legend span::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    background: var(--dot);
+}
+
+/* ---------- Bar chart ---------- */
+
+.db-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin-top: 1rem;
+}
+
+.db-bar-row {
+    display: grid;
+    grid-template-columns: 170px 1fr 36px;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+}
+
+.db-bar-track {
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(120, 160, 255, 0.1);
+    overflow: hidden;
+}
+
+.db-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #3b82f6, #38bdf8);
+    transition: width 0.4s ease;
+}
+
+/* ---------- Lists ---------- */
+
+.db-list {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.75rem;
+}
+
+.db-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid rgba(120, 160, 255, 0.08);
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.db-row:last-child {
+    border-bottom: none;
+}
+
+.db-row:hover .db-row-name {
+    color: #38bdf8;
+}
+
+.db-row-name {
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+/* ---------- Badges ---------- */
+
+.db-badge {
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px solid;
+    white-space: nowrap;
+}
+
+.db-badge.operational {
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.12);
+    border-color: rgba(74, 222, 128, 0.35);
+}
+
+.db-badge.needs_maintenance,
+.db-badge.under_maintenance {
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.12);
+    border-color: rgba(251, 191, 36, 0.35);
+}
+
+.db-badge.out_of_service {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.12);
+    border-color: rgba(248, 113, 113, 0.35);
+}
+
+.db-badge.retired {
+    color: #9fb0cf;
+    background: rgba(159, 176, 207, 0.1);
+    border-color: rgba(159, 176, 207, 0.3);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1100px) {
+    .db-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .db-grid,
+    .db-grid-bottom {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 800px) {
+    .db {
+        grid-template-columns: 1fr;
+    }
+
+    .db-sidebar {
+        display: none;
+    }
+
+    .db-main {
+        padding: 1.25rem;
+    }
+}
+
+/* extra stat icon colors */
+.db-stat-icon.violet { background: linear-gradient(135deg, #a78bfa, #6d28d9); }
+.db-stat-icon.rose   { background: linear-gradient(135deg, #fb7185, #be123c); }
+
+/* mission statuses */
+.db-badge.planned {
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.12);
+    border-color: rgba(96, 165, 250, 0.35);
+}
+
+.db-badge.active {
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+    border-color: rgba(56, 189, 248, 0.35);
+}
+
+.db-badge.completed {
+    color: #a78bfa;
+    background: rgba(167, 139, 250, 0.12);
+    border-color: rgba(167, 139, 250, 0.35);
+}
+
+.db-badge.suspended {
+    color: #fb923c;
+    background: rgba(251, 146, 60, 0.12);
+    border-color: rgba(251, 146, 60, 0.35);
+}
+
+/* neutral badge for discovery types */
+.db-badge.neutral {
+    color: #9fb0cf;
+    background: rgba(159, 176, 207, 0.1);
+    border-color: rgba(159, 176, 207, 0.3);
+}
+
+/* lists with a second line under the title */
+.db-row-3 {
+    grid-template-columns: 1fr auto;
+}
