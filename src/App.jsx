@@ -4,7 +4,7 @@ import Navbar from "./components/Navbar";
 import SignupPage from "./pages/SignupPage";
 import Homepage from "./pages/Homepage";
 import SignInPage from "./pages/SigninPage";
-import Dashboard from "./pages/Dashboard";
+// import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import { logout } from "./services/authService";
 // Abdulla's pages
@@ -73,10 +73,10 @@ function App() {
         <Route path="/sign-up" element={<SignupPage />} />
         <Route path="/sign-in" element={<SignInPage setUser={setUser} />} />
 
-        <Route
+        {/* <Route
           path="/dashboard"
           element={user ? <Dashboard user={user} /> : <Navigate to="/sign-in" />}
-        />
+        /> */}
 
         <Route path="/all-missions" element={<AllMission user={user} />} />
         <Route path="/mission/:id" element={<MissionDetails user={user} />} />

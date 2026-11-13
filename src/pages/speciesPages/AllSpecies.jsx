@@ -55,6 +55,9 @@ function AllSpecies() {
         async function fetchSpecies() {
             try {
                 const data = await getAllSpecies();
+                if (!Array.isArray(data)) {
+                    throw new Error('Invalid species response');
+                }
                 if (!cancelled) setSpecies(data);
             } catch {
                 if (!cancelled) setError('We could not load the species collection. Please try again.');
