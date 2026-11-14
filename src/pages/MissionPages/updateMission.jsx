@@ -29,8 +29,8 @@ function UpdateMission({ user }) {
                     objective: mission.objective,
                     startDate: mission.startDate ? new Date(mission.startDate).toISOString().split('T')[0] : '',
                     endDate: mission.endDate ? new Date(mission.endDate).toISOString().split('T')[0] : '',
-                    submarine: mission.submarine,
-                    location: mission.location,
+                    submarine: mission.submarine?._id ?? mission.submarine ?? '',
+                    location: mission.location?._id ?? mission.location ?? '',
                     missionResearchers: mission.missionResearchers.map(
                         (researcher) => researcher._id
                     ),
