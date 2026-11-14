@@ -159,3 +159,63 @@
         grid-column: span 1;
     }
 }
+/* Species Gallery */
+
+.species-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+}
+
+.species-gallery-item {
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #0b1c27;
+    border: 1px solid #203743;
+}
+
+.species-gallery-item img,
+.species-image-placeholder {
+    width: 100%;
+    height: 125px;
+    object-fit: cover;
+    display: block;
+}
+
+.species-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+    background: #102b39;
+}
+
+.species-gallery-info {
+    padding: 10px;
+}
+
+.species-gallery-info h4 {
+    color: #e6f4f7;
+    font-size: 13px;
+    margin: 0 0 5px;
+}
+
+.species-gallery-info p {
+    color: #829ba8;
+    font-size: 11px;
+    font-style: italic;
+    margin: 0 0 8px;
+}
+
+.species-gallery-info span {
+    color: #36bfc0;
+    font-size: 10px;
+}
+
+@media (max-width: 700px) {
+    .species-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
