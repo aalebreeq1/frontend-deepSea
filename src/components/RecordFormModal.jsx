@@ -191,6 +191,11 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
       onClose();
     } catch (err) {
       console.error(err);
+      window.alert(
+        err.response?.status === 401
+          ? "Your session has expired. Please sign in again."
+          : err.response?.data?.message || err.response?.data?.error || "Could not save changes. Please try again."
+      );
     } finally {
       setSaving(false);
       setUploading(false);
@@ -225,9 +230,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
             </p>
           </Modal.Header>
 
-          <Modal.Body className="record-body">
-
-            <Form id={formId} onSubmit={handleSubmit} className="record-form" validationBehavior="native">
+          <Form id={formId} onSubmit={handleSubmit} className="record-dialog-form" validationBehavior="native">
+            <Modal.Body className="record-body">
+              <div className="record-form">
               {isMission ? (
                 <>
                   <div className="record-field record-wide">
@@ -419,18 +424,19 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
               )}
 
               {uploading && <p className="record-notice record-wide" role="status">Uploading your image...</p>}
-            </Form>
-          </Modal.Body>
+              </div>
+            </Modal.Body>
 
-          <Modal.Footer className="record-footer">
-            <span className="record-footer-note">DEEPSEA / BEYOND THE SURFACE</span>
-            <div className="record-footer-buttons">
-              <button type="button" className="record-button record-button-cancel" onClick={onClose} disabled={saving}>Cancel</button>
-              <button type="submit" form={formId} className="record-button record-button-save" disabled={saving || Boolean(imageError)} aria-busy={saving}>
-                {uploading ? "Uploading image..." : saving ? "Saving..." : isEditing ? "Save changes" : "Create " + title.toLowerCase()}
-              </button>
-            </div>
-          </Modal.Footer>
+            <Modal.Footer className="record-footer">
+              <span className="record-footer-note">DEEPSEA / BEYOND THE SURFACE</span>
+              <div className="record-footer-buttons">
+                <button type="button" className="record-button record-button-cancel" onClick={onClose} disabled={saving}>Cancel</button>
+                <button type="submit" className="record-button record-button-save" disabled={saving || Boolean(imageError)} aria-busy={saving}>
+                  {uploading ? "Uploading image..." : saving ? "Saving..." : isEditing ? "Save changes" : "Create " + title.toLowerCase()}
+                </button>
+              </div>
+            </Modal.Footer>
+          </Form>
         </Modal.Dialog>
       </Modal.Container>
     </Modal.Backdrop>
