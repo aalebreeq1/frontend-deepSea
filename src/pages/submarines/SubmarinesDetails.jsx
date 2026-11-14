@@ -15,7 +15,7 @@ function SubmarinesDetails({ user }) {
   const [submarine, setSubmarine] = useState(null);
   const [pending, setPending] = useState(false);
   const isAdmin = user?.role === "admin";
-  const canDelete = isAdmin || user?.role === "visitor";
+  const canDelete = isAdmin;
   const canEdit = isAdmin || user?.role === "researcher";
 
   async function handleDelete() {

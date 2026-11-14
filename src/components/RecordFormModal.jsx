@@ -14,9 +14,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
   const isCreatingSubmarine = !isMission && !isEditing;
   const title = isMission ? "Mission" : "Submarine";
   const isAdmin = user?.role === "admin";
-  const canSubmit = isEditing
-    ? isAdmin || user?.role === "researcher"
-    : isAdmin || user?.role === "visitor";
+  const canSubmit = isAdmin || user?.role === "researcher";
 
   const [formData, setFormData] = useState({
     title: record?.title || "",
