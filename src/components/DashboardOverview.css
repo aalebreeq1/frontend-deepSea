@@ -1,3 +1,4 @@
+
 .analytics-dashboard {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -11,9 +12,10 @@
     min-width: 0;
     min-height: 0;
     padding: 14px;
-background: rgba(9, 20, 29, 0.45);
-backdrop-filter: blur(8px);
--webkit-backdrop-filter: blur(8px);    border: 1px solid #1d303b;
+    background: rgba(9, 20, 29, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid #1d303b;
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
@@ -33,17 +35,37 @@ backdrop-filter: blur(8px);
 }
 
 .analytics-number {
-    color: #D69A50;
+    color: #36BFC0;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 1px;
 }
 
+/* Section 07 - Discoveries & Species */
+.wide-card {
+    grid-column: span 2;
+}
+
 .overview-stats {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
-    margin-bottom: 10px;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    height: calc(100% - 35px);
+    margin-bottom: 0;
+}
+
+.overview-stats div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px;
+    background: rgba(16, 31, 42, 0.55);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(54, 191, 192, 0.12);
+    border-radius: 9px;
 }
 
 .overview-stats div,
@@ -52,21 +74,31 @@ backdrop-filter: blur(8px);
     flex-direction: column;
     gap: 4px;
     padding: 8px;
-background: rgba(16, 31, 42, 0.45);
-backdrop-filter: blur(5px);
--webkit-backdrop-filter: blur(5px);    border-radius: 7px;
+    background: rgba(16, 31, 42, 0.45);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 7px;
 }
 
-.overview-stats span,
-.database-summary span {
+.overview-stats span {
     color: #8da2ad;
-    font-size: 10px;
+    font-size: 12px;
 }
 
-.overview-stats strong,
-.database-summary strong {
-    color: #e6f4f7;
-    font-size: 18px;
+.overview-stats strong {
+    color: #36BFC0;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.area-one {
+    display: flex;
+    flex-direction: column;
+}
+
+.area-one .overview-stats {
+    flex: 1;
+    min-height: 0;
 }
 
 .chart-empty {
@@ -94,7 +126,8 @@ backdrop-filter: blur(5px);
 .classification-list span {
     padding: 5px 8px;
     color: #a9c2cb;
-background: rgba(20, 39, 51, 0.5);    border-radius: 20px;
+    background: rgba(20, 39, 51, 0.5);
+    border-radius: 20px;
     font-size: 10px;
 }
 
@@ -104,10 +137,15 @@ background: rgba(20, 39, 51, 0.5);    border-radius: 20px;
     gap: 7px;
 }
 
+/* Responsive layout */
 @media (max-width: 1099px) {
     .analytics-dashboard {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         grid-template-rows: auto;
+    }
+
+    .wide-card {
+        grid-column: span 2;
     }
 }
 
@@ -115,5 +153,9 @@ background: rgba(20, 39, 51, 0.5);    border-radius: 20px;
     .analytics-dashboard {
         grid-template-columns: 1fr;
         padding: 10px;
+    }
+
+    .wide-card {
+        grid-column: span 1;
     }
 }

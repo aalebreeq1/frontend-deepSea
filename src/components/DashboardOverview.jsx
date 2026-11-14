@@ -16,7 +16,13 @@ import {
 
 import './DashboardOverview.css';
 
-const COLORS = ['#D69A50', '#8D78C8', '#4DABB0', '#6B9B78', '#C56D69'];
+const COLORS = [
+    '#087E8B',
+    '#36BFC0',
+    '#75B9A8',
+    '#E39A70',
+    '#0B2538'
+];
 
 function DashboardOverview({
     users = [],
@@ -155,9 +161,9 @@ function DashboardOverview({
         return <p className="chart-empty">{message}</p>;
     }
 
-    function ChartCard({ number, title, children }) {
+    function ChartCard({ number, title, children, className = '' }) {
         return (
-            <section className="analytics-card">
+            <section className={`analytics-card ${className}`}>
                 <div className="analytics-card-heading">
                     <span className="analytics-number">{number}</span>
                     <h3>{title}</h3>
@@ -166,12 +172,11 @@ function DashboardOverview({
             </section>
         );
     }
-
     return (
         <div className="analytics-dashboard">
 
             {/* 1. Expedition Overview */}
-            <ChartCard number="01" title="Expedition Overview">
+            <ChartCard number="01" title="Expedition Overview" className="area-one">
                 <div className="overview-stats">
                     <div>
                         <span>Total Missions</span>
@@ -197,27 +202,10 @@ function DashboardOverview({
                     </div>
                 </div>
 
-                {missionActivity.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={125}>
-                        <LineChart data={missionActivity}>
-                            <CartesianGrid stroke="#293941" strokeDasharray="3 3" />
-                            <XAxis dataKey="month" stroke="#82939B" />
-                            <YAxis allowDecimals={false} stroke="#82939B" />
-                            <Tooltip />
-                            <Line
-                                type="monotone"
-                                dataKey="missions"
-                                stroke="#D69A50"
-                                strokeWidth={3}
-                                dot={{ r: 4 }}
-                            />
-                        </LineChart>
-                    </ResponsiveContainer>
-                ) : <EmptyChart message="No mission dates available" />}
             </ChartCard>
 
             {/* 2. Mission Distribution */}
-            <ChartCard number="02" title="Mission Distribution">
+            <ChartCard number="02" title="Mission Distribution" className="area-two">
                 {missionsByOcean.length > 0 ? (
                     <ResponsiveContainer width="100%" height={135}>
                         <BarChart data={missionsByOcean}>
@@ -250,9 +238,12 @@ function DashboardOverview({
                             </Pie>
                             <Tooltip />
                         </PieChart>
+
                     </ResponsiveContainer>
+
                 ) : <EmptyChart />}
             </ChartCard>
+
 
             {/* 4. Equipment Inventory */}
             <ChartCard number="04" title="Equipment Inventory">
@@ -277,23 +268,10 @@ function DashboardOverview({
                 ) : <EmptyChart />}
             </ChartCard>
 
-            {/* 5. Deep-Sea Locations */}
-            <ChartCard number="05" title="Deep-Sea Locations">
-                {locationDepth.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={260}>
-                        <BarChart data={locationDepth}>
-                            <CartesianGrid stroke="#293941" strokeDasharray="3 3" />
-                            <XAxis dataKey="name" stroke="#82939B" />
-                            <YAxis stroke="#82939B" />
-                            <Tooltip />
-                            <Bar dataKey="depth" fill="#8D78C8" radius={[5, 5, 0, 0]} />
-                        </BarChart>
-                    </ResponsiveContainer>
-                ) : <EmptyChart message="No location depth records available" />}
-            </ChartCard>
+
 
             {/* 6. Research Team */}
-            <ChartCard number="06" title="Research Team">
+            <ChartCard number="06" title="Research Team" className="area-six">
                 {userRoles.length > 0 ? (
                     <ResponsiveContainer width="100%" height={260}>
                         <PieChart>
@@ -316,7 +294,7 @@ function DashboardOverview({
             </ChartCard>
 
             {/* 7. Discoveries */}
-            <ChartCard number="07" title="Discoveries & Species">
+            <ChartCard number="07" title="Discoveries & Species" className="wide-card">
                 {discoveryTypes.length > 0 ? (
                     <ResponsiveContainer width="100%" height={260}>
                         <BarChart data={discoveryTypes}>
