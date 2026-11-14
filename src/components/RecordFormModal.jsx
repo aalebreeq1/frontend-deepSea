@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { Form, Modal } from "@heroui/react";
+import { Form, Modal, toast } from "@heroui/react";
 import { createMission, updateMission } from "../services/MissionService";
 import { createSubmarine, getAllSubmarines, updateSubmarine } from "../services/submarineService";
 import { getAllLocations } from "../services/locationServices";
@@ -11,6 +11,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
   const imageInput = useRef(null);
   const isMission = kind === "mission";
   const isEditing = Boolean(record?._id);
+  const isCreatingSubmarine = !isMission && !isEditing;
   const title = isMission ? "Mission" : "Submarine";
   const isAdmin = user?.role === "admin";
   const canSubmit = isEditing
@@ -164,6 +165,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
 
         if (!submarineData.name || !submarineData.model) {
           console.error("Enter a name and model for your submarine.");
+          if (isCreatingSubmarine) toast.danger("Enter a name and model for your submarine.");
           return;
         }
 
@@ -188,9 +190,19 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
       }
 
       onSaved(saved);
+      if (isCreatingSubmarine) toast.success("Submarine created successfully");
       onClose();
     } catch (err) {
       console.error(err);
+      const message = err.response?.status === 401
+        ? "Your session has expired. Please sign in again."
+        : err.response?.data?.message || err.response?.data?.error || "Could not save changes. Please try again.";
+
+      if (isCreatingSubmarine) {
+        toast.danger(message);
+      } else {
+        window.alert(message);
+      }
     } finally {
       setSaving(false);
       setUploading(false);
@@ -225,9 +237,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
             </p>
           </Modal.Header>
 
-          <Modal.Body className="record-body">
-
-            <Form id={formId} onSubmit={handleSubmit} className="record-form" validationBehavior="native">
+          <Form id={formId} onSubmit={handleSubmit} className="record-dialog-form" validationBehavior="native">
+            <Modal.Body className="record-body">
+              <div className="record-form">
               {isMission ? (
                 <>
                   <div className="record-field record-wide">
@@ -419,18 +431,19 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
               )}
 
               {uploading && <p className="record-notice record-wide" role="status">Uploading your image...</p>}
-            </Form>
-          </Modal.Body>
+              </div>
+            </Modal.Body>
 
-          <Modal.Footer className="record-footer">
-            <span className="record-footer-note">DEEPSEA / BEYOND THE SURFACE</span>
-            <div className="record-footer-buttons">
-              <button type="button" className="record-button record-button-cancel" onClick={onClose} disabled={saving}>Cancel</button>
-              <button type="submit" form={formId} className="record-button record-button-save" disabled={saving || Boolean(imageError)} aria-busy={saving}>
-                {uploading ? "Uploading image..." : saving ? "Saving..." : isEditing ? "Save changes" : "Create " + title.toLowerCase()}
-              </button>
-            </div>
-          </Modal.Footer>
+            <Modal.Footer className="record-footer">
+              <span className="record-footer-note">DEEPSEA / BEYOND THE SURFACE</span>
+              <div className="record-footer-buttons">
+                <button type="button" className="record-button record-button-cancel" onClick={onClose} disabled={saving}>Cancel</button>
+                <button type="submit" className="record-button record-button-save" disabled={saving || Boolean(imageError)} aria-busy={saving}>
+                  {uploading ? "Uploading image..." : saving ? "Saving..." : isEditing ? "Save changes" : "Create " + title.toLowerCase()}
+                </button>
+              </div>
+            </Modal.Footer>
+          </Form>
         </Modal.Dialog>
       </Modal.Container>
     </Modal.Backdrop>

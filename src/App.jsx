@@ -11,12 +11,8 @@ import { logout } from "./services/authService";
 // Abdulla's pages
 import AllMission from "./pages/MissionPages/AllMission";
 import MissionDetails from "./pages/MissionPages/MissionDetails";
-import CreateMission from "./pages/MissionPages/CreateMission";
-import UpdateMission from "./pages/MissionPages/updateMission";
 
 import AllSubmarines from "./pages/submarines/AllSubmarines";
-import CreateSubmarines from "./pages/submarines/CreateSubmarines";
-import UpdateSubmarines from "./pages/submarines/UpdateSubmarines";
 import SubmarinesDetails from "./pages/submarines/SubmarinesDetails";
 
 // Zainab's pages
@@ -81,12 +77,8 @@ function App() {
 
         <Route path="/all-missions" element={<AllMission user={user} />} />
         <Route path="/mission/:id" element={<MissionDetails user={user} />} />
-        <Route path="/create-mission" element={<CreateMission user={user} />} />
-        <Route path="/update-mission/:id" element={<UpdateMission user={user} />} />
 
         <Route path="/all-submarines" element={<AllSubmarines user={user} />} />
-        <Route path="/create-submarines" element={<CreateSubmarines user={user} />} />
-        <Route path="/update-submarines/:id" element={<UpdateSubmarines user={user} />} />
         <Route path="/submarines/:id" element={<SubmarinesDetails user={user} />} />
         // EQUIPMENT Routes
         <Route path="/equipments" element={<AllEquipment />} />
