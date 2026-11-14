@@ -33,9 +33,6 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
   });
   const [submarines, setSubmarines] = useState([]);
   const [locations, setLocations] = useState([]);
-  const [loading, setLoading] = useState(isMission);
-  const [optionsError, setOptionsError] = useState("");
-  const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
@@ -57,11 +54,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
           setLocations(locationData);
         }
       } catch (err) {
-        if (active) {
-          setOptionsError(err.response?.data?.message || "Unable to load submarines and locations.");
-        }
-      } finally {
-        if (active) setLoading(false);
+        console.error(err);
       }
     }
 
@@ -78,7 +71,6 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
   function handleChange(event) {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
-    setError("");
   }
 
   function handleImageChange(event) {
@@ -100,7 +92,6 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
     setImageFile(file);
     setPreview(URL.createObjectURL(file));
     setImageError("");
-    setError("");
   }
 
   function cancelImageSelection() {
@@ -120,10 +111,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if (!canSubmit || saving || loading || optionsError || imageError) return;
+    if (!canSubmit || saving || imageError) return;
 
     setSaving(true);
-    setError("");
 
     try {
       let saved;
@@ -139,7 +129,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
         };
 
         if (!missionData.title || !missionData.objective) {
-          setError("Enter a title and objective for your mission.");
+          console.error("Enter a title and objective for your mission.");
           return;
         }
 
@@ -173,7 +163,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
         };
 
         if (!submarineData.name || !submarineData.model) {
-          setError("Enter a name and model for your submarine.");
+          console.error("Enter a name and model for your submarine.");
           return;
         }
 
@@ -200,11 +190,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
       onSaved(saved);
       onClose();
     } catch (err) {
-      if (err.response?.status === 401) {
-        setError("Please sign in again before saving.");
-      } else {
-        setError(err.response?.data?.message || err.response?.data?.error || err.response?.data?.err || "Unable to save. Please try again.");
-      }
+      console.error(err);
     } finally {
       setSaving(false);
       setUploading(false);
@@ -212,7 +198,6 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
   }
 
   if (!canSubmit) return null;
-  const disabled = saving || loading || Boolean(optionsError);
 
   return (
     <Modal.Backdrop
@@ -241,8 +226,6 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
           </Modal.Header>
 
           <Modal.Body className="record-body">
-            {loading && <p className="record-notice" role="status">Loading submarines and locations...</p>}
-            {optionsError && <p className="record-error" role="alert">{optionsError}</p>}
 
             <Form id={formId} onSubmit={handleSubmit} className="record-form" validationBehavior="native">
               {isMission ? (
@@ -255,7 +238,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                       placeholder="Name your expedition"
                       value={formData.title}
                       onChange={handleChange}
-                      disabled={disabled}
+                      disabled={saving}
                       required
                     />
                   </div>
@@ -269,7 +252,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                       placeholder="What do you hope to discover?"
                       value={formData.objective}
                       onChange={handleChange}
-                      disabled={disabled}
+                      disabled={saving}
                       required
                     />
                   </div>
@@ -282,7 +265,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                       type="date"
                       value={formData.startDate}
                       onChange={handleChange}
-                      disabled={disabled}
+                      disabled={saving}
                       required
                     />
                   </div>
@@ -296,7 +279,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                       min={formData.startDate || undefined}
                       value={formData.endDate}
                       onChange={handleChange}
-                      disabled={disabled}
+                      disabled={saving}
                     />
                   </div>
 
@@ -307,13 +290,13 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                       name="submarine"
                       value={formData.submarine}
                       onChange={handleChange}
-                      disabled={disabled}
+                      disabled={saving}
                       required
                     >
                       <option value="">Choose a submarine</option>
                       {submarines.map((item) => <option key={item._id} value={item._id}>{item.name}</option>)}
                     </select>
-                    {!loading && !optionsError && submarines.length === 0 && <p className="record-help">Add a submarine before creating a mission.</p>}
+                    {submarines.length === 0 && <p className="record-help">Add a submarine before creating a mission.</p>}
                   </div>
 
                   <div className="record-field">
@@ -323,13 +306,13 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                       name="location"
                       value={formData.location}
                       onChange={handleChange}
-                      disabled={disabled}
+                      disabled={saving}
                       required
                     >
                       <option value="">Choose a location</option>
                       {locations.map((item) => <option key={item._id} value={item._id}>{item.name}</option>)}
                     </select>
-                    {!loading && !optionsError && locations.length === 0 && <p className="record-help">Add a location before creating a mission.</p>}
+                    {locations.length === 0 && <p className="record-help">Add a location before creating a mission.</p>}
                   </div>
                 </>
               ) : (
@@ -342,7 +325,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                       placeholder="Name your vessel"
                       value={formData.name}
                       onChange={handleChange}
-                      disabled={disabled}
+                      disabled={saving}
                       required
                     />
                   </div>
@@ -355,7 +338,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                       placeholder="Enter the model"
                       value={formData.model}
                       onChange={handleChange}
-                      disabled={disabled}
+                      disabled={saving}
                       required
                     />
                   </div>
@@ -371,7 +354,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                       placeholder="300"
                       value={formData.maxDepth}
                       onChange={handleChange}
-                      disabled={disabled}
+                      disabled={saving}
                       required
                     />
                   </div>
@@ -387,7 +370,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                       placeholder="6"
                       value={formData.capacity}
                       onChange={handleChange}
-                      disabled={disabled}
+                      disabled={saving}
                       required
                     />
                   </div>
@@ -401,7 +384,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                       placeholder="Tell us about this submarine and its capabilities."
                       value={formData.description}
                       onChange={handleChange}
-                      disabled={disabled}
+                      disabled={saving}
                     />
                   </div>
 
@@ -423,11 +406,11 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                             aria-describedby={formId + "-image-help"}
                             accept="image/jpeg,image/png,image/webp"
                             onChange={handleImageChange}
-                            disabled={disabled}
+                            disabled={saving}
                           />
                           {preview ? "Change image" : "Choose image"}
                         </label>
-                        {(imageFile || imageError) && <button className="record-image-cancel" type="button" onClick={cancelImageSelection} disabled={disabled}>Cancel selection</button>}
+                        {(imageFile || imageError) && <button className="record-image-cancel" type="button" onClick={cancelImageSelection} disabled={saving}>Cancel selection</button>}
                       </div>
                     </div>
                     {imageError && <p className="record-error" role="alert">{imageError}</p>}
@@ -435,7 +418,6 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                 </>
               )}
 
-              {error && <p className="record-error record-wide" role="alert">{error}</p>}
               {uploading && <p className="record-notice record-wide" role="status">Uploading your image...</p>}
             </Form>
           </Modal.Body>
@@ -444,7 +426,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
             <span className="record-footer-note">DEEPSEA / BEYOND THE SURFACE</span>
             <div className="record-footer-buttons">
               <button type="button" className="record-button record-button-cancel" onClick={onClose} disabled={saving}>Cancel</button>
-              <button type="submit" form={formId} className="record-button record-button-save" disabled={disabled || Boolean(imageError)} aria-busy={saving}>
+              <button type="submit" form={formId} className="record-button record-button-save" disabled={saving || Boolean(imageError)} aria-busy={saving}>
                 {uploading ? "Uploading image..." : saving ? "Saving..." : isEditing ? "Save changes" : "Create " + title.toLowerCase()}
               </button>
             </div>

@@ -12,8 +12,6 @@ function SubmarinesDetails({ user }) {
   const navigate = useNavigate();
   const { id } = useParams();
   const [submarine, setSubmarine] = useState(null);
-  const [loadError, setLoadError] = useState(null);
-  const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const isAdmin = user?.role === "admin";
   const canDelete = isAdmin || user?.role === "visitor";
@@ -23,13 +21,12 @@ function SubmarinesDetails({ user }) {
     if (!canDelete || pending) return;
 
     setPending(true);
-    setError("");
 
     try {
       await deleteSubmarine(id);
       navigate("/all-submarines");
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to delete submarine.");
+      console.error(err);
     } finally {
       setPending(false);
     }
@@ -39,13 +36,12 @@ function SubmarinesDetails({ user }) {
     if (!canEdit || pending) return;
 
     setPending(true);
-    setError("");
 
     try {
       const data = await updateSubmarineState(id, newState);
       setSubmarine(data.submarine);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to update submarine status.");
+      console.error(err);
     } finally {
       setPending(false);
     }
@@ -58,12 +54,7 @@ function SubmarinesDetails({ user }) {
         const data = await getSubmarineById(id);
         if (active) setSubmarine(data.submarine);
       } catch (err) {
-        if (active) {
-          setLoadError({
-            id,
-            message: err.response?.data?.message || "Failed to load this submarine.",
-          });
-        }
+        console.error(err);
       }
     }
 
@@ -78,11 +69,7 @@ function SubmarinesDetails({ user }) {
     return (
       <div>
         <Link to="/all-submarines">Back to submarines</Link>
-        {loadError?.id === id ? (
-          <p role="alert" className="text-danger">{loadError.message}</p>
-        ) : (
-          <p role="status">Loading submarine...</p>
-        )}
+        <p role="status">Loading submarine...</p>
       </div>
     );
   }
@@ -92,7 +79,6 @@ function SubmarinesDetails({ user }) {
       <h1>Submarine Details</h1>
       <Link to="/all-submarines">Back to submarines</Link>
 
-      {error && <p role="alert" className="text-danger">{error}</p>}
       {pending && <p role="status">Saving changes...</p>}
 
       {canDelete && (
