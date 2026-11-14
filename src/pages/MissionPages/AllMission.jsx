@@ -7,7 +7,7 @@ import "./AllMission.css";
 
 function AllMission({ user }) {
     const [showCreate, setShowCreate] = useState(false);
-    const canCreate = ["admin", "visitor"].includes(user?.role);
+    const canCreate = ["admin", "researcher"].includes(user?.role);
 
     const [missions, setMissions] = useState([]);
     const [index, setIndex] = useState(0);
