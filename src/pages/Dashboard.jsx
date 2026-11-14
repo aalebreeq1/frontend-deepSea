@@ -215,6 +215,8 @@ export default function Dashboard() {
                                 submarines={submarines}
                                 equipment={equipment}
                                 locations={locations}
+                                discoveries={discoveries}
+                                species={species}
                             />
                         )}
                         {/* USERS */}
