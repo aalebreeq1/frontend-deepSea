@@ -33,7 +33,7 @@ import UserDetails from "./pages/UserPages/UserDetails";
 
 //Nawraa's pages 
 import AllDiscovery from "./pages/discoveryPages/AllDiscovery";
-import CreateDiscovery from "./pages/discoveryPages/createDiscovery";
+import CreateDiscovery from "./pages/discoveryPages/CreateDiscovery";
 import DiscoveryDetails from "./pages/discoveryPages/DiscoveryDeatials";
 import UpdateDiscovery from "./pages/discoveryPages/UpdateDiscovery";
 
