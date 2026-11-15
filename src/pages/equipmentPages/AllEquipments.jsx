@@ -1,15 +1,21 @@
+
 import { useState, useEffect } from 'react'
 import { getAllEquipments } from "../../services/equipmentServices"
 import { Link } from 'react-router'
+import { Button } from "@heroui/react"
+import RecordFormModal from "../../components/RecordFormModal"
 import './AllEquipment.css'
 
 function formatCondition(value) {
     return value.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase())
 }
 
-function AllEquipments() {
+function AllEquipments({ user }) {
     const [equipment, setEquipment] = useState([])
     const [index, setIndex] = useState(0)
+    const [showCreate, setShowCreate] = useState(false)
+
+    const canCreate = ["admin", "researcher"].includes(user?.role)
 
     useEffect(() => {
         async function loadEquipment() {
@@ -87,6 +93,26 @@ function AllEquipments() {
                         />
                     ))}
                 </div>
+
+                {canCreate && (
+                    <div className="sub-create-row">
+                        <Button className="sub-create-btn" onPress={() => setShowCreate(true)}>
+                            + Create Equipment
+                        </Button>
+                    </div>
+                )}
+
+                {canCreate && showCreate && (
+                    <RecordFormModal
+                        kind="equipment"
+                        user={user}
+                        onClose={() => setShowCreate(false)}
+                        onSaved={(newEquipment) => {
+                            setEquipment((previous) => [...previous, newEquipment])
+                            setIndex(equipment.length)
+                        }}
+                    />
+                )}
             </div>
 
         </section>

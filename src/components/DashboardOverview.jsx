@@ -3,20 +3,25 @@ import {
     ResponsiveContainer,
     BarChart,
     Bar,
-    LineChart,
-    Line,
     PieChart,
     Pie,
     Cell,
     XAxis,
     YAxis,
     Tooltip,
-    CartesianGrid
+    CartesianGrid,
+    Legend
 } from 'recharts';
 
 import './DashboardOverview.css';
 
-const COLORS = ['#D69A50', '#8D78C8', '#4DABB0', '#6B9B78', '#C56D69'];
+const COLORS = [
+    '#087E8B',
+    '#36BFC0',
+    '#75B9A8',
+    '#E39A70',
+    '#0B2538'
+];
 
 function DashboardOverview({
     users = [],
@@ -73,7 +78,10 @@ function DashboardOverview({
             const status = submarine.status || 'Unknown';
 
             if (!acc[status]) {
-                acc[status] = { name: status.replaceAll('_', ' '), value: 0 };
+                acc[status] = {
+                    name: status.replaceAll('_', ' '),
+                    value: 0
+                };
             }
 
             acc[status].value += 1;
@@ -130,6 +138,7 @@ function DashboardOverview({
             }
 
             acc[type].count += 1;
+
             return acc;
         }, {})
     );
@@ -147,21 +156,32 @@ function DashboardOverview({
             }
 
             acc[classification].count += 1;
+
             return acc;
         }, {})
     );
 
+    // Latest 4 species
+    const latestSpecies = [...species]
+        .sort((a, b) =>
+            String(b._id || '').localeCompare(String(a._id || ''))
+        )
+        .slice(0, 4);
+
+    // Empty chart message
     function EmptyChart({ message = 'No records available yet' }) {
         return <p className="chart-empty">{message}</p>;
     }
 
-    function ChartCard({ number, title, children }) {
+    // Dashboard chart card
+    function ChartCard({ number, title, children, className = '' }) {
         return (
-            <section className="analytics-card">
+            <section className={`analytics-card ${className}`}>
                 <div className="analytics-card-heading">
                     <span className="analytics-number">{number}</span>
                     <h3>{title}</h3>
                 </div>
+
                 {children}
             </section>
         );
@@ -171,24 +191,31 @@ function DashboardOverview({
         <div className="analytics-dashboard">
 
             {/* 1. Expedition Overview */}
-            <ChartCard number="01" title="Expedition Overview">
+            <ChartCard
+                number="01"
+                title="Expedition Overview"
+                className="area-one"
+            >
                 <div className="overview-stats">
                     <div>
                         <span>Total Missions</span>
                         <strong>{missions.length}</strong>
                     </div>
+
                     <div>
                         <span>Active Missions</span>
                         <strong>
                             {missions.filter(m => m.status === 'active').length}
                         </strong>
                     </div>
+
                     <div>
                         <span>Completed</span>
                         <strong>
                             {missions.filter(m => m.status === 'completed').length}
                         </strong>
                     </div>
+
                     <div>
                         <span>Planned</span>
                         <strong>
@@ -196,163 +223,267 @@ function DashboardOverview({
                         </strong>
                     </div>
                 </div>
-
-                {missionActivity.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={125}>
-                        <LineChart data={missionActivity}>
-                            <CartesianGrid stroke="#293941" strokeDasharray="3 3" />
-                            <XAxis dataKey="month" stroke="#82939B" />
-                            <YAxis allowDecimals={false} stroke="#82939B" />
-                            <Tooltip />
-                            <Line
-                                type="monotone"
-                                dataKey="missions"
-                                stroke="#D69A50"
-                                strokeWidth={3}
-                                dot={{ r: 4 }}
-                            />
-                        </LineChart>
-                    </ResponsiveContainer>
-                ) : <EmptyChart message="No mission dates available" />}
             </ChartCard>
 
             {/* 2. Mission Distribution */}
-            <ChartCard number="02" title="Mission Distribution">
+            <ChartCard
+                number="02"
+                title="Mission Distribution"
+                className="area-two"
+            >
                 {missionsByOcean.length > 0 ? (
                     <ResponsiveContainer width="100%" height={135}>
                         <BarChart data={missionsByOcean}>
-                            <CartesianGrid stroke="#293941" strokeDasharray="3 3" />
+                            <CartesianGrid
+                                stroke="#293941"
+                                strokeDasharray="3 3"
+                            />
                             <XAxis dataKey="name" stroke="#82939B" />
                             <YAxis allowDecimals={false} stroke="#82939B" />
                             <Tooltip />
-                            <Bar dataKey="missions" fill="#4DABB0" radius={[5, 5, 0, 0]} />
+                            <Bar
+                                dataKey="missions"
+                                fill="#4DABB0"
+                                radius={[5, 5, 0, 0]}
+                            />
                         </BarChart>
                     </ResponsiveContainer>
-                ) : <EmptyChart />}
+                ) : (
+                    <EmptyChart />
+                )}
             </ChartCard>
 
             {/* 3. Submarine Fleet */}
             <ChartCard number="03" title="Submarine Fleet">
                 {submarineStatus.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={260}>
-                        <PieChart>
-                            <Pie
-                                data={submarineStatus}
-                                dataKey="value"
-                                nameKey="name"
-                                innerRadius={60}
-                                outerRadius={90}
-                                paddingAngle={4}
-                            >
-                                {submarineStatus.map((item, index) => (
-                                    <Cell key={item.name} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                        </PieChart>
-                    </ResponsiveContainer>
-                ) : <EmptyChart />}
+                    <div className="pie-chart-layout">
+                        <div className="pie-chart-visual">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={submarineStatus}
+                                        dataKey="value"
+                                        nameKey="name"
+                                        innerRadius={45}
+                                        outerRadius={75}
+                                        paddingAngle={4}
+                                    >
+                                        {submarineStatus.map((item, index) => (
+                                            <Cell
+                                                key={item.name}
+                                                fill={COLORS[index % COLORS.length]}
+                                            />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+
+                        <div className="pie-chart-legend">
+                            {submarineStatus.map((item, index) => (
+                                <div className="pie-legend-item" key={item.name}>
+                                    <span className="pie-legend-label">
+                                        <span
+                                            className="pie-legend-dot"
+                                            style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                                        />
+                                        {item.name}
+                                    </span>
+                                    <span className="pie-legend-count">{item.value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <EmptyChart />
+                )}
             </ChartCard>
 
             {/* 4. Equipment Inventory */}
             <ChartCard number="04" title="Equipment Inventory">
                 {equipmentCondition.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={260}>
-                        <PieChart>
-                            <Pie
-                                data={equipmentCondition}
-                                dataKey="value"
-                                nameKey="name"
-                                innerRadius={60}
-                                outerRadius={90}
-                                paddingAngle={4}
-                            >
-                                {equipmentCondition.map((item, index) => (
-                                    <Cell key={item.name} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                        </PieChart>
-                    </ResponsiveContainer>
-                ) : <EmptyChart />}
-            </ChartCard>
+                    <div className="pie-chart-layout">
+                        <div className="pie-chart-visual">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={equipmentCondition}
+                                        dataKey="value"
+                                        nameKey="name"
+                                        innerRadius={45}
+                                        outerRadius={75}
+                                        paddingAngle={4}
+                                    >
+                                        {equipmentCondition.map((item, index) => (
+                                            <Cell
+                                                key={item.name}
+                                                fill={COLORS[index % COLORS.length]}
+                                            />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
 
-            {/* 5. Deep-Sea Locations */}
-            <ChartCard number="05" title="Deep-Sea Locations">
-                {locationDepth.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={260}>
-                        <BarChart data={locationDepth}>
-                            <CartesianGrid stroke="#293941" strokeDasharray="3 3" />
-                            <XAxis dataKey="name" stroke="#82939B" />
-                            <YAxis stroke="#82939B" />
-                            <Tooltip />
-                            <Bar dataKey="depth" fill="#8D78C8" radius={[5, 5, 0, 0]} />
-                        </BarChart>
-                    </ResponsiveContainer>
-                ) : <EmptyChart message="No location depth records available" />}
+                        <div className="pie-chart-legend">
+                            {equipmentCondition.map((item, index) => (
+                                <div className="pie-legend-item" key={item.name}>
+                                    <span className="pie-legend-label">
+                                        <span
+                                            className="pie-legend-dot"
+                                            style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                                        />
+                                        {item.name}
+                                    </span>
+                                    <span className="pie-legend-count">{item.value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <EmptyChart />
+                )}
             </ChartCard>
 
             {/* 6. Research Team */}
-            <ChartCard number="06" title="Research Team">
+            <ChartCard
+                number="06"
+                title="Research Team"
+                className="area-six"
+            >
                 {userRoles.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={260}>
-                        <PieChart>
-                            <Pie
-                                data={userRoles}
-                                dataKey="value"
-                                nameKey="name"
-                                innerRadius={60}
-                                outerRadius={90}
-                                paddingAngle={4}
-                            >
-                                {userRoles.map((item, index) => (
-                                    <Cell key={item.name} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                        </PieChart>
-                    </ResponsiveContainer>
-                ) : <EmptyChart />}
+                    <div className="pie-chart-layout">
+                        <div className="pie-chart-visual">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={userRoles}
+                                        dataKey="value"
+                                        nameKey="name"
+                                        innerRadius={45}
+                                        outerRadius={75}
+                                        paddingAngle={4}
+                                    >
+                                        {userRoles.map((item, index) => (
+                                            <Cell
+                                                key={item.name}
+                                                fill={COLORS[index % COLORS.length]}
+                                            />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+
+                        <div className="pie-chart-legend">
+                            {userRoles.map((item, index) => (
+                                <div className="pie-legend-item" key={item.name}>
+                                    <span className="pie-legend-label">
+                                        <span
+                                            className="pie-legend-dot"
+                                            style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                                        />
+                                        {item.name}
+                                    </span>
+                                    <span className="pie-legend-count">{item.value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <EmptyChart />
+                )}
             </ChartCard>
 
-            {/* 7. Discoveries */}
-            <ChartCard number="07" title="Discoveries & Species">
-                {discoveryTypes.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={260}>
-                        <BarChart data={discoveryTypes}>
-                            <CartesianGrid stroke="#293941" strokeDasharray="3 3" />
-                            <XAxis dataKey="name" stroke="#82939B" />
-                            <YAxis allowDecimals={false} stroke="#82939B" />
-                            <Tooltip />
-                            <Bar dataKey="count" fill="#D69A50" radius={[5, 5, 0, 0]} />
-                        </BarChart>
-                    </ResponsiveContainer>
-                ) : <EmptyChart message="Discovery data will appear here" />}
+            {/* 7. Discoveries & Species */}
+            <ChartCard
+                number="07"
+                title="Discoveries & Species"
+                className="wide-card"
+            >
+                <div className="species-gallery">
+                    {latestSpecies.length > 0 ? (
+                        latestSpecies.map(item => (
+                            <div
+                                className="species-gallery-item"
+                                key={item._id}
+                            >
+                                {item.image ? (
+                                    <img
+                                        src={item.image}
+                                        alt={
+                                            item.commonName ||
+                                            item.scientificName
+                                        }
+                                    />
+                                ) : (
+                                    <div className="species-image-placeholder">
+                                        🪼
+                                    </div>
+                                )}
+
+                                <div className="species-gallery-info">
+                                    <h4>
+                                        {item.commonName || item.scientificName}
+                                    </h4>
+
+                                    <p>{item.scientificName}</p>
+
+                                    <span>{item.classification}</span>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <EmptyChart message="No species records available" />
+                    )}
+                </div>
 
                 <p className="chart-note">
+                    Showing {latestSpecies.length} latest species ·{' '}
                     {species.length} species recorded
                 </p>
-                {speciesClassifications.length > 0 && (
-                    <div className="classification-list">
-                        {speciesClassifications.map(item => (
-                            <span key={item.name}>
-                                {item.name}: {item.count}
-                            </span>
-                        ))}
-                    </div>
-                )}
             </ChartCard>
 
             {/* 8. Database Summary */}
             <ChartCard number="08" title="DeepSea Database">
                 <div className="database-summary">
-                    <div><span>Users</span><strong>{users.length}</strong></div>
-                    <div><span>Missions</span><strong>{missions.length}</strong></div>
-                    <div><span>Submarines</span><strong>{submarines.length}</strong></div>
-                    <div><span>Equipment</span><strong>{equipment.length}</strong></div>
-                    <div><span>Locations</span><strong>{locations.length}</strong></div>
-                    <div><span>Discoveries</span><strong>{discoveries.length}</strong></div>
-                    <div><span>Species</span><strong>{species.length}</strong></div>
+                    <div>
+                        <span>Users</span>
+                        <strong>{users.length}</strong>
+                    </div>
+
+                    <div>
+                        <span>Missions</span>
+                        <strong>{missions.length}</strong>
+                    </div>
+
+                    <div>
+                        <span>Submarines</span>
+                        <strong>{submarines.length}</strong>
+                    </div>
+
+                    <div>
+                        <span>Equipment</span>
+                        <strong>{equipment.length}</strong>
+                    </div>
+
+                    <div>
+                        <span>Locations</span>
+                        <strong>{locations.length}</strong>
+                    </div>
+
+                    <div>
+                        <span>Discoveries</span>
+                        <strong>{discoveries.length}</strong>
+                    </div>
+
+                    <div>
+                        <span>Species</span>
+                        <strong>{species.length}</strong>
+                    </div>
                 </div>
             </ChartCard>
 

@@ -1,0 +1,347 @@
+.submarine-details-page {
+  min-height: 100vh;
+  padding: 2rem 1.25rem 3rem;
+  background-color: #02060c;
+  background-image:
+    linear-gradient(#02060c40, #02060c99),
+    url("/images/mission-details-ocean.png");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  color: #e6f4f7;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.submarine-details-page *,
+.submarine-details-page *::before,
+.submarine-details-page *::after {
+  box-sizing: border-box;
+}
+
+.submarine-details-shell {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.submarine-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px;
+  margin-bottom: 2rem;
+  color: #b8c2cc;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.submarine-detail-back:hover {
+  color: #a6e9ec;
+}
+
+.submarine-detail-heading {
+  margin-bottom: 2rem;
+}
+
+.submarine-detail-heading-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.submarine-detail-label {
+  margin: 0;
+  color: #aebdc9;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.submarine-detail-heading h1 {
+  margin: 0;
+  color: #ece8e1;
+  font-size: clamp(2.5rem, 5.5vw, 5rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  overflow-wrap: anywhere;
+}
+
+.submarine-detail-model {
+  margin: 1rem 0 0;
+  color: #a6e9ec;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.submarine-detail-status {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid #718593;
+  border-radius: 999px;
+  background: #12212c;
+  color: #c3d1d9;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+}
+
+.submarine-detail-status.operational {
+  border-color: #587764;
+  background: #23342a;
+  color: #b2d7be;
+}
+
+.submarine-detail-status.under_maintenance {
+  border-color: #877247;
+  background: #382f1c;
+  color: #e2c990;
+}
+
+.submarine-detail-status.retired {
+  border-color: #6d6585;
+  background: #302b45;
+  color: #cec7eb;
+}
+
+.submarine-detail-overview {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.submarine-detail-photo {
+  position: relative;
+  min-width: 0;
+  min-height: 340px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid #8ddce24d;
+  border-radius: 20px;
+  background: #0c1e2b;
+}
+
+.submarine-detail-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.submarine-detail-photo figcaption {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 4rem 1.5rem 1.5rem;
+  background: linear-gradient(transparent, #02060cf2);
+  color: #d8e6ec;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.submarine-detail-panel,
+.submarine-detail-management {
+  min-width: 0;
+  padding: 1.5rem;
+  border: 1px solid #9aa8b533;
+  border-radius: 20px;
+  background: #0a1923ed;
+}
+
+.submarine-detail-panel h2,
+.submarine-detail-management h2 {
+  margin: 0.65rem 0 1rem;
+  color: #ece8e1;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.submarine-detail-description {
+  margin: 0;
+  color: #c3d1d9;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.submarine-detail-specs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.submarine-detail-specs > div {
+  min-width: 0;
+  padding: 1.25rem;
+  border: 1px solid #8ddce233;
+  border-radius: 12px;
+  background: #102936;
+}
+
+.submarine-detail-specs dt,
+.submarine-detail-facts dt {
+  color: #aebdc9;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.submarine-detail-specs dd {
+  margin: 0.75rem 0 0;
+  color: #a6e9ec;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.submarine-detail-specs dd span {
+  display: block;
+  margin-top: 0.4rem;
+  color: #c3d1d9;
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.submarine-detail-facts {
+  margin: 0;
+  border-top: 1px solid #9aa8b533;
+}
+
+.submarine-detail-facts > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-top: 1.25rem;
+}
+
+.submarine-detail-facts dd {
+  margin: 0;
+  color: #e6f4f7;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.submarine-detail-status-text {
+  text-transform: capitalize;
+}
+
+.submarine-detail-management {
+  margin-top: 1.5rem;
+}
+
+.submarine-detail-management > div > p:last-child {
+  margin-bottom: 0;
+  color: #b8c2cc;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.submarine-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.submarine-detail-button {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #658492;
+  border-radius: 8px;
+  background: transparent;
+  color: #d4e0e5;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.submarine-detail-button:hover {
+  border-color: #a6e9ec;
+  background: #173340;
+  color: #e6f4f7;
+}
+
+.submarine-detail-primary {
+  border-color: #a6e9ec;
+  background: #a6e9ec;
+  color: #0a2631;
+}
+
+.submarine-detail-primary:hover {
+  background: #c7f6f7;
+  color: #0a2631;
+}
+
+.submarine-detail-delete {
+  border-color: #aa7474;
+  color: #f4c3c3;
+}
+
+.submarine-detail-delete:hover {
+  border-color: #e2a3a3;
+  background: #382222;
+  color: #f4c3c3;
+}
+
+.submarine-detail-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submarine-detail-saving {
+  margin: 1rem 0 0;
+  color: #a6e9ec;
+  font-size: 0.85rem;
+}
+
+.submarine-detail-footer {
+  padding-top: 3rem;
+  color: #aebdc9;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.submarine-details-page :is(a, button):focus-visible {
+  outline: 2px solid #a6e9ec;
+  outline-offset: 4px;
+}
+
+@media (min-width: 700px) {
+  .submarine-details-page {
+    padding: 2.5rem 5% 3rem;
+  }
+
+  .submarine-detail-panel,
+  .submarine-detail-management {
+    padding: 2rem;
+  }
+
+  .submarine-detail-photo {
+    min-height: 440px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .submarine-detail-overview {
+    grid-template-columns: 1.15fr 1fr;
+    gap: 2rem;
+  }
+
+  .submarine-detail-photo {
+    min-height: 500px;
+  }
+
+  .submarine-detail-management {
+    margin-top: 2rem;
+  }
+}

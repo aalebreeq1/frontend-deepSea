@@ -11,10 +11,8 @@ function formatStatus(value) {
 
 function AllSubmarines({ user }) {
     const [showCreate, setShowCreate] = useState(false);
-    const canCreate = ["admin", "visitor"].includes(user?.role);
+    const canCreate = ["admin", "researcher"].includes(user?.role);
     const [submarines, setSubmarines] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [index, setIndex] = useState(0);
     const [photo, setPhoto] = useState(0);
 
@@ -26,12 +24,7 @@ function AllSubmarines({ user }) {
                 const data = await getAllSubmarines();
                 if (active) setSubmarines(data.submarines);
             } catch (err) {
-                if (active) {
-                    setError(err.response?.data?.message ||
-                        'Failed to load submarines. Please try again later.');
-                }
-            } finally {
-                if (active) setLoading(false);
+                console.error(err);
             }
         }
 
@@ -78,8 +71,8 @@ function AllSubmarines({ user }) {
             <header className="sub-hero">
                 <div className="sub-hero-overlay" />
                 <div className="sub-hero-content">
-                    <h1 className="sub-hero-title">DeepSea</h1>
-                    <p className="sub-hero-subtitle">Submarines</p>
+                    <h1 className="sub-hero-title">Submarines</h1>
+                    <p className="sub-hero-subtitle">OF DeepSea</p>
                 </div>
                 <a className="sub-scroll-cue" href="#submarine-list">
                     <span className="sub-scroll-arrow">↓</span>
@@ -90,11 +83,7 @@ function AllSubmarines({ user }) {
             <div className="sub-section" id="submarine-list">
                 <h2 className="sub-section-title">Our submarines</h2>
 
-                {loading ? (
-                    <p role="status" className="sub-message">Loading submarines...</p>
-                ) : error ? (
-                    <p role="alert" className="sub-message error">{error}</p>
-                ) : total === 0 ? (
+                {total === 0 ? (
                     <p className="sub-message">No submarines currently registered.</p>
                 ) : (
                     <>
@@ -163,7 +152,7 @@ function AllSubmarines({ user }) {
 
                 {canCreate && (
                     <div className="sub-create-row">
-                        <Button className="sub-create-btn" isDisabled={loading} onPress={() => setShowCreate(true)}>
+                        <Button className="sub-create-btn" onPress={() => setShowCreate(true)}>
                             + Create Submarine
                         </Button>
                     </div>
@@ -176,7 +165,6 @@ function AllSubmarines({ user }) {
                         onClose={() => setShowCreate(false)}
                         onSaved={(submarine) => {
                             setSubmarines((previous) => [...previous, submarine]);
-                            setError(null);
                         }}
                     />
                 )}

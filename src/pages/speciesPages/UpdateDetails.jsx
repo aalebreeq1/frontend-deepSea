@@ -1,7 +1,7 @@
 import {useEffect ,useState } from 'react';
 import { useNavigate ,useParams} from 'react-router';
 import { getSpeciesById,updateSpecies} from '../../services/speciesService';
-
+import './UpdateSpecies.css'
 
 function UpdateSpecies() {
     const navigate = useNavigate();
@@ -67,10 +67,15 @@ function UpdateSpecies() {
     };
 
     return (
-        <div>
-            <h1>Update Species</h1>
+        <div className='update-species-page'>
+            <div className='update-species-header'>
+                <span className='update-species-label'>BENEATH THE SURFACE</span>
+                 <h1>Update Species</h1>
+                 <p>Modify the details of this marine species</p>
+            </div>
+            
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className='update-species-form'>
                 <label htmlFor="scientificName">Scientific Name</label>
                 <input
                     id="scientificName"
@@ -103,10 +108,9 @@ function UpdateSpecies() {
 
 
                 <label htmlFor="description">Description</label>
-                <input
+                <textarea
                     id="description"
                     name="description"
-                    type="text"
                     value={formData.description}
                     onChange={handleChange}
                     required
@@ -123,7 +127,7 @@ function UpdateSpecies() {
                 />
 
 
-                <button type="submit">Update Species</button>
+                <button type="submit" className='update-species-button'>Update Species</button>
             </form>
         </div>
     );

@@ -2,8 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router";
 import {getDiscoveryById, deleteDiscovery}from '../../services/discoveryService'
 import {useEffect,useState}from "react"
-import './DiscoveryDetails.css'
-
+import './DiscoveryDetails.css';
 
 function DiscoveryDetails({user}) {
   const navigate = useNavigate();
@@ -35,6 +34,19 @@ function DiscoveryDetails({user}) {
         {!discovery ?(
           <p className="discovery-loading">Loading discovery . . .</p>
         ):(
+      <div className="discovery-details-container">
+
+
+     <div className="discovery-details-header">
+      <div>
+        <p className="discovery-subtitle">EXPLORE THE UNKNOWN</p>
+        <h1>Discovery Details</h1>
+      </div>
+     
+
+      <div className="discovery-actions">
+      {isAdmin &&(
+         <button className="delete-btn"onClick={handleDelete}>Delete Discovery</button>
 
             <div className="discovery-details-wrapper">
               <button 

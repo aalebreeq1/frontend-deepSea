@@ -21,6 +21,11 @@
   .discovery-details-wrapper{
     width: 100%;
         max-width: 1250px;
+    font-family: system-ui, -apple-system,'Segoe UI', Roboto, sans-serif;
+
+}
+    .discovery-details-container{
+        max-width: 1300px;
         margin: 0 auto;
     }
 

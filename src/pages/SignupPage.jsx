@@ -14,8 +14,9 @@ function SignupPage() {
     email: "",
     password: "",
     passwordConf: "",
+    role: "visitor",
   });
-  const { username, email, password, passwordConf } = formData;
+  const { username, email, password, passwordConf, role } = formData;
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -45,6 +46,7 @@ function SignupPage() {
         username: username.trim(),
         email: email.trim(),
         password,
+        role,
       });
       navigate("/sign-in", { state: { accountCreated: true } });
     } catch (err) {
@@ -141,6 +143,34 @@ function SignupPage() {
             required
           />
         </div>
+
+        <fieldset className="auth-role-group" disabled={submitting}>
+          <legend>Account role</legend>
+          <div className="auth-role-options">
+            <label className="auth-role-option">
+              <input
+                type="radio"
+                name="role"
+                value="visitor"
+                checked={role === "visitor"}
+                onChange={handleChange}
+                required
+              />
+              Visitor
+            </label>
+            <label className="auth-role-option">
+              <input
+                type="radio"
+                name="role"
+                value="researcher"
+                checked={role === "researcher"}
+                onChange={handleChange}
+                required
+              />
+              Researcher
+            </label>
+          </div>
+        </fieldset>
 
         {error && <p className="auth-error" role="alert">{error}</p>}
 

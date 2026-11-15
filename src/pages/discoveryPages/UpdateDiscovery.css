@@ -1,0 +1,130 @@
+.update-discovery-page{
+    min-height: 100vh;
+    padding: 50px 7%;
+    color: #efefef;
+    background: linear-gradient(
+        rgba(4,20,32,0.65),
+        rgba(4,20,32,0.85)
+    ),
+    url('/images/discovery/Alldiscoveries.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+}
+
+
+.update-discovery-header{
+    margin-bottom: 35px;
+}
+
+.update-discovery-label{
+    color: #43d9e8;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+
+.update-discovery-header h1{
+    margin: 12px 0;
+    font-size: 42px;
+    color: #f2fcff;
+}
+
+.update-discovery-header p{
+    color: #9bb9c5;
+    font-size: 15px;
+}
+
+.update-discovery-form{
+    max-width: 850px;
+    margin: auto;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: 1px solid rgba(118,205,220,0.2);
+    border-radius: 18px;
+    background: rgba(6,30,43,0.88);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+}
+
+
+.update-discovery-form label{
+    color: #9edce5;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.update-discovery-form textarea{
+    min-height: 120px;
+    resize: vertical;
+}
+
+
+
+.update-discovery-form input,
+.update-discovery-form select,
+.update-discovery-form textarea{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 15px;
+    border: 1px solid rgba(118,205,220,0.5);
+    border-radius:9px;
+    background: #092b3a;
+    color: #e6f4f7;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline:none;
+    transition: border-color 0.25s,box-shadow 0.25s;
+}
+
+.update-discovery-form input:focus,
+.update-discovery-form select:focus,
+.update-discovery-form textarea:focus
+{
+    border-color: #43d9e8;
+    box-shadow: 0 0 0 2px rgba(67,217, 232, 0.15);
+}
+
+.update-discovery-form select option{
+    background: #092b3a;
+    color: white;
+}
+
+
+.update-discovery-button{
+    margin-top: 20px;
+    padding: 14px;
+    border:none;
+    border-radius:9px;
+    background: linear-gradient(135deg,#087d98,#07556d);
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+.update-discovery-button:hover{
+    background: #0b9bb5;
+    transform: translateY(-2px);
+}
+
+
+@media(max-width:700px){
+    .update-discovery-page{
+        padding: 30px 5%;
+    }
+
+    .update-discovery-header h1{
+        font-size: 32px;
+    }
+
+    .update-discovery-form{
+        padding: 22px;
+    }
+}
