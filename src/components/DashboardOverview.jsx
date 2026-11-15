@@ -9,7 +9,8 @@ import {
     XAxis,
     YAxis,
     Tooltip,
-    CartesianGrid
+    CartesianGrid,
+    Legend
 } from 'recharts';
 
 import './DashboardOverview.css';
@@ -255,26 +256,45 @@ function DashboardOverview({
             {/* 3. Submarine Fleet */}
             <ChartCard number="03" title="Submarine Fleet">
                 {submarineStatus.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={260}>
-                        <PieChart>
-                            <Pie
-                                data={submarineStatus}
-                                dataKey="value"
-                                nameKey="name"
-                                innerRadius={60}
-                                outerRadius={90}
-                                paddingAngle={4}
-                            >
-                                {submarineStatus.map((item, index) => (
-                                    <Cell
-                                        key={item.name}
-                                        fill={COLORS[index % COLORS.length]}
-                                    />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                        </PieChart>
-                    </ResponsiveContainer>
+                    <div className="pie-chart-layout">
+                        <div className="pie-chart-visual">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={submarineStatus}
+                                        dataKey="value"
+                                        nameKey="name"
+                                        innerRadius={45}
+                                        outerRadius={75}
+                                        paddingAngle={4}
+                                    >
+                                        {submarineStatus.map((item, index) => (
+                                            <Cell
+                                                key={item.name}
+                                                fill={COLORS[index % COLORS.length]}
+                                            />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+
+                        <div className="pie-chart-legend">
+                            {submarineStatus.map((item, index) => (
+                                <div className="pie-legend-item" key={item.name}>
+                                    <span className="pie-legend-label">
+                                        <span
+                                            className="pie-legend-dot"
+                                            style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                                        />
+                                        {item.name}
+                                    </span>
+                                    <span className="pie-legend-count">{item.value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 ) : (
                     <EmptyChart />
                 )}
@@ -283,26 +303,45 @@ function DashboardOverview({
             {/* 4. Equipment Inventory */}
             <ChartCard number="04" title="Equipment Inventory">
                 {equipmentCondition.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={260}>
-                        <PieChart>
-                            <Pie
-                                data={equipmentCondition}
-                                dataKey="value"
-                                nameKey="name"
-                                innerRadius={60}
-                                outerRadius={90}
-                                paddingAngle={4}
-                            >
-                                {equipmentCondition.map((item, index) => (
-                                    <Cell
-                                        key={item.name}
-                                        fill={COLORS[index % COLORS.length]}
-                                    />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                        </PieChart>
-                    </ResponsiveContainer>
+                    <div className="pie-chart-layout">
+                        <div className="pie-chart-visual">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={equipmentCondition}
+                                        dataKey="value"
+                                        nameKey="name"
+                                        innerRadius={45}
+                                        outerRadius={75}
+                                        paddingAngle={4}
+                                    >
+                                        {equipmentCondition.map((item, index) => (
+                                            <Cell
+                                                key={item.name}
+                                                fill={COLORS[index % COLORS.length]}
+                                            />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+
+                        <div className="pie-chart-legend">
+                            {equipmentCondition.map((item, index) => (
+                                <div className="pie-legend-item" key={item.name}>
+                                    <span className="pie-legend-label">
+                                        <span
+                                            className="pie-legend-dot"
+                                            style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                                        />
+                                        {item.name}
+                                    </span>
+                                    <span className="pie-legend-count">{item.value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 ) : (
                     <EmptyChart />
                 )}
@@ -315,26 +354,45 @@ function DashboardOverview({
                 className="area-six"
             >
                 {userRoles.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={260}>
-                        <PieChart>
-                            <Pie
-                                data={userRoles}
-                                dataKey="value"
-                                nameKey="name"
-                                innerRadius={60}
-                                outerRadius={90}
-                                paddingAngle={4}
-                            >
-                                {userRoles.map((item, index) => (
-                                    <Cell
-                                        key={item.name}
-                                        fill={COLORS[index % COLORS.length]}
-                                    />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                        </PieChart>
-                    </ResponsiveContainer>
+                    <div className="pie-chart-layout">
+                        <div className="pie-chart-visual">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={userRoles}
+                                        dataKey="value"
+                                        nameKey="name"
+                                        innerRadius={45}
+                                        outerRadius={75}
+                                        paddingAngle={4}
+                                    >
+                                        {userRoles.map((item, index) => (
+                                            <Cell
+                                                key={item.name}
+                                                fill={COLORS[index % COLORS.length]}
+                                            />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+
+                        <div className="pie-chart-legend">
+                            {userRoles.map((item, index) => (
+                                <div className="pie-legend-item" key={item.name}>
+                                    <span className="pie-legend-label">
+                                        <span
+                                            className="pie-legend-dot"
+                                            style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                                        />
+                                        {item.name}
+                                    </span>
+                                    <span className="pie-legend-count">{item.value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 ) : (
                     <EmptyChart />
                 )}
