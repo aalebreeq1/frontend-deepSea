@@ -13,7 +13,7 @@ The frontend communicates with a separate backend API through Axios. Signing in 
 ## Live Application
 
 - **Frontend:** 
-- **Backend API:** 
+- **Backend API:**  [deployed backend](https://backend-deepsea.onrender.com/)
 - **Frontend Repository:** [frontend-deepSea](https://github.com/aalebreeq1/frontend-deepSea)
 - **Backend Repository:** [backend-deepSea](https://github.com/aalebreeq1/backend-deepSea)
 
