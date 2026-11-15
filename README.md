@@ -238,8 +238,8 @@ Mission and submarine create/edit actions use popup forms. They do not have sepa
 | Name | GitHub |
 | --- | --- |
 | Abdulla | [aalebreeq1](https://github.com/aalebreeq1) |
-| Zainab | Profile URL not provided in the local project metadata. |
-| Nawraa | Profile URL not provided in the local project metadata. |
+| Zainab | [zainabali98](https://github.com/zainabali98)  |
+| Nawraa | [nawraa5](https://github.com/nawraa5) |
 
 ## Credits
 
