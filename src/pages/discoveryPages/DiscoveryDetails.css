@@ -8,7 +8,7 @@
         rgba(2,6,12,0.8)
     ),
     
-    url('/images/discovery/discoveryDetails.png');
+    url('/images/species/species-details.jpg');
 
      background-size: cover;
     background-position: center;
@@ -16,6 +16,11 @@
     background-attachment: fixed;
 
      color: #e6f4f7;
+}
+
+  .discovery-details-wrapper{
+    width: 100%;
+        max-width: 1250px;
     font-family: system-ui, -apple-system,'Segoe UI', Roboto, sans-serif;
 
 }
@@ -25,219 +30,273 @@
     }
 
 
+     .back-discovery-btn{
+    padding:11px 20px;
+    margin-bottom: 30px;
+    border:1px solid rgba(100,220,230,0.35);
+    border-radius: 10px;
+    background: rgba(10, 45,65,0.65 );
+    color: #c9f8ff;
+    font-size: 14px;
+    font-weight: 800;;
+    cursor: pointer;
+    transition: 0.3s ease;
 
-.discovery-details-header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
 }
 
-.discovery-details-header h1{
-    margin:0;
-    color: #ece8e1;
-    font-size: 2.5rem;
-    font-weight: 800;
-    letter-spacing: -0.03rem;
+.back-discovery-btn:hover{
+    background: rgba(20,115,130,0.65);
+    transform: translateX(-4px);
 }
 
-.discovery-subtitle{
-    margin-top: 0.8rem;
-    color:#9aa8b5;
-    font-size: 0.9rem;
-    letter-spacing: 0.2rem;
+.discovery-details-heading {
+   text-align: center;
+   margin-bottom: 45px;
+}
+
+.discovery-details-heading h1{
+    color:#ffffff;
+    font-size:38px;
+    font-weight: 700;
+    margin-bottom: 12px;
     text-transform: uppercase;
+}
+
+.discovery-details-heading h1 span{
+    color: #55d6d2;
+}
+
+.discovery-details-heading p{
+    color: #b6dce5;
+    font-size: 15px;
 }
 
 .discovery-details-content{
     display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 2rem;
-    align-items: stretch;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: start;
 }
 
-.discovery-image-section{
-    min-height: 480px;
+
+.discovery-image-card{
+    min-height: 450px;
     overflow: hidden;
-    border: 1px solid rgba(141,220,226,0.3);
-    border-radius: 20px;
-    background: rgba(10, 25, 35, 0.48);
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25) 
+    border: 1px solid rgba(120,225,235,0.25);
+    border-radius: 22px;
+    background: rgba(5, 35, 55, 0.25);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    backdrop-filter:blur(12px);
 }
 
-.discovery-image-section img{
+.discovery-image-card img{
     display: block;
     width: 100%;
-    height: 100%;
-    min-height: 480px;
+    height: 480px;
     object-fit: cover;
 }
 
+.no-discovery-image{
+    min-height:450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a9dce5;
+    font-size: 17px;
+}
+
+
 .discovery-info-section{
-    padding: 2.5rem;
-    border:1px solid rgba(154, 168, 181, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+
+.discovery-info-card,
+.related-species-card{
+    padding: 27px;
+    border: 1px solid rgba(120,255,235,0.22);
     border-radius: 20px;
-    background: rgba(10,25,35,0.55);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+    background: rgba(5,35,55,0.68);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+    backdrop-filter: blur(15px);
 }
 
-
-.discovery-info-section > h2{
-    margin: 0;
-    color: #ece8e1;
-    font-size: 2.1rem;
-    font-weight: 800;
-    font-style: italic;
+.discovery-info-card h2{
+    margin:0 0 15px;
+    color:#ffffff;
+    font-size: 27px;
 }
 
-
-.discovery-info-grid{
-    display: grid;
-    grid-template-columns: repeat(2,1fr);
-    gap:1rem;
-    margin-top: 2rem;
-    padding: 1.3rem;
-    border: 1px solid rgba(141, 220, 226, 0.2);
-    border-radius: 12px;
-    background: rgba(20,70,85,0.3);
-}
-
-.discovery-info-card span{
-    color: #8ddce2;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.1rem;
-}
-
-.discovery-info-card p{
-    margin: 0.7rem 0 0;
-    color: #f1f5f6;
-    font-size: 1.1rem;
+.discovery-type{
+    display: inline-block;
+    padding: 7px 15px;
+    border: 1px solid rgba(85,214,210,0.4);
+    border-radius: 20px;
+    background: rgba(45,180,180,0.15);
+    color:#6ce5df;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .discovery-description{
-    margin-top: 2rem;
-}
-
-.discovery-description h3{
-    color:#8ddce2;
-    font-size: 0.95rem;
-    letter-spacing: 0.1rem;
-}
-
-.discovery-description p{
-    color:#d4e0e5;
-    font-size: 1rem;
+    margin: 22px 0;
+    color: #c3dce5;
+    font-size: 15px;
     line-height: 1.8;
 }
 
-.discovery-actions{
-    display:flex;
+.discovery-meta{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(150,220,230,0.18);
+}
+
+
+.discovery-meta-item span{
+    display: block;
+    margin-bottom: 9px;
+    color: #65d5d4;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.discovery-meta-item p{
+    margin: 0;
+    color: #e0f5f8;
+    font-size: 14px;
+}
+
+
+.related-species-card h3{
+    margin: 0 0 18px;
+    color: #65d5d4;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+}
+
+.related-species-list{
+    display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 2rem;
+    gap: 12px;
 }
 
-.edit-btn,
-.delete-btn{
-    border: 1px solid rgba(141,220,226,0.3);
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 0.85rem;
-    font-weight: 800;
+.related-species-item{
+    padding: 10px 15px;
+    border: 1px solid rgba(100,220,230,0.25);
+    border-radius: 10px;
+    background: rgba(20,100,120,0.22);
+    color: #d9faff;
+    font-size: 14px;
+}
+
+.related-species-card p{
+    color: #a9cbd5;
+    font-size: 14px;
+}
+
+
+.discovery-actions{
+    display: flex;
+    gap: 15px;
+}
+
+.edit-discovery-btn,
+.delete-discovery-btn{
+    padding: 12px 23px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 0.9rem 1.5rem;
+    transition: 0.3s ease;
+
 }
 
-.edit-btn{
-    border: 1px solid #a5e7eb ;
-    background: #a5e7eb;
-    color: #02060c;
-}
-.edit-btn:hover{
-    background: transparent;
-    color: #a5e7eb;
+.edit-discovery-btn{
+    background: linear-gradient(135deg,#28b8b5,#168b9c);
+    color: #ffffff;
 }
 
-.delete-btn{
-    border: 1px solid #e47777 ;
-    background: transparent;
-    color: #ff9999;
+.edit-discovery-btn:hover{
+    background: linear-gradient(135deg,#38d5ce,#20a9b8);
+    transform: translateY(-3px);
+
 }
 
-.delete-btn:hover{
-    background: #e47777;
-    color: #02060c;
+.delete-discovery-btn{
+    border: 1px solid rgba(255,100,110,0.4);
+    background: rgba(150,35,50,0.35);
+    color: #ffb5bc;
 }
+
+.delete-discovery-btn:hover{
+    background: rgba(190,45,60,0.7);
+    transform: translateY(-3px);
+}
+
+
 
 .discovery-loading{
-    padding-top: 5rem;
-    color: #e6f4f7;
-    font-size: 1.2rem;
-    text-align: center;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8de7e8;
+    font-size: 18px;
 }
 
-@media(max-width: 900px){
+
+@media(max-width:850px){
     .discovery-details-content{
         grid-template-columns: 1fr;
     }
 
-    .discovery-image-section,
-    .discovery-image-section img{
-        min-height: 350px;
-        height: 480px;
+
+    .discovery-image-card img{
+        height: 380px;
     }
 }
 
 
-.discovery-info-card{
-    padding: 1.3rem;
-    border: 1px solid rgba(141,220,226,0.2);
-    border-radius: 12px;
-    background: rgba(20,70,85,0.3);
-}
-
-
-
-.discovery-type-badge{
-    display: inline-block;
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    border: 1px solid rgba(141,220,226,0.3);
-    border-radius: 20px;
-    background: rgba(20,70,85,0.4);
-    color: #8ddce2;
-    font-size: 0.85rem;
-    font-weight: 700;
-}
-
-
-.discovery-type-badge p{
-    margin: 0;
-}
-
-
-@media(max-width: 600px){
+@media(max-width:550px){
     .discovery-details-page{
-        padding: 2rem 1rem;
-        background-attachment: scroll;
+        padding: 25px 14px 40px;
     }
 
-    .discovery-info-section{
-        padding: 1.5rem;
+
+    .discovery-details-heading h1{
+        font-size: 29px;
     }
 
-    .discovery-details-header h1{
-        font-size: 2rem;
+
+    .discovery-image-card img{
+        height: 280px;
     }
 
-    .discovery-info-section > h2{
-        font-size: 1.7rem;
+
+    .discovery-info-card,
+    .related-species-card{
+        padding:20px;
     }
 
+    .discovery-meta{
+        grid-template-columns: 1fr;
+    }
+
+    .discovery-actions{
+        flex-direction: column;
+    }
+
+    .edit-discovery-btn,
+    .delete-discovery-btn{
+        width: 100%;
+    }
 
 }
