@@ -184,15 +184,6 @@ body {
   gap: 0.75rem;
 }
 
-.ds-search {
-  background-color: var(--bg-trench);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  outline: none;
-  min-width: 220px;
-}
 
 .ds-search:focus {
   border-color: var(--accent-cyan);

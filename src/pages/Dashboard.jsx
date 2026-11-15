@@ -24,7 +24,6 @@ const MODELS = [
 
 export default function Dashboard() {
     const [activeTab, setActiveTab] = useState('overview');
-    const [searchTerm, setSearchTerm] = useState('');
 
     const [users, setUsers] = useState([]);
     const [equipment, setEquipment] = useState([]);
@@ -100,18 +99,6 @@ export default function Dashboard() {
         loadDashboardData();
     }, []);
 
-    // Search users
-    const filteredUsers = users.filter(user =>
-        user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.role?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    // Search missions
-    const filteredMissions = missions.filter(mission =>
-        mission.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        mission._id?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
     return (
         <div className="ds-layout">
@@ -186,18 +173,6 @@ export default function Dashboard() {
                         </p>
                     </div>
 
-                    <div className="ds-header-actions">
-
-                        <input
-                            type="text"
-                            placeholder="Search records..."
-                            className="ds-search"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-
-                    </div>
-
                 </header>
 
 
@@ -236,7 +211,7 @@ export default function Dashboard() {
                                     </thead>
 
                                     <tbody>
-                                        {filteredUsers.map(user => (
+                                        {users.map(user => (
                                             <tr key={user._id}>
                                                 <td>{user.username}</td>
                                                 <td>{user.email}</td>
@@ -248,7 +223,7 @@ export default function Dashboard() {
                                     </tbody>
                                 </table>
 
-                                {filteredUsers.length === 0 && <p>No users found.</p>}
+                                {users.length === 0 && <p>No users found.</p>}
                             </section>
                         )}
 
@@ -269,7 +244,7 @@ export default function Dashboard() {
                                     </thead>
 
                                     <tbody>
-                                        {filteredMissions.map(mission => (
+                                        {missions.map(mission => (
                                             <tr key={mission._id}>
                                                 <td>{mission.title}</td>
                                                 <td>{mission.objective}</td>
@@ -281,7 +256,7 @@ export default function Dashboard() {
                                     </tbody>
                                 </table>
 
-                                {filteredMissions.length === 0 && <p>No expeditions found.</p>}
+                                {missions.length === 0 && <p>No expeditions found.</p>}
                             </section>
                         )}
 
