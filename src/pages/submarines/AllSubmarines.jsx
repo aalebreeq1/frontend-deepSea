@@ -71,8 +71,8 @@ function AllSubmarines({ user }) {
             <header className="sub-hero">
                 <div className="sub-hero-overlay" />
                 <div className="sub-hero-content">
-                    <h1 className="sub-hero-title">DeepSea</h1>
-                    <p className="sub-hero-subtitle">Submarines</p>
+                    <h1 className="sub-hero-title">Submarines</h1>
+                    <p className="sub-hero-subtitle">OF DeepSea</p>
                 </div>
                 <a className="sub-scroll-cue" href="#submarine-list">
                     <span className="sub-scroll-arrow">↓</span>
