@@ -402,6 +402,56 @@
   font-size: 12px;
 }
 
+.auth-role-group {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.auth-role-group legend {
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.auth-role-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.auth-role-option {
+  display: flex;
+  flex: 1 1 130px;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 11px 13px;
+  border: 1px solid #34505e;
+  border-radius: 7px;
+  background: #081722;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.auth-role-option input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #a6e9ec;
+}
+
+.auth-role-option:has(input:checked) {
+  border-color: #a6e9ec;
+  background: #12313d;
+}
+
+.auth-role-group:disabled .auth-role-option {
+  opacity: 0.65;
+  cursor: wait;
+}
+
 .auth-submit {
   min-height: 46px;
   margin-top: 4px;
