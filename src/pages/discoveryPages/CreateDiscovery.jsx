@@ -52,6 +52,10 @@ function CreateDiscovery() {
         try {
             const discoveryData = { ...formData };
 
+            if(!discoveryData.species){
+                delete discoveryData.species;
+            }
+
             if (!discoveryData.image) {
                 delete discoveryData.image;
             }
@@ -150,7 +154,7 @@ function CreateDiscovery() {
                     name="species"
                     value={formData.species}
                     onChange={handleChange}
-                    required
+                    
                 >
                     <option value="">Select a species</option>
                     {species.map((item) => (

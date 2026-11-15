@@ -1,0 +1,243 @@
+.discovery-details-page{
+    min-height: 100vh;
+    padding: 3rem 1.5rem;
+
+    background: 
+    linear-gradient(
+        rgba(2,6,12,0.55),
+        rgba(2,6,12,0.8)
+    ),
+    
+    url('/images/discovery/discoveryDetails.png');
+
+     background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+     color: #e6f4f7;
+    font-family: system-ui, -apple-system,'Segoe UI', Roboto, sans-serif;
+
+}
+    .discovery-details-container{
+        max-width: 1300px;
+        margin: 0 auto;
+    }
+
+
+
+.discovery-details-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.discovery-details-header h1{
+    margin:0;
+    color: #ece8e1;
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03rem;
+}
+
+.discovery-subtitle{
+    margin-top: 0.8rem;
+    color:#9aa8b5;
+    font-size: 0.9rem;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+}
+
+.discovery-details-content{
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 2rem;
+    align-items: stretch;
+}
+
+.discovery-image-section{
+    min-height: 480px;
+    overflow: hidden;
+    border: 1px solid rgba(141,220,226,0.3);
+    border-radius: 20px;
+    background: rgba(10, 25, 35, 0.48);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25) 
+}
+
+.discovery-image-section img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 480px;
+    object-fit: cover;
+}
+
+.discovery-info-section{
+    padding: 2.5rem;
+    border:1px solid rgba(154, 168, 181, 0.2);
+    border-radius: 20px;
+    background: rgba(10,25,35,0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+}
+
+
+.discovery-info-section > h2{
+    margin: 0;
+    color: #ece8e1;
+    font-size: 2.1rem;
+    font-weight: 800;
+    font-style: italic;
+}
+
+
+.discovery-info-grid{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap:1rem;
+    margin-top: 2rem;
+    padding: 1.3rem;
+    border: 1px solid rgba(141, 220, 226, 0.2);
+    border-radius: 12px;
+    background: rgba(20,70,85,0.3);
+}
+
+.discovery-info-card span{
+    color: #8ddce2;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1rem;
+}
+
+.discovery-info-card p{
+    margin: 0.7rem 0 0;
+    color: #f1f5f6;
+    font-size: 1.1rem;
+}
+
+.discovery-description{
+    margin-top: 2rem;
+}
+
+.discovery-description h3{
+    color:#8ddce2;
+    font-size: 0.95rem;
+    letter-spacing: 0.1rem;
+}
+
+.discovery-description p{
+    color:#d4e0e5;
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.discovery-actions{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.edit-btn,
+.delete-btn{
+    border: 1px solid rgba(141,220,226,0.3);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0.9rem 1.5rem;
+}
+
+.edit-btn{
+    border: 1px solid #a5e7eb ;
+    background: #a5e7eb;
+    color: #02060c;
+}
+.edit-btn:hover{
+    background: transparent;
+    color: #a5e7eb;
+}
+
+.delete-btn{
+    border: 1px solid #e47777 ;
+    background: transparent;
+    color: #ff9999;
+}
+
+.delete-btn:hover{
+    background: #e47777;
+    color: #02060c;
+}
+
+.discovery-loading{
+    padding-top: 5rem;
+    color: #e6f4f7;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+@media(max-width: 900px){
+    .discovery-details-content{
+        grid-template-columns: 1fr;
+    }
+
+    .discovery-image-section,
+    .discovery-image-section img{
+        min-height: 350px;
+        height: 480px;
+    }
+}
+
+
+.discovery-info-card{
+    padding: 1.3rem;
+    border: 1px solid rgba(141,220,226,0.2);
+    border-radius: 12px;
+    background: rgba(20,70,85,0.3);
+}
+
+
+
+.discovery-type-badge{
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(141,220,226,0.3);
+    border-radius: 20px;
+    background: rgba(20,70,85,0.4);
+    color: #8ddce2;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+
+.discovery-type-badge p{
+    margin: 0;
+}
+
+
+@media(max-width: 600px){
+    .discovery-details-page{
+        padding: 2rem 1rem;
+        background-attachment: scroll;
+    }
+
+    .discovery-info-section{
+        padding: 1.5rem;
+    }
+
+    .discovery-details-header h1{
+        font-size: 2rem;
+    }
+
+    .discovery-info-section > h2{
+        font-size: 1.7rem;
+    }
+
+
+}
