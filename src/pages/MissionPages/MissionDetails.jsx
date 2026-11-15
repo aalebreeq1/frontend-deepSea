@@ -297,11 +297,6 @@ function MissionDetails({ user }) {
                                             <h3>{item.name || 'Equipment'}</h3>
                                             <p>{item.category || 'Mission equipment'}</p>
                                         </div>
-                                        {item._id && (
-                                            <Link className="mission-detail-item-link" to={`/equipments/${item._id}`} aria-label={`View ${item.name}`}>
-                                                View <span aria-hidden="true">→</span>
-                                            </Link>
-                                        )}
                                     </li>
                                 ))}
                             </ul>
