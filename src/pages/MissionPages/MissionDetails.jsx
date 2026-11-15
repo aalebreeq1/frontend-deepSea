@@ -16,7 +16,7 @@ function MissionDetails({ user }) {
     const isAdmin = user?.role === 'admin';
     const isResearcher = user?.role === 'researcher';
     const canEdit = isAdmin || isResearcher;
-    const canDelete = isAdmin || user?.role === 'visitor';
+    const canDelete = isAdmin;
 
     const navigate = useNavigate();
     const { id } = useParams();
@@ -65,7 +65,7 @@ function MissionDetails({ user }) {
     };
 
     const handleAssignment = async (remove = false) => {
-        if (!isResearcher || !user?._id || !mission) return false;
+        if (!canEdit || !user?._id || !mission) return false;
 
         try {
             const latestMission = await getMissionById(id);
@@ -229,7 +229,7 @@ function MissionDetails({ user }) {
                                 <p className="mission-detail-eyebrow">People behind the expedition</p>
                                 <h2 id="mission-team-title">Research team <span>{mission.missionResearchers?.length || 0}</span></h2>
                             </div>
-                            {isResearcher && (
+                            {canEdit && (
                                 <div className="mission-detail-assignment">
                                     {isAssigned ? (
                                         <>

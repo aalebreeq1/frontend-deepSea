@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router';
 import { getDiscoveryById, updateDiscovery } from '../../services/discoveryService';
 import { getAllMissions } from '../../services/MissionService';
 import { getAllSpecies } from '../../services/speciesService';
+import './UpdateDiscovery.css'
 
 function UpdateDiscovery() {
     const navigate = useNavigate();
@@ -78,10 +79,15 @@ function UpdateDiscovery() {
     };
 
     return (
-        <div>
+        <div className='update-discovery-page'>
+            <div className='update-discovery-header'>
+            <span className='update-discovery-label'>BENEATH THE SURFACE</span>
             <h1>Update Discovery</h1>
+            <p>Modify the details of your ocean discovery</p>
+            </div>
+            
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className='update-discovery-form'>
                 <label htmlFor="title">Title</label>
                 <input
                     id="title"
@@ -93,10 +99,9 @@ function UpdateDiscovery() {
                 />
 
                 <label htmlFor="description">Description</label>
-                <input
+                <textarea
                     id="description"
                     name="description"
-                    type="text"
                     value={formData.description}
                     onChange={handleChange}
                     required
@@ -106,7 +111,6 @@ function UpdateDiscovery() {
                 <select
                     id="discoveryType"
                     name="discoveryType"
-                    type="text"
                     value={formData.discoveryType}
                     onChange={handleChange}
                     required
@@ -177,7 +181,7 @@ function UpdateDiscovery() {
 
 
 
-                <button type="submit">Update Discovery</button>
+                <button type="submit" className='update-discovery-button'>Update Discovery</button>
             </form>
         </div>
     );

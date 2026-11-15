@@ -1,0 +1,246 @@
+.all-discoveries-page{
+    min-height: 100vh;
+    padding: 50px 7%;
+    color: #eafaff;
+    background: 
+    linear-gradient(rgba(4,20,32,0.65),rgba(4,20,32,0.85)),
+    url('/images/discovery/Alldiscoveries.jpg');
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+
+}
+
+
+.discoveries-header{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 55px;
+}
+
+
+
+.discoveries-label{
+    color: #43d9e8;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+
+
+.discoveries-header h1{
+    margin: 12px 0;
+    font-size: 42px;
+    color: #f2fcff;
+}
+
+.discoveries-header p{
+    margin: 0;
+    color:#9bb9c5;
+    font-size: 15px;
+}
+
+
+.create-discovery-link{
+    display: inline-block;
+    padding: 13px 22px;
+    border: 1px solid rgba(75,220,235,0.5);
+    border-radius: 10px;
+    background: linear-gradient(135deg,#087d98,#07556d);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s ease;
+    white-space: nowrap;
+}
+
+.create-discovery-link:hover{
+    background: #0b9bb5;
+    transform: translateX(-3px);
+    box-shadow: 0 8px 25px rgba(0,190,220,0.2);
+}
+
+
+.discoveries-topbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(151,218,230,0.15);
+}
+
+
+.discoveries-topbar h2{
+    margin: 0;
+    font-size: 23px;
+    color: #eafaff;
+}
+
+.discoveries-topbar span{
+    color:#7fcbd7;
+    font-size: 14px;
+}
+
+
+.discoveries-list{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.discovery-card{
+    display: flex;
+    min-height: 210px;
+    overflow: hidden;
+    border: 1px solid rgba(118,205,220,0.16);
+    border-radius: 16px;
+    background: rgba(12,48,63,0.72);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.18);
+    transition: 0.3s ease;
+}
+
+.discovery-card:hover{
+    transform: translateY(-4px);
+    border-color: rgba(67,217,232,0.3);
+    box-shadow: 0 12px 30px rgba(0,180,210,0.12);
+}
+
+
+.discovery-card-image,
+.discovery-card-placeholder{
+    width:260px;
+    min-width: 260px;
+    min-height: 210px;
+    object-fit: cover;
+}
+
+
+.discovery-card-placeholder{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg,#0b5269,#092b3a);
+    color: #72dce8;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 4px;
+}
+
+
+.discovery-card-content{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 24px 28px;
+}
+
+.discovery-type-badge{
+    align-self: flex-start;
+    padding: 6px 12px;
+    border: 1px solid rgba(35,178,198,0.12);
+    border-radius: 20px;
+    background: rgba(35,178,198,0.12);
+    color: #64dce8;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+
+.discovery-card-content h2{
+    margin: 13px 0 8px;
+    color: #f0fbff;
+    font-size: 22px;
+}
+
+.discovery-card-content p{
+    margin: 0;
+    color: #a5c0ca;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.discovery-card-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-top: auto;
+    padding-top: 20px;
+    color: #7fa8b5;
+    font-size: 13px;
+}
+
+
+.view-discovery-link{
+    color:#53d5e4;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.view-discovery-link:hover{
+    color: #a2f5ff;
+}
+
+
+.discoveries-empty{
+    padding: 55px 20px;
+    border: 1px dashed rgba(118,205,220,0.25);
+    border-radius: 16px;
+    background: rgba(12,48,63,0.45);
+    text-align: center;
+}
+
+.discoveries-empty h2{
+    color: #eafaff;
+}
+
+.discoveries-empty p{
+    color: #9bb9c5;
+}
+
+@media(max-width:700px) {
+
+    .all-discoveries-page{
+        padding: 30px 5%;
+    }
+    
+
+    .discoveries-header{
+        align-items:flex-start;
+        flex-direction:column;
+        margin-bottom: 35px;
+    }
+
+    .discoveries-header h1{
+        font-size: 32px;
+    }
+
+    .discovery-card{
+        flex-direction: column;
+    }
+
+    .discovery-card-image,
+    .discovery-card-placeholder{
+        width:100%;
+        min-width: 100%;
+        height: 190px;
+        min-height: 190px;
+    }
+
+        .discovery-card-content{
+            padding: 20px;
+        }
+    
+        .discovery-card-footer{
+            align-items: flex-start;
+            flex-direction: column;
+        }
+}

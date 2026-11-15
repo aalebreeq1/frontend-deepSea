@@ -11,7 +11,7 @@ function formatStatus(value) {
 
 function AllSubmarines({ user }) {
     const [showCreate, setShowCreate] = useState(false);
-    const canCreate = ["admin", "visitor"].includes(user?.role);
+    const canCreate = ["admin", "researcher"].includes(user?.role);
     const [submarines, setSubmarines] = useState([]);
     const [index, setIndex] = useState(0);
     const [photo, setPhoto] = useState(0);
