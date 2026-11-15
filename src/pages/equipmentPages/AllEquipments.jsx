@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 import { getAllEquipments } from "../../services/equipmentServices"
 import { Link } from 'react-router'

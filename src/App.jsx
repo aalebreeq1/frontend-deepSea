@@ -17,7 +17,6 @@ import SubmarinesDetails from "./pages/submarines/SubmarinesDetails";
 
 // Zainab's pages
 import AllEquipment from "./pages/equipmentPages/AllEquipments";
-import CreateEquipment from "./pages/equipmentPages/CreateEquipment";
 import UpdateEquipment from "./pages/equipmentPages/UpdateEquipment";
 import EquipmentDetails from "./pages/equipmentPages/EquipmentDetails";
 
@@ -82,11 +81,10 @@ function App() {
         <Route path="/submarines/:id" element={<SubmarinesDetails user={user} />} />
         // EQUIPMENT Routes
         <Route path="/equipments" element={<AllEquipment user={user}/>} />
-        <Route path="/equipments/new" element={<CreateEquipment user={user} />} />
         <Route path="/equipments/:equipmentId/edit" element={<UpdateEquipment user={user} />} />
         <Route path="/equipments/:equipmentId" element={<EquipmentDetails />} />
         // LOCATION Routes
-        <Route path="/locations" element={<AllLocations />} />
+        <Route path="/locations" element={<AllLocations user={user}/>} />
         <Route path="/locations/new" element={<CreateLocation user={user} />} />
         <Route path="/locations/:locationId/edit" element={<UpdateLocation user={user} />} />
         <Route path="/locations/:locationId/" element={<LocationDetails />} />
