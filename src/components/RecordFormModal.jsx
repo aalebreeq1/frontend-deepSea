@@ -2,16 +2,9 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Form, Modal, toast } from "@heroui/react";
 import { createMission, updateMission } from "../services/MissionService";
-import {
-  createSubmarine,
-  getAllSubmarines,
-  updateSubmarine
-} from "../services/submarineService";
-import { getAllLocations } from "../services/locationServices";
-import {
-  createNewEquipment,
-  updateEquipment
-} from "../services/equipmentServices";
+import { createSubmarine, getAllSubmarines, updateSubmarine} from "../services/submarineService";
+import { getAllLocations, createNewLocation, updateLocationById} from "../services/locationServices";
+import { createNewEquipment, updateEquipment } from "../services/equipmentServices";
 import { uploadImage } from "../services/uploadService";
 import "./RecordFormModal.css";
 
@@ -21,16 +14,20 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
 
   const isMission = kind === "mission";
   const isEquipment = kind === "equipment";
+  const isLocation = kind === "location";
   const isEditing = Boolean(record?._id);
 
   const isCreatingSubmarine = kind === "submarine" && !isEditing;
   const isCreatingEquipment = isEquipment && !isEditing;
+  const isCreatingLocation = isLocation && !isEditing;
 
   const title = isMission
     ? "Mission"
     : isEquipment
       ? "Equipment"
-      : "Submarine";
+      : isLocation
+        ? "Location"
+        : "Submarine";
 
   const isAdmin = user?.role === "admin";
   const canSubmit = isAdmin || user?.role === "researcher";
@@ -50,6 +47,10 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
     capacity: record?.capacity ?? "",
     description: record?.description || "",
     image: record?.image || "",
+    ocean: record?.ocean || "",
+    latitude: record?.latitude ?? "",
+    longitude: record?.longitude ?? "",
+    depth: record?.depth ?? "",
   });
 
   const [submarines, setSubmarines] = useState([]);
@@ -73,8 +74,12 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
         ]);
 
         if (active) {
-          setSubmarines(submarineData.submarines);
-          setLocations(locationData);
+          setSubmarines(submarineData.submarines || []);
+          setLocations(
+            Array.isArray(locationData)
+              ? locationData
+              : locationData.locations || []
+          );
         }
       } catch (err) {
         console.error(err);
@@ -98,11 +103,16 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
 
   function handleChange(event) {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+
+    setFormData((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
   }
 
   function handleImageChange(event) {
     const file = event.target.files[0];
+
     if (!file) return;
 
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
@@ -140,6 +150,28 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
     if (!open && !saving) onClose();
   }
 
+  async function uploadSelectedImage() {
+    if (!imageFile) return formData.image;
+
+    setUploading(true);
+
+    const uploaded = await uploadImage(imageFile);
+
+    setFormData((previous) => ({
+      ...previous,
+      image: uploaded.image,
+    }));
+
+    setPreview(uploaded.image);
+    setImageFile(null);
+
+    if (imageInput.current) {
+      imageInput.current.value = "";
+    }
+
+    return uploaded.image;
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -167,9 +199,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
         }
 
         if (isEditing) {
-          missionData.missionResearchers = (record.missionResearchers || []).map(
-            (researcher) => researcher._id || researcher
-          );
+          missionData.missionResearchers = (
+            record.missionResearchers || []
+          ).map((researcher) => researcher._id || researcher);
 
           missionData.equipment = (record.equipment || []).map(
             (item) => item._id || item
@@ -194,6 +226,54 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
         }
       }
 
+      // LOCATION
+      else if (isLocation) {
+        const locationData = {
+          name: formData.name.trim(),
+          ocean: formData.ocean.trim(),
+          latitude: Number(formData.latitude),
+          longitude: Number(formData.longitude),
+          depth:
+            formData.depth === "" ? undefined : Number(formData.depth),
+          image: formData.image,
+        };
+
+        if (
+          !locationData.name ||
+          !locationData.ocean ||
+          formData.latitude === "" ||
+          formData.longitude === ""
+        ) {
+          toast.danger("Complete all required location fields.");
+          return;
+        }
+
+        if (
+          locationData.latitude < -90 ||
+          locationData.latitude > 90 ||
+          locationData.longitude < -180 ||
+          locationData.longitude > 180 ||
+          (locationData.depth !== undefined && locationData.depth < 0)
+        ) {
+          toast.danger("Enter valid coordinates and depth.");
+          return;
+        }
+
+        if (imageFile) {
+          locationData.image = await uploadSelectedImage();
+        }
+
+        let result;
+
+        if (isEditing) {
+          result = await updateLocationById(record._id, locationData);
+        } else {
+          result = await createNewLocation(locationData);
+        }
+
+        saved = result.location || result;
+      }
+
       // EQUIPMENT
       else if (isEquipment) {
         const equipmentData = {
@@ -210,24 +290,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
         }
 
         if (imageFile) {
-          setUploading(true);
-
-          const uploaded = await uploadImage(imageFile);
-          equipmentData.image = uploaded.image;
-
-          setFormData((previous) => ({
-            ...previous,
-            image: uploaded.image,
-          }));
-
-          setPreview(uploaded.image);
-          setImageFile(null);
-
-          if (imageInput.current) {
-            imageInput.current.value = "";
-          }
-
-          setUploading(false);
+          equipmentData.image = await uploadSelectedImage();
         }
 
         let result;
@@ -258,24 +321,7 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
         }
 
         if (imageFile) {
-          setUploading(true);
-
-          const uploaded = await uploadImage(imageFile);
-          submarineData.image = uploaded.image;
-
-          setFormData((previous) => ({
-            ...previous,
-            image: uploaded.image,
-          }));
-
-          setPreview(uploaded.image);
-          setImageFile(null);
-
-          if (imageInput.current) {
-            imageInput.current.value = "";
-          }
-
-          setUploading(false);
+          submarineData.image = await uploadSelectedImage();
         }
 
         let result;
@@ -299,18 +345,26 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
         toast.success("Equipment created successfully");
       }
 
-      onClose();
+      if (isCreatingLocation) {
+        toast.success("Location created successfully");
+      }
 
+      onClose();
     } catch (err) {
       console.error(err);
 
-      const message = err.response?.status === 401
-        ? "Your session has expired. Please sign in again."
-        : err.response?.data?.message ||
-          err.response?.data?.error ||
-          "Could not save changes. Please try again.";
+      const message =
+        err.response?.status === 401
+          ? "Your session has expired. Please sign in again."
+          : err.response?.data?.message ||
+            err.response?.data?.error ||
+            "Could not save changes. Please try again.";
 
-      if (isCreatingSubmarine || isCreatingEquipment) {
+      if (
+        isCreatingSubmarine ||
+        isCreatingEquipment ||
+        isCreatingLocation
+      ) {
         toast.danger(message);
       } else {
         window.alert(message);
@@ -333,8 +387,10 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
     >
       <Modal.Container size="lg" scroll="inside">
         <Modal.Dialog className="record-modal">
-
-          <Modal.CloseTrigger className="record-close" isDisabled={saving}>
+          <Modal.CloseTrigger
+            className="record-close"
+            isDisabled={saving}
+          >
             Close
           </Modal.CloseTrigger>
 
@@ -344,11 +400,14 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                 ? "EXPEDITION PLANNING"
                 : isEquipment
                   ? "EXPEDITION EQUIPMENT"
-                  : "THE DEEPSEA FLEET"}
+                  : isLocation
+                    ? "OCEAN EXPLORATION"
+                    : "THE DEEPSEA FLEET"}
             </p>
 
             <Modal.Heading className="record-heading">
-              {isEditing ? "Edit " : "Create "}{title.toLowerCase()}.
+              {isEditing ? "Edit " : "Create "}
+              {title.toLowerCase()}.
             </Modal.Heading>
 
             <p className="record-intro">
@@ -356,7 +415,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                 ? "Give your next expedition a purpose, a place, and a plan."
                 : isEquipment
                   ? "Register the tools and technology used in our expeditions."
-                  : "Prepare your vessel for its next journey below the surface."}
+                  : isLocation
+                    ? "Register the coordinates and details of an exploration site."
+                    : "Prepare your vessel for its next journey below the surface."}
             </p>
           </Modal.Header>
 
@@ -373,7 +434,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                 {isMission ? (
                   <>
                     <div className="record-field record-wide">
-                      <label htmlFor={formId + "-title"}>Mission title</label>
+                      <label htmlFor={formId + "-title"}>
+                        Mission title
+                      </label>
                       <input
                         id={formId + "-title"}
                         name="title"
@@ -386,7 +449,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                     </div>
 
                     <div className="record-field record-wide">
-                      <label htmlFor={formId + "-objective"}>Objective</label>
+                      <label htmlFor={formId + "-objective"}>
+                        Objective
+                      </label>
                       <textarea
                         id={formId + "-objective"}
                         name="objective"
@@ -400,7 +465,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                     </div>
 
                     <div className="record-field">
-                      <label htmlFor={formId + "-start"}>Start date</label>
+                      <label htmlFor={formId + "-start"}>
+                        Start date
+                      </label>
                       <input
                         id={formId + "-start"}
                         name="startDate"
@@ -428,7 +495,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                     </div>
 
                     <div className="record-field">
-                      <label htmlFor={formId + "-submarine"}>Submarine</label>
+                      <label htmlFor={formId + "-submarine"}>
+                        Submarine
+                      </label>
                       <select
                         id={formId + "-submarine"}
                         name="submarine"
@@ -453,7 +522,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                     </div>
 
                     <div className="record-field">
-                      <label htmlFor={formId + "-location"}>Location</label>
+                      <label htmlFor={formId + "-location"}>
+                        Location
+                      </label>
                       <select
                         id={formId + "-location"}
                         name="location"
@@ -477,12 +548,174 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                       )}
                     </div>
                   </>
+
+                ) : isLocation ? (
+
+                  /* LOCATION FIELDS */
+                  <>
+                    <div className="record-field">
+                      <label htmlFor={formId + "-name"}>
+                        Location name
+                      </label>
+                      <input
+                        id={formId + "-name"}
+                        name="name"
+                        placeholder="Enter location name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        disabled={saving}
+                        required
+                      />
+                    </div>
+
+                    <div className="record-field">
+                      <label htmlFor={formId + "-ocean"}>
+                        Ocean
+                      </label>
+                      <input
+                        id={formId + "-ocean"}
+                        name="ocean"
+                        placeholder="e.g. Pacific Ocean"
+                        value={formData.ocean}
+                        onChange={handleChange}
+                        disabled={saving}
+                        required
+                      />
+                    </div>
+
+                    <div className="record-field">
+                      <label htmlFor={formId + "-latitude"}>
+                        Latitude
+                      </label>
+                      <input
+                        id={formId + "-latitude"}
+                        name="latitude"
+                        type="number"
+                        step="any"
+                        min="-90"
+                        max="90"
+                        placeholder="e.g. 11.3733"
+                        value={formData.latitude}
+                        onChange={handleChange}
+                        disabled={saving}
+                        required
+                      />
+                    </div>
+
+                    <div className="record-field">
+                      <label htmlFor={formId + "-longitude"}>
+                        Longitude
+                      </label>
+                      <input
+                        id={formId + "-longitude"}
+                        name="longitude"
+                        type="number"
+                        step="any"
+                        min="-180"
+                        max="180"
+                        placeholder="e.g. 142.5917"
+                        value={formData.longitude}
+                        onChange={handleChange}
+                        disabled={saving}
+                        required
+                      />
+                    </div>
+
+                    <div className="record-field">
+                      <label htmlFor={formId + "-depth"}>
+                        Depth <span>(meters, optional)</span>
+                      </label>
+                      <input
+                        id={formId + "-depth"}
+                        name="depth"
+                        type="number"
+                        min="0"
+                        step="any"
+                        placeholder="e.g. 10994"
+                        value={formData.depth}
+                        onChange={handleChange}
+                        disabled={saving}
+                      />
+                    </div>
+
+                    <div className="record-field record-wide">
+                      <p className="record-upload-label">
+                        Location image <span>(optional)</span>
+                      </p>
+
+                      <div className="record-upload">
+                        <div className="record-image-preview">
+                          <span>
+                            {preview
+                              ? "Image preview unavailable"
+                              : "Your exploration site, in focus."}
+                          </span>
+
+                          {preview && (
+                            <img
+                              key={preview}
+                              src={preview}
+                              alt="Location preview"
+                              onError={hideBrokenImage}
+                            />
+                          )}
+                        </div>
+
+                        <div className="record-upload-copy">
+                          <strong>
+                            {imageFile
+                              ? imageFile.name
+                              : formData.image
+                                ? "Current location image"
+                                : "Add a photo of your location"}
+                          </strong>
+
+                          <p id={formId + "-image-help"}>
+                            JPEG, PNG, or WebP. Up to 5 MB.
+                          </p>
+
+                          <label className="record-file-button">
+                            <input
+                              ref={imageInput}
+                              type="file"
+                              aria-label="Choose a location image"
+                              aria-describedby={formId + "-image-help"}
+                              accept="image/jpeg,image/png,image/webp"
+                              onChange={handleImageChange}
+                              disabled={saving}
+                            />
+                            {preview ? "Change image" : "Choose image"}
+                          </label>
+
+                          {(imageFile || imageError) && (
+                            <button
+                              className="record-image-cancel"
+                              type="button"
+                              onClick={cancelImageSelection}
+                              disabled={saving}
+                            >
+                              Cancel selection
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {imageError && (
+                        <p className="record-error" role="alert">
+                          {imageError}
+                        </p>
+                      )}
+                    </div>
+                  </>
+
                 ) : isEquipment ? (
 
                   /* EQUIPMENT FIELDS */
                   <>
                     <div className="record-field">
-                      <label htmlFor={formId + "-name"}>Equipment name</label>
+                      <label htmlFor={formId + "-name"}>
+                        Equipment name
+                      </label>
                       <input
                         id={formId + "-name"}
                         name="name"
@@ -495,7 +728,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                     </div>
 
                     <div className="record-field">
-                      <label htmlFor={formId + "-category"}>Category</label>
+                      <label htmlFor={formId + "-category"}>
+                        Category
+                      </label>
                       <select
                         id={formId + "-category"}
                         name="category"
@@ -510,12 +745,16 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                         <option value="Sampling">Sampling</option>
                         <option value="Communication">Communication</option>
                         <option value="Robotics">Robotics</option>
-                        <option value="Scientific Sensors">Scientific Sensors</option>
+                        <option value="Scientific Sensors">
+                          Scientific Sensors
+                        </option>
                       </select>
                     </div>
 
                     <div className="record-field">
-                      <label htmlFor={formId + "-condition"}>Condition</label>
+                      <label htmlFor={formId + "-condition"}>
+                        Condition
+                      </label>
                       <select
                         id={formId + "-condition"}
                         name="condition"
@@ -528,7 +767,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                         <option value="needs_maintenance">
                           Needs maintenance
                         </option>
-                        <option value="out_of_service">Out of service</option>
+                        <option value="out_of_service">
+                          Out of service
+                        </option>
                       </select>
                     </div>
 
@@ -622,7 +863,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                   /* SUBMARINE FIELDS */
                   <>
                     <div className="record-field">
-                      <label htmlFor={formId + "-name"}>Submarine name</label>
+                      <label htmlFor={formId + "-name"}>
+                        Submarine name
+                      </label>
                       <input
                         id={formId + "-name"}
                         name="name"
@@ -635,7 +878,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                     </div>
 
                     <div className="record-field">
-                      <label htmlFor={formId + "-model"}>Model</label>
+                      <label htmlFor={formId + "-model"}>
+                        Model
+                      </label>
                       <input
                         id={formId + "-model"}
                         name="model"
@@ -666,7 +911,9 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                     </div>
 
                     <div className="record-field">
-                      <label htmlFor={formId + "-capacity"}>Crew capacity</label>
+                      <label htmlFor={formId + "-capacity"}>
+                        Crew capacity
+                      </label>
                       <input
                         id={formId + "-capacity"}
                         name="capacity"
@@ -772,7 +1019,6 @@ function RecordFormModal({ kind, user, record = null, onClose, onSaved }) {
                     Uploading your image...
                   </p>
                 )}
-
               </div>
             </Modal.Body>
 

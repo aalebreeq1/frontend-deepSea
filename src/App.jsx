@@ -21,8 +21,6 @@ import UpdateEquipment from "./pages/equipmentPages/UpdateEquipment";
 import EquipmentDetails from "./pages/equipmentPages/EquipmentDetails";
 
 import AllLocations from "./pages/locationPages/AllLocations";
-import CreateLocation from "./pages/locationPages/CreateLocation";
-import UpdateLocation from "./pages/locationPages/UpdateLocation";
 import LocationDetails from "./pages/locationPages/LocationDetails";
 
 import AllUsers from "./pages/UserPages/AllUsers";
@@ -82,12 +80,11 @@ function App() {
         // EQUIPMENT Routes
         <Route path="/equipments" element={<AllEquipment user={user}/>} />
         <Route path="/equipments/:equipmentId/edit" element={<UpdateEquipment user={user} />} />
-        <Route path="/equipments/:equipmentId" element={<EquipmentDetails />} />
+        <Route path="/equipments/:equipmentId" element={<EquipmentDetails user={user}/>} />
+
         // LOCATION Routes
         <Route path="/locations" element={<AllLocations user={user}/>} />
-        <Route path="/locations/new" element={<CreateLocation user={user} />} />
-        <Route path="/locations/:locationId/edit" element={<UpdateLocation user={user} />} />
-        <Route path="/locations/:locationId/" element={<LocationDetails />} />
+        <Route path="/locations/:locationId/" element={<LocationDetails user={user}/>} />
         //USER Routes
         <Route path="/users" element={<AllUsers />} />
         <Route path="/users/new" element={<CreateUser />} />

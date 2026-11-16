@@ -40,7 +40,6 @@ function DiscoveryDetails({ user }) {
           <div className="discovery-details-header">
             <div>
               <p className="discovery-subtitle">EXPLORE THE UNKNOWN</p>
-              <h1>Discovery Details</h1>
             </div>
           </div>
 
