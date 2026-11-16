@@ -43,7 +43,6 @@ console.log("ROLE:", user?.role);
                     <div className="location-details-header">
                         <div>
                             <p className="location-subtitle">EXPLORE THE UNKNOWN</p>
-                            <h1>Location Details</h1>
                         </div>
                     </div>
 
