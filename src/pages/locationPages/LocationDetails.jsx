@@ -63,11 +63,20 @@ console.log("ROLE:", user?.role);
 
                         <div className="location-details-content">
 
-                            <div className="location-image-card">
-                                <div className="no-location-image">
-                                    Location Coordinates
-                                </div>
-                            </div>
+                            
+<div className="location-image-card">
+    {location.image ? (
+        <img
+            src={location.image}
+            alt={location.name}
+        />
+    ) : (
+        <div className="no-location-image">
+            No Image Available
+        </div>
+    )}
+</div>
+
 
                             <div className="location-info-section">
 
