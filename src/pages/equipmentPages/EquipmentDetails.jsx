@@ -1,14 +1,13 @@
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import {
-    getEquipmentById,
-    deleteEquipment
-} from "../../services/equipmentServices";
+import { getEquipmentById, deleteEquipment } from "../../services/equipmentServices";
+import RecordFormModal from "../../components/RecordFormModal";
 import "./EquipmentDetails.css";
 
 function EquipmentDetails({ user }) {
     const [equipment, setEquipment] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
 
     const navigate = useNavigate();
     const { equipmentId } = useParams();
@@ -25,6 +24,11 @@ function EquipmentDetails({ user }) {
         await deleteEquipment(equipmentId);
         setEquipment(null);
         navigate("/equipments");
+    }
+
+    function handleSaved(updatedEquipment) {
+        setEquipment(updatedEquipment.equipment || updatedEquipment);
+        setShowEditModal(false);
     }
 
     useEffect(() => {
@@ -107,9 +111,7 @@ function EquipmentDetails({ user }) {
                                     {canEdit && (
                                         <button
                                             className="edit-equipment-btn"
-                                            onClick={() =>
-                                                navigate(`/equipments/${equipment._id}/edit`)
-                                            }
+                                            onClick={() => setShowEditModal(true)}
                                         >
                                             Edit Equipment
                                         </button>
@@ -127,6 +129,17 @@ function EquipmentDetails({ user }) {
                                 </div>
                             </div>
                         </div>
+
+                        {showEditModal && equipment && (
+                            <RecordFormModal
+                                kind="equipment"
+                                user={user}
+                                record={equipment}
+                                onClose={() => setShowEditModal(false)}
+                                onSaved={handleSaved}
+                            />
+                        )}
+
                     </div>
                 </div>
             )}
