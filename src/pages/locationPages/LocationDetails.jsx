@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import {
@@ -8,6 +7,8 @@ import {
 import './LocationDetails.css';
 
 function LocationDetails({ user }) {
+  console.log("USER:", user);
+console.log("ROLE:", user?.role);
     const navigate = useNavigate();
     const { locationId } = useParams();
 
